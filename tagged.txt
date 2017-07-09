@@ -1,0 +1,67 @@
+A_DT lot_NN goes_VBZ into_IN walking_NN ._.
+It_PRP takes_VBZ balance_NN ,_, strength_NN and_CC brainpower_NN ._.
+Just_RB ask_VB Zac_NNP Vawter_NNP ._.
+He_PRP lost_VBD his_PRP$ leg_NN in_IN a_DT motorcycle_NN accident_NN in_IN 2009_CD ._.
+But_CC with_IN the_DT help_NN of_IN a_DT team_NN of_IN scientists_NNS and_CC doctors_NNS ,_, he_PRP has_VBZ taught_VBN a_DT whole_JJ new_JJ type_NN of_IN artificial_JJ leg_NN to_TO walk_VB ,_, kick_NN and_CC do_VB everything_NN else_RB that_IN a_DT leg_NN does_VBZ ._.
+The_DT team_NN includes_VBZ scientists_NNS who_WP develop_VBP software_NN ,_, surgeons_NNS ,_, and_CC people_NNS who_WP make_VBP artificial_JJ limbs_NNS called_VBD prosthetics_NNS ._.
+Together_RB they_PRP designed_VBD a_DT leg_NN that_WDT can_MD receive_VB commands_NNS directly_RB from_IN Vawter’s_NNP brain_NN ._.
+The_DT leg_NN has_VBZ learned_VBN to_TO read_VB what_WP Vawter_NNP wants_VBZ it_PRP to_TO do_VB ._.
+A_DT bundle_NN of_IN nerves_NNS that_IN end_NN above_IN his_PRP$ missing_JJ knee_NN gives_VBZ signals_NNS to_TO the_DT leg_NN ,_, a_DT scientific_JJ report_NN said_VBD ._.
+Roughly_RB 1_CD million_CD Americans_NNPS have_VBP lost_VBN a_DT leg_NN or_CC part_NN of_IN one_CD ._.
+Vawter_NNP and_CC his_PRP$ robotic_JJ leg_NN offer_NN hope_NN that_IN future_JJ prosthetics_NNS might_MD feel_VB more_RBR natural_JJ ._.
+Imagine_VB It_PRP ,_, And_CC It_PRP Happens_.
+Vawter’s_NNP prosthetic_NN is_VBZ a_DT marvel_NN of_IN 21st_JJ century_NN engineering_NN ._.
+But_CC Vawter’s_NNP ability_NN to_TO control_VB the_DT prosthetic_JJ with_IN his_PRP$ thoughts_NNS makes_VBZ his_PRP$ case_NN remarkable_JJ ._.
+If_IN he_PRP wants_VBZ his_PRP$ artificial_JJ toes_NNS to_TO curl_VB toward_IN him_PRP all_DT he_PRP has_VBZ to_TO do_VB is_VBZ imagine_VB the_DT movements_NNS ._.
+The_DT same_JJ with_IN shifting_VBG his_PRP$ artificial_JJ ankle_NN so_IN he_PRP can_MD walk_VB down_IN a_DT ramp_NN ._.
+The_DT work_NN was_VBD done_VBN at_IN the_DT Rehabilitation_NNP Institute_NNP of_IN Chicago_NNP ._.
+The_DT Army_NNP paid_VBD $_$ 8_CD million_CD for_IN the_DT study_NN ._.
+About_IN 1,200_CD service_NN men_NNS and_CC women_NNS have_VBP lost_VBN a_DT leg_NN in_IN the_DT wars_NNS in_IN Iraq_NNP and_CC Afghanistan_NNP ._.
+The_DT armed_JJ forces_NNS hope_VBP studies_NNS like_IN this_DT one_NN will_MD help_VB them_PRP ._.
+“We_PRP want_VBP to_TO restore_VB full_JJ capabilities_NNS ”_IN to_TO people_NNS who_WP have_VBP lost_VBN a_DT lower_JJR limb_NN ,_, said_VBD Levi_NNP J._NNP Hargrove_NNP ._.
+He_PRP worked_VBD on_IN the_DT new_JJ report_NN ._.
+The_DT leg_NN weighs_VBZ just_RB over_IN 10_CD pounds_NNS ._.
+It_PRP has_VBZ two_CD separate_JJ engines_NNS ._.
+One_CD powers_NNS movement_NN in_IN the_DT ankle_NN and_CC the_DT other_JJ in_IN the_DT knee_NN ._.
+It_PRP has_VBZ sensors_NNS that_WDT are_VBP capable_JJ of_IN detecting_VBG and_CC measuring_VBG movement_NN all_DT over_IN ._.
+In_IN most_JJS prosthetics_NNS ,_, the_DT wearer_NN has_VBZ to_TO turn_VB a_DT key_JJ to_TO change_VB from_IN one_CD type_NN of_IN movement_NN to_TO another_DT ._.
+Not_RB so_RB in_IN Vawter_NNP 's_POS robotic_JJ leg_NN ._.
+"_`` Teaching_NN "_`` The_DT Leg_NNP To_TO Read_VB
+“With_IN this_DT leg_NN ,_, it_PRP just_RB flows_VBZ ,_, ”_RB said_VBD the_DT 32-year-old_JJ software_NN engineer_NN ._.
+“There_RB is_VBZ n’t_IN anything_NN special_JJ I_PRP have_VBP to_TO do_VB to_TO make_VB it_PRP work_VB right_RB ._. ”_''
+Vawter_NNP lives_NNS in_IN Washington_NNP ._.
+Most_JJS of_IN the_DT time_NN he_PRP uses_VBZ a_DT typical_JJ prosthetic_JJ ._.
+But_CC he_PRP travels_VBZ to_TO Chicago_NNP several_JJ times_NNS a_DT year_NN to_TO work_VB with_IN the_DT robotic_JJ leg_NN ._.
+Vawter_NNP could_MD n't_RB just_RB strap_VB on_IN the_DT bionic_JJ lower_JJR limb_NN ._.
+First_JJ engineers_NNS in_IN Chicago_NNP had_VBD to_TO “teach_VB ”_IN the_DT leg_NN how_WRB to_TO read_VB tiny_JJ muscle_NN movements_NNS in_IN his_PRP$ right_JJ thigh_NN ._.
+Those_DT movements_NNS told_VBD the_DT leg_NN what_WP Vawter_NNP wanted_VBD it_PRP to_TO do_VB ._.
+Vawter_NNP spent_VBD hours_NNS with_IN his_PRP$ thigh_NN wired_VBN up_RP ._.
+He_PRP imagined_VBD making_VBG certain_JJ movements_NNS with_IN his_PRP$ missing_VBG knee_NN ,_, ankle_NN and_CC foot_NN ._.
+Engineers_NNS broke_VBD down_RP those_DT recorded_VBN electrical_JJ signals_NNS to_TO log_VB an_DT entire_JJ collection_NN of_IN movements_NNS ._.
+They_PRP used_VBD special_JJ software_NN to_TO do_VB this_DT ._.
+The_DT prosthetic_NN could_MD then_RB be_VB programmed_VBN to_TO recognize_VB the_DT smallest_JJS twitch_NN of_IN a_DT muscle_NN in_IN Vawter’s_NNP thigh_NN ._.
+It_PRP took_VBD a_DT new_JJ type_NN of_IN surgery_NN to_TO make_VB this_DT possible_JJ ,_, though_IN ._.
+In_IN most_JJS amputations_NNS ,_, the_DT nerves_NNS in_IN the_DT thigh_NN are_VBP left_VBN to_TO wither_VB or_CC die_VB ._.
+Rewiring_VBG The_DT Severed_JJ Nerves_NNS
+Dr._NNP Todd_NNP Kuiken_NNP is_VBZ a_DT neurosurgeon_NN at_IN the_DT rehabilitation_NN institute_NN ._.
+He_PRP developed_VBD the_DT new_JJ method_NN ._.
+It_PRP is_VBZ called_VBN “reinervation_NN ._. ”_''
+Vawter’s_NNP orthopedic_JJ surgeon_NN was_VBD trained_VBN in_IN the_DT delicate_JJ operation_NN ._.
+He_PRP rewired_VBD the_DT severed_VBN nerves_NNS to_TO control_VB some_DT of_IN the_DT muscles_NNS in_IN Vawter’s_NNP thigh_NN ._.
+The_DT muscles_NNS would_MD be_VB used_VBN less_RBR frequently_RB after_IN the_DT amputation_NN ._.
+Those_DT nerves_NNS recovered_VBD from_IN the_DT shock_NN of_IN the_DT injury_NN ._.
+Then_RB they_PRP began_VBD to_TO regrow_VB ._.
+They_PRP could_MD carry_VB electrical_JJ signals_NNS ._.
+When_WRB Vawter_NNP thought_VBD about_IN flexing_VBG his_PRP$ right_JJ foot_NN in_IN a_DT particular_JJ way_NN ,_, the_DT nerve_NN endings_NNS would_MD cause_VB a_DT special_JJ motion_NN in_IN his_PRP$ hamstring_NN ._.
+The_DT same_JJ sort_NN of_IN thing_NN happened_VBN with_IN other_JJ muscle_NN movements_NNS ._.
+The_DT bionic_JJ leg_NN performs_VBZ better_JJR than_IN standard_JJ prosthetics_NNS ,_, according_VBG to_TO the_DT report_NN ._.
+The_DT robotic_JJ leg_NN ,_, programmed_VBD to_TO follow_VB Vawter’s_NNP commands_NNS ,_, reduced_VBN errors_NNS by_IN 44_CD percent_NN ._.
+Those_DT errors_NNS cause_VBP unnatural_JJ movements_NNS ,_, pain_NN and_CC falls_VBZ ._.
+Vawter_NNP said_VBD he_PRP had_VBD “fallen_VBN down_IN a_DT whole_JJ bunch_NN of_IN times_NNS ”_RB while_IN wearing_VBG his_PRP$ everyday_JJ prosthetic_NN ._.
+He_PRP has_VBZ not_RB fallen_VBN once_RB while_IN moving_VBG around_RB on_IN his_PRP$ bionic_JJ leg_NN ._.
+He_PRP said_VBD he_PRP could_MD move_VB a_DT lot_NN faster_RBR too_RB —_, which_WDT would_MD be_VB helpful_JJ for_IN keeping_VBG up_RP with_IN his_PRP$ 5-year-old_JJ son_NN and_CC 3-year-old_JJ daughter_NN ._.
+But_CC first_RB ,_, Vawter_NNP added_VBD ,_, he_PRP needs_VBZ to_TO persuade_VB Hargrove’s_NNP team_NN to_TO let_VB him_PRP wear_VB it_PRP home_NN ._.
+
+Execution_NNP time_NN :_: 0.241_CD seconds_NNS
+Execution_NNP time:_NN 0.384_CD seconds_NNS
+Execution time: 1.836 seconds

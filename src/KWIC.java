@@ -3,9 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-/**
- * Created by marko on 08.07.17.
- */
+
 public class KWIC {
     public static void main(String[] args){
         Runtime runtime = Runtime.getRuntime();

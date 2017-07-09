@@ -25,7 +25,7 @@ public class KWIC {
             BufferedReader buff = new BufferedReader(sReader);
             String nextLine = "";
             while((nextLine = buff.readLine()) != null) {
-                System.out.print(nextLine + ", ");
+                System.out.println(nextLine);
             }
         } catch (IOException e) {
             System.out.println("Whoops! Something went wrong");

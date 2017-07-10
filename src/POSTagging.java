@@ -25,7 +25,7 @@ public class POSTagging {
         Elements lines = doc.select("p");
         String content = "";
         for (Element line : lines) {
-            content = content + line.text();
+            content = content + line.text().replaceAll("\\[\\d*\\]|\\[citation needed\\]" , "");
         }
         return content;
     }

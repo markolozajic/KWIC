@@ -5,11 +5,30 @@ import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.*;
+import java.util.Scanner;
 
 
 public class POSTagging {
+
+    private static String fetchFromWikipedia() throws IOException{
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Choose a wikipedia article:");
+        String sitename = "https://en.wikipedia.org/wiki/" + scanner.nextLine().replace(" ", "_");
+        Document doc = Jsoup.connect(sitename).get();
+
+        Elements lines = doc.select("p");
+        String content = "";
+        for (Element line : lines) {
+            content = content + line.text();
+        }
+        return content;
+    }
 
     private static String readSentencesFromFile(String filename) throws IOException{
         String[] anArray = sentenceDetector(filename);
@@ -61,7 +80,7 @@ public class POSTagging {
     }
 
     public static void main (String[] args) throws IOException{
-        String contents = readSentencesFromFile("testfile.txt");
+        String contents = fetchFromWikipedia();
         String[] tokenized = tokenizer(contents);
         String[] tags = postagger(tokenized);
         for(int i = 0; i<tokenized.length; i++){

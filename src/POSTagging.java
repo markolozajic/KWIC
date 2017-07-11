@@ -51,7 +51,7 @@ public class POSTagging {
             bop += nextLine + " ";
         }
 
-        InputStream modelIn = new FileInputStream("opennlp-master/models/en-sent.bin");
+        InputStream modelIn = new FileInputStream("models/en-sent.bin");
         SentenceModel model = new SentenceModel(modelIn);
         SentenceDetectorME sentenceDetector = new SentenceDetectorME(model);
         modelIn.close();
@@ -61,7 +61,7 @@ public class POSTagging {
 
     private static String[] tokenizer(String sentences) throws IOException {
 
-        InputStream modelIn = new FileInputStream("opennlp-master/models/en-token.bin");
+        InputStream modelIn = new FileInputStream("models/en-token.bin");
         TokenizerModel model = new TokenizerModel(modelIn);
         Tokenizer tokenizer = new TokenizerME(model);
         modelIn.close();
@@ -71,7 +71,7 @@ public class POSTagging {
 
     private static String[] postagger(String[] tokenizedText) throws IOException {
 
-        InputStream modelIn = new FileInputStream("opennlp-master/models/en-pos-maxent.bin");
+        InputStream modelIn = new FileInputStream("models/en-pos-maxent.bin");
         POSModel model = new POSModel(modelIn);
         POSTaggerME tagger = new POSTaggerME(model);
         modelIn.close();

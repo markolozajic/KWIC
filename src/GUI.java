@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+
 import static javax.swing.BoxLayout.Y_AXIS;
 
 
@@ -18,6 +20,7 @@ public class GUI extends JPanel {
     private JComboBox<String> searchTerm;
     private JTextField ngramBox;
     private JList<String> sentenceList;
+    private JScrollPane scrollPane;
 
     //constructor
     GUI() {
@@ -143,14 +146,14 @@ public class GUI extends JPanel {
 
         //centerLeft
         JPanel centerLeft = new JPanel();
-        String[] bullshitSentences = {"this", "is", "a", "bullshit", "list", "of", "sentences", "HERE'S A LONG ONE", "lalala", "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" , "a" };
-        sentenceList = new JList<>(bullshitSentences);
+        String[] defaultSentences = {}; // do we want a default sentence, or just leave it blank?
+        sentenceList = new JList<>(defaultSentences);
         sentenceList.setFont(listFont);
         sentenceList.setFixedCellHeight(24);
         sentenceList.setFixedCellWidth(700);
         sentenceList.setVisibleRowCount(24);
         sentenceList.addListSelectionListener(new SentenceListHandler());
-        JScrollPane scrollPane = new JScrollPane(sentenceList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane = new JScrollPane(sentenceList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVisible(true);
         centerLeft.add(scrollPane);
 
@@ -220,10 +223,6 @@ public class GUI extends JPanel {
     private class SearchButtonHandler implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            String toSearch = searchBox.getText();
-            String url = urlField.getText();
-            String type = searchTerm.getSelectedItem().toString();
-            int contextWords = Integer.parseInt(ngramBox.getText());
 
             //methods
             //search for toSearch in url webpage/file
@@ -234,7 +233,49 @@ public class GUI extends JPanel {
             //message for invalid file names/websites
             //or if text not found/access denied/??
 
+            String toSearch = searchBox.getText();
+            String url = urlField.getText();
+            String type = searchTerm.getSelectedItem().toString();
+            try {
+                int contextWords = Integer.parseInt(ngramBox.getText()); // throws exception if there is no text
+            }
+            catch (NumberFormatException n){
+                // TODO there's definitely a better way to deal with the ngrams
+                ngramBox.setText("100"); // this number appears in the ngram box if field left empty
+                int contextWords = Integer.parseInt(ngramBox.getText());
+                // to be continued
+            }
+            try {
+                /* I'm using the url field here, but it's very simple to reassign this to another one if need be.
+                   What it's doing at the moment is expecting a simple string as input (e.g. "helen keller"), and
+                   attempts to find an English wikipedia article with such a title. If not found, an exception is
+                   thrown.
+                   Note: for now we only have a general IOException, maybe we could consider making more specific ones
+                   for different failures (FileNotFound, URL not found) so we could inform the user more precisely what
+                   went wrong?
+                */
+                POSTagging.fetchFromWikipedia(url); // look for topic on wikipedia, save text to file
+                // readSentencesFromFile method has to make sure to read from the file the previous method just created,
+                // so the long parameter string is an attempt to predict what the filename will look like
+                String reader = POSTagging.readSentencesFromFile(url.replaceAll(" ","_") + ".txt");
+                String[] sents = POSTagging.sentenceDetector(reader);
 
+                // the following block of code is just repeating what is already written above (look for "centerLeft")
+                // surely there is a way to avoid this?
+                JList<String> sentenceList2 = new JList<>(sents);
+                sentenceList2.setFont(new Font("Serif", Font.PLAIN, 18));
+                sentenceList2.setFixedCellHeight(24);
+                sentenceList2.setFixedCellWidth(700);
+                sentenceList2.setVisibleRowCount(24);
+
+                scrollPane.setViewportView(sentenceList2); // replace old scrollpane
+
+            } catch (IOException i) {
+                // show error message in scrollpane
+                String[] errorMessage = {"Something unfortunate just happened"};
+                JList<String> whoops = new JList<>(errorMessage);
+                scrollPane.setViewportView(whoops);
+            }
         }
     }
 

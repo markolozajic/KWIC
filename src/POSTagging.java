@@ -11,55 +11,51 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.*;
-import java.util.Scanner;
 
 
 public class POSTagging {
 
-    private static String fetchFromWikipedia() throws IOException{
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Choose a wikipedia article:");
-        String sitename = "https://en.wikipedia.org/wiki/" + scanner.nextLine().replace(" ", "_");
-        Document doc = Jsoup.connect(sitename).get();
 
+    static void fetchFromWikipedia(String article) throws IOException{
+
+        String sitename = "https://en.wikipedia.org/wiki/" + article.replace(" ", "_");
+        Document doc = Jsoup.connect(sitename).get();
         Elements lines = doc.select("p");
-        String content = "";
+
+        // so the search "helen keller" would have its output saved to file "helen_keller.txt"
+        PrintWriter writer = new PrintWriter(article.replace(" ","_") + ".txt");
+
         for (Element line : lines) {
-            content = content + line.text().replaceAll("\\[\\d*\\]|\\[citation needed\\]" , "");
+            // write next line to file, without citations (e.g. "[56]" or "[citation needed]")
+            writer.println(line.text().replaceAll("\\[\\d*\\]|\\[citation needed\\]" , ""));
         }
-        return content;
+        writer.close();
     }
 
-    private static String readSentencesFromFile(String filename) throws IOException{
-        String[] anArray = sentenceDetector(filename);
+    static String readSentencesFromFile(String filename) throws IOException{
 
+        BufferedReader buff = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+        String nextLine = "";
         String sentences = "";
 
-        for (String str : anArray) {
-            sentences += str + "\n";
+        while((nextLine = buff.readLine()) != null) {
+            sentences += nextLine + "\n";
         }
 
         return sentences;
     }
 
-    private static String[] sentenceDetector (String filename) throws IOException {
-
-        BufferedReader buff = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
-        String nextLine = "";
-        String bop = "";
-        while ((nextLine = buff.readLine()) != null) {
-            bop += nextLine + " ";
-        }
+    static String[] sentenceDetector (String input) throws IOException {
 
         InputStream modelIn = new FileInputStream("models/en-sent.bin");
         SentenceModel model = new SentenceModel(modelIn);
         SentenceDetectorME sentenceDetector = new SentenceDetectorME(model);
         modelIn.close();
 
-        return sentenceDetector.sentDetect(bop);
+        return sentenceDetector.sentDetect(input);
     }
 
-    private static String[] tokenizer(String sentences) throws IOException {
+    static String[] tokenizer(String sentences) throws IOException {
 
         InputStream modelIn = new FileInputStream("models/en-token.bin");
         TokenizerModel model = new TokenizerModel(modelIn);
@@ -69,7 +65,7 @@ public class POSTagging {
         return tokenizer.tokenize(sentences);
     }
 
-    private static String[] postagger(String[] tokenizedText) throws IOException {
+    static String[] postagger(String[] tokenizedText) throws IOException {
 
         InputStream modelIn = new FileInputStream("models/en-pos-maxent.bin");
         POSModel model = new POSModel(modelIn);
@@ -79,12 +75,21 @@ public class POSTagging {
         return tagger.tag(tokenizedText);
     }
 
+
+    // use this part if you're curious what kind of output you get from the above methods
+
     public static void main (String[] args) throws IOException{
-        String contents = fetchFromWikipedia();
-        String[] tokenized = tokenizer(contents);
-        String[] tags = postagger(tokenized);
-        for(int i = 0; i<tokenized.length; i++){
-            System.out.println(tokenized[i] + " " + tags[i]);
+        String article = "helen keller";
+        fetchFromWikipedia(article);
+        String contents = readSentencesFromFile(article.replaceAll(" ","_") + ".txt");
+        String[] ayy = sentenceDetector(contents);
+        for (String s: ayy){
+            System.out.println(s);
         }
+//        String[] tokenized = tokenizer(contents);
+//        String[] tags = postagger(tokenized);
+//        for(int i = 0; i<tokenized.length; i++){
+//            System.out.println(tokenized[i] + " " + tags[i]);
+//        }
     }
 }

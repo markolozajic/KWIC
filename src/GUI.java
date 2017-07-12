@@ -21,8 +21,9 @@ public class GUI extends JPanel {
     private JTextField ngramBox;
     private JList<String> sentenceList;
     private JScrollPane scrollPane;
+    private JTextArea resultArea;
 
-    //constructor
+        //constructor
     GUI() {
         Font listFont = new Font("Serif", Font.PLAIN, 18); //if I could do this with original font it would be better
         Dimension size = new Dimension(95, 30); //how is this with size??
@@ -146,7 +147,9 @@ public class GUI extends JPanel {
 
         //centerLeft
         JPanel centerLeft = new JPanel();
-        String[] defaultSentences = {}; // do we want a default sentence, or just leave it blank?
+        String[] defaultSentences = {"Welcome to KWIC! Please click me"};
+        // if we use the same "sentenceList" as in the listSelectionListener, we could show the magic of our program
+        // on the default sentence!
         sentenceList = new JList<>(defaultSentences);
         sentenceList.setFont(listFont);
         sentenceList.setFixedCellHeight(24);
@@ -159,9 +162,8 @@ public class GUI extends JPanel {
 
         //centerRight- for
         JPanel centerRight = new JPanel();
-        JTextArea resultArea = new JTextArea(24, 30);
+        resultArea = new JTextArea(24, 30);
         resultArea.setFont(listFont);
-        resultArea.setText("This is what is displayed inside the field. \n Yay a new line");
         resultArea.setEditable(false);
         centerRight.add(new JScrollPane(resultArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS), BorderLayout.PAGE_START);
 
@@ -262,13 +264,14 @@ public class GUI extends JPanel {
 
                 // the following block of code is just repeating what is already written above (look for "centerLeft")
                 // surely there is a way to avoid this?
-                JList<String> sentenceList2 = new JList<>(sents);
-                sentenceList2.setFont(new Font("Serif", Font.PLAIN, 18));
-                sentenceList2.setFixedCellHeight(24);
-                sentenceList2.setFixedCellWidth(700);
-                sentenceList2.setVisibleRowCount(24);
+                sentenceList = new JList<>(sents);
+                sentenceList.setFont(new Font("Serif", Font.PLAIN, 18));
+                sentenceList.setFixedCellHeight(24);
+                sentenceList.setFixedCellWidth(700);
+                sentenceList.setVisibleRowCount(24);
+                sentenceList.addListSelectionListener(new SentenceListHandler());
 
-                scrollPane.setViewportView(sentenceList2); // replace old scrollpane
+                scrollPane.setViewportView(sentenceList); // replace old scrollpane
 
             } catch (IOException i) {
                 // show error message in scrollpane
@@ -294,11 +297,19 @@ public class GUI extends JPanel {
         public void valueChanged(ListSelectionEvent e) {
 
             String theSentence = sentenceList.getSelectedValue();
+            try {
+                String[] tokenized = POSTagging.tokenizer(theSentence);
+                String[] tagged = POSTagging.postagger(tokenized);
+                resultArea.setText("");
+                for (int i = 0; i<tokenized.length; i++){
+                    resultArea.append("Word: " + tokenized[i] + "   POS Tag: " + tagged[i] + "\n");
+                }
+            } catch (IOException e1) {
+                System.out.println("Cannot tokenize for some reason");
+            }
 
-            //change what shows up in the side box
-            //how to do formatting???
-            //pos tags, lemma, and words in a table
-            //can I even make a table
+            // maybe format somehow, table or at least separate columns could look neater?
+            // word, pos tags and lemma in a table (if that's a thing)
 
         }
     }

@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static javax.swing.BoxLayout.Y_AXIS;
 
@@ -238,14 +239,18 @@ public class GUI extends JPanel {
             String toSearch = searchBox.getText();
             String url = urlField.getText();
             String type = searchTerm.getSelectedItem().toString();
+            int contextWords =0;
+            if(ngramBox.getText().equals("") || ngramBox.getText().equals("Whole sentence")){
+                ngramBox.setText("Whole sentence");
+                contextWords = 100;
+            }
             try {
-                int contextWords = Integer.parseInt(ngramBox.getText()); // throws exception if there is no text
+                contextWords = Integer.parseInt(ngramBox.getText()); // throws exception if there is no text
             }
             catch (NumberFormatException n){
-                // TODO there's definitely a better way to deal with the ngrams
-                ngramBox.setText("100"); // this number appears in the ngram box if field left empty
-                int contextWords = Integer.parseInt(ngramBox.getText());
-                // to be continued
+                String[] errorMessage = {"Ngram has to be an integer!"};
+                JList<String> whoops = new JList<>(errorMessage);
+                scrollPane.setViewportView(whoops);
             }
             try {
                 /* I'm using the url field here, but it's very simple to reassign this to another one if need be.
@@ -261,10 +266,15 @@ public class GUI extends JPanel {
                 // so the long parameter string is an attempt to predict what the filename will look like
                 String reader = POSTagging.readSentencesFromFile(url.replaceAll(" ","_") + ".txt");
                 String[] sents = POSTagging.sentenceDetector(reader);
-
+                keyWordFinder finder = new keyWordFinder();
+                ArrayList<String> tmp = finder.sentencesWithKeyWord(sents, toSearch, contextWords);
+                String[] filteredSentences = new String[tmp.size()];
+                for(int i = 0; i<filteredSentences.length; i++){
+                    filteredSentences[i] = tmp.get(i);
+                }
                 // the following block of code is just repeating what is already written above (look for "centerLeft")
                 // surely there is a way to avoid this?
-                sentenceList = new JList<>(sents);
+                sentenceList = new JList<>(filteredSentences);
                 sentenceList.setFont(new Font("Serif", Font.PLAIN, 18));
                 sentenceList.setFixedCellHeight(24);
                 sentenceList.setFixedCellWidth(700);

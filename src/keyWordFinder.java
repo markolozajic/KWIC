@@ -12,6 +12,8 @@ public class keyWordFinder
 {
 
 	private int count;
+	// if we want to keep "private int count" here, we should figure out a way to make
+	// the method sentencesWithKeyword non-static (or a different way of keeping track of count)
 
 	/**
 	 * takes an array of strings and returns the keyword (if found) with the
@@ -27,7 +29,7 @@ public class keyWordFinder
 	 * @return - an ArrayList of the Strings that are the keyword + n-gram of
 	 *         the original sentence
 	 */
-	public ArrayList<String> sentencesWithKeyWord(String[] sentences, String keyWord, int ngram)
+	ArrayList<String> sentencesWithKeyWord(String[] sentences, String keyWord, int ngram)
 	{
 		count = 0;
 		ArrayList<String> rval = new ArrayList<String>();

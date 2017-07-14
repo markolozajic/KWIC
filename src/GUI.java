@@ -186,7 +186,7 @@ public class GUI extends JPanel
 
 		// centerLeft- sentences containing word
 		JPanel centerLeft = new JPanel();
-		String[] defaultSentences = { "Welcome to KWIC! Please click me" };
+		String[] defaultSentences = { "<html>Welcome to KWIC! Please click me</html>" };
 		// if we use the same "sentenceList" as in the listSelectionListener, we
 		// could show the magic of our program
 		// on the default sentence!
@@ -203,7 +203,7 @@ public class GUI extends JPanel
 		// centerRight- word, lemma, pos tags
 		JPanel centerRight = new JPanel();
 		String[] columnNames = { "Word", "Lemma", "POS Tags" };
-		Object[][] data = new Object[50][3];
+		Object[][] data = new Object[100][3];
 		resultTable = new JTable(data, columnNames);
 		TableColumn column = null;
 		// for each column, set preferred width
@@ -351,10 +351,11 @@ public class GUI extends JPanel
 
 					for (int i = 0; i < filteredSentences.length; i++)
 					{
-						filteredSentences[i] = tmp3.get(i);
+						filteredSentences[i] = "<html>" + tmp3.get(i) + "</html>";
 					}
 
-					// the following block of code is just repeating what is already
+					// the following block of code is just repeating what is
+					// already
 					// written above (look for "centerLeft")
 					// surely there is a way to avoid this?
 					sentenceList = new JList<>(filteredSentences);
@@ -366,30 +367,32 @@ public class GUI extends JPanel
 					// sentenceList.addListSelectionListener(new
 					// SentenceListHandler());
 
-					scrollPane.setViewportView(sentenceList); // replace old scrollpane
-				}
-				else
+					scrollPane.setViewportView(sentenceList); // replace old
+																// scrollpane
+				} else
 				{
 
-				ArrayList<String> tmp2 = finder.generateNgrams(tmp1, toSearch, contextWords);
-				String[] filteredSentences = new String[tmp2.size()];
+					ArrayList<String> tmp2 = finder.generateNgrams(tmp1, toSearch, contextWords);
+					String[] filteredSentences = new String[tmp2.size()];
 
-				for (int i = 0; i < filteredSentences.length; i++)
-				{
-					filteredSentences[i] = tmp2.get(i);
-				}
+					for (int i = 0; i < filteredSentences.length; i++)
+					{
+						filteredSentences[i] = "<html>" + tmp2.get(i) + "</html>";
+					}
 
-				// the following block of code is just repeating what is already
-				// written above (look for "centerLeft")
-				// surely there is a way to avoid this?
-				sentenceList = new JList<>(filteredSentences);
-				sentenceList.setFont(new Font("Serif", Font.PLAIN, 18));
-				sentenceList.setFixedCellHeight(24);
-				sentenceList.setFixedCellWidth(700);
-				sentenceList.setVisibleRowCount(24);
-				sentenceList.addListSelectionListener(new SentenceListHandler());
+					// the following block of code is just repeating what is
+					// already
+					// written above (look for "centerLeft")
+					// surely there is a way to avoid this?
+					sentenceList = new JList<>(filteredSentences);
+					sentenceList.setFont(new Font("Serif", Font.PLAIN, 18));
+					sentenceList.setFixedCellHeight(24);
+					sentenceList.setFixedCellWidth(700);
+					sentenceList.setVisibleRowCount(24);
+					sentenceList.addListSelectionListener(new SentenceListHandler());
 
-				scrollPane.setViewportView(sentenceList); // replace old scrollpane
+					scrollPane.setViewportView(sentenceList); // replace old
+																// scrollpane
 				}
 			} catch (IOException i)
 			{
@@ -417,8 +420,42 @@ public class GUI extends JPanel
 	{
 		public void valueChanged(ListSelectionEvent e)
 		{
-
-			String theSentence = sentenceList.getSelectedValue();
+			
+			//clear the table before putting in new content
+			for (int i = 0; i < resultTable.getRowCount(); i++)
+			{
+				for (int j = 0; j < 3; j++)
+				resultTable.setValueAt("", i, j);
+			}
+			
+			//this block removes the html tags that have been added for formatting earlier
+			String theSentence = "";
+			String listContent = sentenceList.getSelectedValue().substring(6, sentenceList.getSelectedValue().length() - 7);
+			String[] tmp1 = listContent.split("\\s+");
+			String[] tmp2 = new String[tmp1.length];
+			
+			//find the marked keyword and remove the <b></b>
+			for (int i = 0; i < tmp1.length; i++)
+			{
+				System.out.println(tmp1[i]);
+				if (tmp1[i].startsWith("<b>"))
+				{
+					tmp2[i] = tmp1[i].substring(3, tmp1[i].length() - 4);
+				}
+				else
+				{
+					tmp2[i] = tmp1[i];
+				}
+				
+			}
+			
+			for (String item : tmp2)
+			{
+				theSentence += item + " ";
+			}
+			theSentence = theSentence.substring(0, theSentence.length() - 1);
+			
+			
 			try
 			{
 				String[] tokenized = POSTagging.tokenizer(theSentence);

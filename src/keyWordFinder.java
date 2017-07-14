@@ -31,12 +31,9 @@ public class keyWordFinder
 				// if you find the keyword in this sentence, add it to the
 				// buffer ArrayList, increment count and
 				// set the control boolean to true
-				if (words[j].equals(keyWord))
+				if (words[j].equals(keyWord) && (!rval.contains(sentences[i])))
 				{
-					if (!rval.contains(sentences[i]))
-					{
-						rval.add(sentences[i]);
-					}
+						rval.add(sentences[i]);				
 				}
 			}
 		}
@@ -80,7 +77,7 @@ public class keyWordFinder
 				{
 					// if the tag is the one we want, add the sentence to the
 					// new ArrayList
-					if (tags[i].equals(tag))
+					if (tags[i].equals(tag) && (!rval.contains(item)))
 					{
 						rval.add(item);
 						tagFound = true;
@@ -134,6 +131,7 @@ public class keyWordFinder
 					// this block adds the specified amount of words around the
 					// keyword + the keyword to the ArrayList that is to be
 					// returned
+					int keyWordIndex = i;
 					int startIndex = i - ngram;
 					int endIndex = i + ngram;
 
@@ -146,9 +144,9 @@ public class keyWordFinder
 						{
 							// mark up the keyword so the GUI knows which one to
 							// change later
-							if (words[j].equals(words[i]))
+							if (words[j].equals(words[i]) && j == keyWordIndex)
 							{
-								toAdd += "!@#" + words[j] + " ";
+								toAdd += "<b>" + words[j] + "</b>" + " ";
 							} else
 							{
 								toAdd += words[j] + " ";
@@ -168,9 +166,9 @@ public class keyWordFinder
 						{
 							// mark up the keyword so the GUI knows which one to
 							// change later
-							if (words[j].equals(words[i]))
+							if (words[j].equals(words[i]) && j == keyWordIndex)
 							{
-								toAdd += "!@#" + words[j] + " ";
+								toAdd += "<b>" + words[j] + "</b>" + " ";
 							} else
 							{
 								toAdd += words[j] + " ";
@@ -191,9 +189,9 @@ public class keyWordFinder
 						{
 							// mark up the keyword so the GUI knows which one to
 							// change later
-							if (words[j].equals(words[i]))
+							if (words[j].equals(words[i]) && j == keyWordIndex)
 							{
-								toAdd += "!@#" + words[j] + " ";
+								toAdd += "<b>" + words[j] + "</b>" + " ";
 							} else
 							{
 								toAdd += words[j] + " ";
@@ -212,9 +210,9 @@ public class keyWordFinder
 						{
 							// mark up the keyword so the GUI knows which one to
 							// change later
-							if (words[j].equals(words[i]))
+							if (words[j].equals(words[i]) && j == keyWordIndex)
 							{
-								toAdd += "!@#" + words[j] + " ";
+								toAdd += "<b>" + words[j] + "</b>" + " ";
 							} else
 							{
 								toAdd += words[j] + " ";

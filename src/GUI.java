@@ -1,134 +1,157 @@
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+
+import GUI.SentenceListHandler;
+
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static javax.swing.BoxLayout.Y_AXIS;
 
-
+/**
+ * Created by Joules on 10/07/2017.
+ * GUI for
+ */
 public class GUI extends JPanel {
 
     private JFrame frame; //top window
     private JTextField urlField; //to enter URL
     private JTextField saveField; //to save file
-    private JTextField searchBox;
-    private JComboBox<String> searchTerm;
-    private JTextField ngramBox;
-    private JList<String> sentenceList;
+    private JTextField searchBox; //the thing to search
+    private JComboBox<String> ngramList; //how many context words
+    private JList<String> sentenceList; //sentences word has been found in
+    private JTable resultTable; //table displaying word, lemma, and POS tags
+    private ButtonGroup buttonGroup = new ButtonGroup();
+    private JRadioButton fileInput;
+    private JRadioButton urlInput;
     private JScrollPane scrollPane;
-    private JTextArea resultArea;
 
-        //constructor
+    //constructor
     GUI() {
-        Font listFont = new Font("Serif", Font.PLAIN, 18); //if I could do this with original font it would be better
-        Dimension size = new Dimension(95, 30); //how is this with size??
 
         //top window- set size and name of window
         frame = new JFrame("KWIC search");
-
+        //get the size of the screen it's on, so that everything is relative to screen size
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
         double windowWidth = width*0.7;
-        double heightWidth = height*0.7;
+        double windowHeight = height*0.7;
+        //set window size relative to screen
+        frame.setSize((int) windowWidth, (int) windowHeight);
 
-        //set window size relative to machine
-        frame.setSize((int) windowWidth, (int) heightWidth);
         //main panel with borderlayout
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        //in west, have a vertical box layout- add URL label to the top- jlabel, and then space, then buttons below? createrigidarea?
+        //separators
+        Dimension sep = new Dimension((int)width/100, 0);
+        Dimension borderSep = new Dimension((int) width/50, 0);
+        Dimension verSep = new Dimension(0, (int) height/80);
 
-        Dimension sep = new Dimension(5, 0);
-
-        //northPanel
+        //northPanel with boxlayout
         JPanel northPanel = new JPanel();
         BoxLayout bl = new BoxLayout(northPanel, Y_AXIS);
         northPanel.setLayout(bl);
 
-        //north part of north panel
+        //north part of north panel- flowlayout
         JPanel npNorth = new JPanel();
         FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
         npNorth.setLayout(fl);
-        npNorth.add(Box.createRigidArea(new Dimension(68, 0)));
-        //URL label
-        JLabel urlLabel = new JLabel("URL:");
+        //so the labels aren't directly on the side
+        npNorth.add(Box.createRigidArea(borderSep));
+
+        //URL
+        JLabel urlLabel = new JLabel("URL/Filename:");
         urlLabel.setToolTipText("Where should we look for the search term?");
         npNorth.add(urlLabel);
-        //space to enter URL
-        urlField = new JTextField(45);;
+        urlField = new JTextField((int) width/50);
+
+        //if the box has text in it, keep it- if not, give example URL
+        urlField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                urlField.setText("");
+            }
+            public void focusLost(FocusEvent e) {
+                urlField.setForeground(Color.black);
+                while (urlField.getText().equals("")) {
+                    urlField.setText("en.wikipedia.org/wiki/Java_(programming_language)");
+                    urlField.setForeground(Color.gray); } }
+        });
+
+        //buttons to select if it's a URL or file
+        urlInput = new JRadioButton("URL");
+        fileInput = new JRadioButton("File");
+        buttonGroup.add(urlInput);
+        buttonGroup.add(fileInput);
         npNorth.add(urlField);
-        //add a separator
-        npNorth.add(Box.createRigidArea(new Dimension(290, 0)));
+        npNorth.add(urlInput);
+        npNorth.add(fileInput);
+
+        //space between them
+        npNorth.add(Box.createRigidArea(new Dimension((int) (width/6.65), 0)));
+
+        //Filename for saving
         JLabel fileLabel = new JLabel("Filename:");
         fileLabel.setToolTipText("What would you like to name the file to save the results into?");
         npNorth.add(fileLabel);
-        saveField = new JTextField(23); //default suggestion when you hover???
+        saveField = new JTextField((int) width/75);
+        //example filename for saving the results
+        saveField.setText("defaultFile.xml");
         npNorth.add(saveField);
-        //add a separator
-        npNorth.add(Box.createRigidArea(sep));
 
-        //south panel of north panel
+        //south panel of north panel- flowlayout
         JPanel npSouth = new JPanel();
         FlowLayout fL = new FlowLayout(FlowLayout.LEFT);
         npSouth.setLayout(fL);
-        npSouth.add(Box.createRigidArea(new Dimension(20, 0)));
+        npSouth.add(Box.createRigidArea(new Dimension((int) width/44, 0)));
+
+        //Search term
         JLabel searchLabel = new JLabel("Search term:");
-        searchLabel.setToolTipText("What are you looking for?");
+        searchLabel.setToolTipText("Searching for a word with a specific POS tag: word, POS tag");
         npSouth.add(searchLabel);
-        searchBox = new JTextField(30);
+        searchBox = new JTextField((int) width/75);
         npSouth.add(searchBox);
-        //separator
         npSouth.add(Box.createRigidArea(sep));
-        JLabel typeLabel = new JLabel("Type:");
-        typeLabel.setToolTipText("Are you searching for a word, lemma, or POS tag?");
-        npSouth.add(typeLabel);
-        String[] searchTerms = {"Word", "POS tag", "Lemma"};
-        searchTerm = new JComboBox<>(searchTerms);
-        searchTerm.setSize(10, 30);
-        npSouth.add(searchTerm);
-        //separator
-        npSouth.add(Box.createRigidArea(sep));
+
         JLabel ngramLabel = new JLabel("N-gram length:");
         ngramLabel.setToolTipText("How many context words be displayed on either side of the search term?");
         npSouth.add(ngramLabel);
-        ngramBox = new JTextField(5); //hover to show
-        npSouth.add(ngramBox);
-        //separator
+        String[] ngrams = {"sentence", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        ngramList = new JComboBox<>(ngrams);
+        npSouth.add(ngramList);
         npSouth.add(Box.createRigidArea(sep));
+
         JButton searchButton = new JButton("search");
         searchButton.setToolTipText("Let's find it!");
         searchButton.addActionListener(new SearchButtonHandler());
-        searchButton.setSize(size);
         npSouth.add(searchButton);
 
-        npSouth.add(Box.createRigidArea(new Dimension(234, 0)));
+        npSouth.add(Box.createRigidArea(new Dimension((int) (width/4.78), 0)));
+
+        //Saving
         JButton saveButton = new JButton("save");
         saveButton.setToolTipText("Save results into an XML file with the given filename");
         saveButton.addActionListener(new SaveButtonHandler());
-        saveButton.setSize(size);
         npSouth.add(saveButton);
-        npSouth.add(Box.createRigidArea(new Dimension(10, 0)));
+        npSouth.add(Box.createRigidArea(sep));
+
+        //Clearing
         JButton clearButton = new JButton("clear all");
         clearButton.setToolTipText("Clear all results and search terms");
-        saveButton.setSize(size);
         npSouth.add(clearButton);
         clearButton.addActionListener(new ClearButtonHandler());
 
-
-        //westPanel
+        //westPanel- vertical boxlayout for buttons
         JPanel westPanel = new JPanel();
         BoxLayout bL = new BoxLayout(westPanel, Y_AXIS);
         westPanel.setLayout(bL);
-        Dimension verSep = new Dimension(0, 20);
-        westPanel.add(Box.createRigidArea(verSep));
+
         //add fun buttons here
         JButton but1 = new JButton("fun button");
         but1.addActionListener(new FunButton1Handler());
@@ -143,16 +166,17 @@ public class GUI extends JPanel {
         westPanel.add(but3);
         westPanel.setBorder(BorderFactory.createLineBorder(new Color(223, 240, 255), 7));
 
+        //centerPanel- boxlayout containing main two boxes
         JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
+        BoxLayout BL = new BoxLayout(centerPanel, BoxLayout.X_AXIS);
+        centerPanel.setLayout(BL);
 
-        //centerLeft
+        //centerLeft- sentences containing word
         JPanel centerLeft = new JPanel();
         String[] defaultSentences = {"Welcome to KWIC! Please click me"};
         // if we use the same "sentenceList" as in the listSelectionListener, we could show the magic of our program
         // on the default sentence!
         sentenceList = new JList<>(defaultSentences);
-        sentenceList.setFont(listFont);
         sentenceList.setFixedCellHeight(24);
         sentenceList.setFixedCellWidth(700);
         sentenceList.setVisibleRowCount(24);
@@ -160,19 +184,35 @@ public class GUI extends JPanel {
         scrollPane = new JScrollPane(sentenceList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVisible(true);
         centerLeft.add(scrollPane);
-
-        //centerRight- for
+        
+        //centerRight- word, lemma, pos tags
         JPanel centerRight = new JPanel();
-        resultArea = new JTextArea(24, 30);
-        resultArea.setFont(listFont);
-        resultArea.setEditable(false);
-        centerRight.add(new JScrollPane(resultArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS), BorderLayout.PAGE_START);
+        String[] columnNames = {"Word", "Lemma", "POS Tags"};
+        Object[][] data = {{"This", "x", "y"}, {"is", "x", "y"}, {"an", "x", "y"}, {"example", "x", "y"}, {"sentence", "x", "y"},
+                {"This", "x", "y"}, {"is", "x", "y"}, {"an", "x", "y"}, {"example", "x", "y"}, {"sentence", "x", "y"},
+                {"This", "x", "y"}, {"is", "x", "y"}, {"an", "x", "y"}, {"example", "x", "y"}, {"sentence", "x", "y"},
+                {"This", "x", "y"}, {"is", "x", "y"}, {"an", "x", "y"}, {"example", "x", "y"}, {"sentence", "x", "y"}, {"This", "x", "y"}, {"is", "x", "y"}, {"an", "x", "y"}, {"example", "x", "y"}, {"sentence", "x", "y"},
+                {"This", "x", "y"}, {"is", "x", "y"}, {"an", "x", "y"}, {"example", "x", "y"}, {"sentence", "x", "y"},
+                {"This", "x", "y"}, {"is", "x", "y"}, {"an", "x", "y"}, {"example", "x", "y"}, {"sentence", "x", "y"}};
+        resultTable = new JTable(data, columnNames);
+        TableColumn column = null;
+        //for each column, set preferred width
+        for (int i = 0; i < 3; i++) {
+            column = resultTable.getColumnModel().getColumn(i);
+            column.setPreferredWidth((int) (width/15));}
+        resultTable.setRowHeight((int) (height/40));
+        //so you can't edit it
+        resultTable.setEnabled(false);
+        resultTable.setPreferredScrollableViewportSize(new Dimension((int) width/4, (int) (height/1.95)));
+        JScrollPane sP = new JScrollPane(resultTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        JTableHeader tH = resultTable.getTableHeader(); //for assigning colours later
+        centerRight.add(sP);
 
-
+        //add sub-panels to panels
         northPanel.add(npNorth);
         northPanel.add(npSouth);
-        centerPanel.add(centerLeft, BorderLayout.CENTER);
-        centerPanel.add(centerRight, BorderLayout.EAST);
+        centerPanel.add(centerLeft);
+        centerPanel.add(centerRight);
         panel.add(northPanel, BorderLayout.NORTH);
         panel.add(westPanel, BorderLayout.WEST);
         panel.add(centerPanel, BorderLayout.CENTER);
@@ -183,7 +223,17 @@ public class GUI extends JPanel {
         frame.setResizable(false);
 
 
-        //colours of main box and sub-box
+        //AESTHETICS
+        //fonts
+        Font medFont = new Font("Serif", Font.PLAIN, 18);
+        Font smallFont = new Font("Serif", Font.PLAIN, 14);
+        but1.setFont(smallFont);
+        but2.setFont(smallFont);
+        but3.setFont(smallFont);
+        tH.setFont(smallFont);
+        sentenceList.setFont(medFont);
+        resultTable.setFont(medFont);
+        //colours
         panel.setBackground(Color.white);
         npNorth.setBackground(new Color(223, 240, 255));
         npSouth.setBackground(new Color(223, 240, 255));
@@ -191,16 +241,17 @@ public class GUI extends JPanel {
         centerPanel.setBackground(new Color(223, 240, 255));
         centerLeft.setBackground(new Color(223, 240, 255));
         centerRight.setBackground(new Color(223, 240, 255));
-
-        //buttons another colour
+        urlInput.setBackground(new Color(223, 240, 255));
+        fileInput.setBackground(new Color(223, 240, 255));
         saveButton.setBackground(Color.white);
-        searchTerm.setBackground(Color.white);
-        searchButton.setBackground(Color.white); //maybe make this one a fancy colour
+        ngramList.setBackground(Color.white);
+        searchButton.setBackground(Color.white);
+        resultTable.setBackground(Color.white);
+        tH.setBackground(Color.white);
         clearButton.setBackground(Color.white);
         but1.setBackground(Color.white);
         but2.setBackground(Color.white);
         but3.setBackground(Color.white);
-        //make fun buttons fun colours
     }
 
     //so that when you close a window the window actually closes
@@ -210,7 +261,7 @@ public class GUI extends JPanel {
         }
     }
 
-    //actionlisteners
+  //actionlisteners
     private class SaveButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String fileName = saveField.getText();
@@ -238,19 +289,13 @@ public class GUI extends JPanel {
 
             String toSearch = searchBox.getText();
             String url = urlField.getText();
-            String type = searchTerm.getSelectedItem().toString();
             int contextWords =0;
-            if(ngramBox.getText().equals("") || ngramBox.getText().equals("Whole sentence")){
-                ngramBox.setText("Whole sentence");
+            if(ngramList.getSelectedItem().equals("sentence")){
                 contextWords = 100;
             }
-            try {
-                contextWords = Integer.parseInt(ngramBox.getText()); // throws exception if there is no text
-            }
-            catch (NumberFormatException n){
-                String[] errorMessage = {"Ngram has to be an integer!"};
-                JList<String> whoops = new JList<>(errorMessage);
-                scrollPane.setViewportView(whoops);
+            else
+            {
+                contextWords = (int) ngramList.getSelectedItem();
             }
             try {
                 /* I'm using the url field here, but it's very simple to reassign this to another one if need be.
@@ -267,10 +312,11 @@ public class GUI extends JPanel {
                 String reader = POSTagging.readSentencesFromFile(url.replaceAll(" ","_") + ".txt");
                 String[] sents = POSTagging.sentenceDetector(reader);
                 keyWordFinder finder = new keyWordFinder();
-                ArrayList<String> tmp = finder.sentencesWithKeyWord(sents, toSearch, contextWords);
-                String[] filteredSentences = new String[tmp.size()];
+                ArrayList<String> tmp1 = finder.getSentencesWithKeyWord(sents, toSearch);
+                ArrayList<String> tmp2 = finder.generateNgrams(tmp1, toSearch, contextWords);
+                String[] filteredSentences = new String[tmp2.size()];
                 for(int i = 0; i<filteredSentences.length; i++){
-                    filteredSentences[i] = tmp.get(i);
+                    filteredSentences[i] = tmp2.get(i);
                 }
                 // the following block of code is just repeating what is already written above (look for "centerLeft")
                 // surely there is a way to avoid this?
@@ -279,8 +325,9 @@ public class GUI extends JPanel {
                 sentenceList.setFixedCellHeight(24);
                 sentenceList.setFixedCellWidth(700);
                 sentenceList.setVisibleRowCount(24);
-                sentenceList.addListSelectionListener(new SentenceListHandler());
-
+                //Had to comment this out till it is fixed
+                //sentenceList.addListSelectionListener(new SentenceListHandler());
+             
                 scrollPane.setViewportView(sentenceList); // replace old scrollpane
 
             } catch (IOException i) {
@@ -323,7 +370,6 @@ public class GUI extends JPanel {
 
         }
     }
-
     private class FunButton1Handler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             //whatever this button is actually gonna do

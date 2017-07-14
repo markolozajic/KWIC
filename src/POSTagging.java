@@ -1,3 +1,5 @@
+import opennlp.tools.lemmatizer.LemmatizerME;
+import opennlp.tools.lemmatizer.LemmatizerModel;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
@@ -75,6 +77,13 @@ public class POSTagging {
         return tagger.tag(tokenizedText);
     }
 
+    static String[] lemmatizer(String[] tokens, String[] postags) throws IOException{
+        InputStream modelIn = new FileInputStream("models/en-lemmatizer.bin");
+        LemmatizerModel model = new LemmatizerModel(modelIn);
+        LemmatizerME lemmatizer = new LemmatizerME(model);
+        return lemmatizer.lemmatize(tokens, postags);
+    }
+
 
     // use this part if you're curious what kind of output you get from the above methods
 
@@ -82,14 +91,11 @@ public class POSTagging {
         String article = "helen keller";
         fetchFromWikipedia(article);
         String contents = readSentencesFromFile(article.replaceAll(" ","_") + ".txt");
-        String[] ayy = sentenceDetector(contents);
-        for (String s: ayy){
-            System.out.println(s);
+        String[] tokens = tokenizer(contents);
+        String[] tags = postagger(tokens);
+        String[] lemmas = lemmatizer(tokens, tags);
+        for(int i = 0; i<tokens.length; i++){
+            System.out.println(tokens[i] + " " + tags[i] + " " + lemmas[i]);
         }
-//        String[] tokenized = tokenizer(contents);
-//        String[] tags = postagger(tokenized);
-//        for(int i = 0; i<tokenized.length; i++){
-//            System.out.println(tokenized[i] + " " + tags[i]);
-//        }
     }
 }

@@ -437,7 +437,6 @@ public class GUI extends JPanel
 			//find the marked keyword and remove the <b></b>
 			for (int i = 0; i < tmp1.length; i++)
 			{
-				System.out.println(tmp1[i]);
 				if (tmp1[i].startsWith("<b>"))
 				{
 					tmp2[i] = tmp1[i].substring(3, tmp1[i].length() - 4);

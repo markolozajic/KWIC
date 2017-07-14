@@ -81,6 +81,8 @@ public class POSTagging {
         InputStream modelIn = new FileInputStream("models/en-lemmatizer.bin");
         LemmatizerModel model = new LemmatizerModel(modelIn);
         LemmatizerME lemmatizer = new LemmatizerME(model);
+        modelIn.close();
+
         return lemmatizer.lemmatize(tokens, postags);
     }
 

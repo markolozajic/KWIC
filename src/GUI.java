@@ -389,9 +389,7 @@ public class GUI extends JPanel
                     sentenceList.setFixedCellHeight(24);
                     sentenceList.setFixedCellWidth(700);
                     sentenceList.setVisibleRowCount(24);
-                    // Had to comment this out till it is fixed
-                    // sentenceList.addListSelectionListener(new
-                    // SentenceListHandler());
+                    sentenceList.addListSelectionListener(new SentenceListHandler());
 
                     scrollPane.setViewportView(sentenceList); // replace old
                     // scrollpane

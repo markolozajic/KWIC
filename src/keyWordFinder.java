@@ -1,6 +1,7 @@
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class keyWordFinder
 {
@@ -15,7 +16,7 @@ public class keyWordFinder
 	 * @return - an ArrayList of the Strings that are the keyword + n-gram of
 	 *         the original sentence
 	 */
-	public ArrayList<String> getSentencesWithKeyWord(String[] sentences, String keyWord)
+	static ArrayList<String> getSentencesWithKeyWord(String[] sentences, String keyWord)
 	{
 		ArrayList<String> rval = new ArrayList<String>();
 
@@ -55,57 +56,82 @@ public class keyWordFinder
 	 * @return - those sentences that contain the keyword with the given POS-Tag
 	 * @throws IOException
 	 */
-	public ArrayList<String> getSentencesWithCorrectPOSTag(ArrayList<String> sentences, String keyWord, String tag)
+	static ArrayList<String> getNgramsWithCorrectPOSTag(ArrayList<String> sentences, String keyWord, String tag)
 			throws IOException
 	{
-		POSTagging tagger = new POSTagging();
 		ArrayList<String> rval = new ArrayList<String>();
-		boolean tagFound = false;
 
-		// go through the entirety of the sentences
-		for (String item : sentences)
-		{
-			// generate the tokens and tags for the given sentence
-			String[] tokens = tagger.tokenizer(item);
-			String[] tags = tagger.postagger(tokens);
+		boolean found = false;
 
-			// go through the tokens array
-			for (int i = 0; i < tokens.length; i++)
-			{
-				// if you find the keyword, check its tag
-				if (tokens[i].equals(keyWord))
-				{
-					// if the tag is the one we want, add the sentence to the
-					// new ArrayList
-					if (tags[i].equals(tag) && (!rval.contains(item)))
-					{
-						rval.add(item);
-						tagFound = true;
-					}
-				}
+		String sents = "";
+		for (String item : sentences){
+			// this %b will be used to mark the end of a sentence (tokenizer treats it as a single token)
+			sents += item + " %b ";
+		}
+
+		// remove special characters for word detection - it happened that I had a string such as <b>word,</b> which
+		// the method failed to recognise because of the comma
+
+		sents = sents.replaceAll("[,-.\"\';:]","");
+
+		String[] tokens = POSTagging.tokenizer(sents); // array with tokens from selected sentences
+		String[] tags = POSTagging.postagger(tokens); // array with tags made from tokenized array
+
+		int sentenceCounter = 0; // keep track of how many of the input sentences you went through
+
+		for(int i = 0; i<tokens.length; i++){
+
+			if(tokens[i].equals("%b")){
+				sentenceCounter+=1; // end of sentence reached, whether token found within it or not move to next one
+			}
+			if(tokens[i].equalsIgnoreCase("<b>"+keyWord+"</b>") && tags[i].equals(tag)){
+				rval.add(sentences.get(sentenceCounter)); // get sentence at specified index from list of input sentences
+				found = true;
 			}
 		}
-		
-		if (!tagFound)
-		{
+
+		if(!found){
 			rval.add("Sorry, could not find the word with that tag in the text!");
 		}
+
 		return rval;
 	}
+
+	// I left the main method for now, just in case anyone feels like playing around with the above method
+
+//	public static void main (String[] args){
+//		try {
+//			String readThis = POSTagging.readSentencesFromFile("Sergey_Bubka.txt");
+//			String [] sentences = POSTagging.sentenceDetector(readThis);
+//
+//			ArrayList<String> tmp1 = keyWordFinder.getSentencesWithKeyWord(sentences, "jump");
+//			ArrayList<String> tmp2 = keyWordFinder.generateNgrams(tmp1, "jump",2);
+//			for (String t:tmp2){
+//				System.out.println(t);
+//			}
+//			ArrayList<String> tmp3 = keyWordFinder.getNgramsWithCorrectPOSTag(tmp2, "jump", "NN");
+//			for(String t:tmp3){
+//				System.out.println(t);
+//			}
+//		}
+//		catch (IOException i){
+//			i.printStackTrace();
+//		}
+//	}
 
 	/**
 	 * Method that takes an ArrayList of the sentences containing a words and a
 	 * given n-gram and generates an ArrayList with those n-grams of the keyword
-	 * 
+	 *
+	 * @param sentences
+	 *            - the ArrayList to get n-grams of
 	 * @param keyWord
 	 *            - the keyword
-	 * @param buffer
-	 *            - the ArrayList to get n-grams of
 	 * @param ngram
 	 *            - the number of words to each side of the keyword
 	 * @return the n-gram of the keyword specified
 	 */
-	public ArrayList<String> generateNgrams(ArrayList<String> sentences, String keyWord, int ngram)
+	static ArrayList<String> generateNgrams(ArrayList<String> sentences, String keyWord, int ngram)
 	{
 		ArrayList<String> rval = new ArrayList<String>();
 		// boolean to check whether we actually found the keyword

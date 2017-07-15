@@ -357,17 +357,18 @@ public class GUI extends JPanel {
                 // the filename will look like
                 String reader = POSTagging.readSentencesFromFile(url.replaceAll(" ", "_") + ".txt");
                 String[] sents = POSTagging.sentenceDetector(reader);
-                keyWordFinder finder = new keyWordFinder();
-                ArrayList<String> tmp1 = finder.getSentencesWithKeyWord(sents, toSearch);
+                ArrayList<String> tmp1 = keyWordFinder.getSentencesWithKeyWord(sents, toSearch);
+                ArrayList<String> tmp2 = keyWordFinder.generateNgrams(tmp1, toSearch, contextWords);
+
 
                 // If there is a POSTag we have to take that into consideration
                 if (!tag.isEmpty()) {
-                    ArrayList<String> tmp2 = finder.getSentencesWithCorrectPOSTag(tmp1, toSearch, tag);
-                    ArrayList<String> tmp3 = finder.generateNgrams(tmp2, toSearch, contextWords);
+                    ArrayList<String> tmp3 = keyWordFinder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag);
+                    
                     String[] filteredSentences = new String[tmp3.size()];
                     // this array is used to figure out how wide the cells in
                     // the Jlist should be
-                    int[] filteredSentencesLength = new int[tmp2.size()];
+                    int[] filteredSentencesLength = new int[tmp3.size()];
 
                     for (int i = 0; i < filteredSentences.length; i++) {
                         filteredSentences[i] = "<html>" + tmp3.get(i) + "</html>";
@@ -376,7 +377,7 @@ public class GUI extends JPanel {
 
                     int maxWidth = 0;
                     // find the biggest value in the int array
-                    for (int i = 0; i < filteredSentencesLength.length; i++) {
+                    for(int i = 0; i < filteredSentencesLength.length; i++) {
                         if (filteredSentencesLength[i] > maxWidth) {
                             maxWidth = filteredSentencesLength[i];
                         }
@@ -399,7 +400,6 @@ public class GUI extends JPanel {
                     // scrollpane
                 } else {
 
-                    ArrayList<String> tmp2 = finder.generateNgrams(tmp1, toSearch, contextWords);
                     String[] filteredSentences = new String[tmp2.size()];
                     // this array is used to figure out how wide the cells in
                     // the Jlist should be

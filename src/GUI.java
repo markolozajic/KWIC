@@ -315,11 +315,21 @@ public class GUI extends JPanel {
         public void actionPerformed(ActionEvent e) {
             String fileName = saveField.getText();
 
-            // methods
-            // save to xml file
-            // get sentences and tags and ???
-            // message for invalid file names
+            ArrayList<String> listContents = new ArrayList<>();
 
+            ListModel model = sentenceList.getModel(); // have to make listModel to access all elements in JList
+
+            // add all the elements in JList to model as strings (Object by default)
+
+            for(int i = 0; i<model.getSize(); i++){
+                listContents.add(model.getElementAt(i).toString());
+            }
+
+            try {
+                Saving.saveToFile(listContents, fileName);
+            } catch (IOException e1) {
+                e1.printStackTrace(); // make error box pop up as well?
+            }
         }
     }
 
@@ -536,7 +546,7 @@ public class GUI extends JPanel {
 //        if (german.isSelected())
 //            posList = new JComboBox<>(germanPOS);
 //    }
-
+    
     private class FunButton1Handler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             // whatever this button is actually gonna do

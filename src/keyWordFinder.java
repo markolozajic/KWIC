@@ -43,11 +43,11 @@ public class keyWordFinder
 	}
 
 	/**
-	 * Method that takes the result of getSentencesWithKeyWord and filters it so
-	 * it returns a new ArrayList that only contains those sentences in which
+	 * Method that takes the result of getSentencesWithKeyWord + generateNgrams and filters it so
+	 * it returns a new ArrayList that only contains those ngrams in which
 	 * the keyword has the correct POSTag
 	 * 
-	 * @param sentences
+	 * @param ngrams
 	 *            - the sentences to go through
 	 * @param keyWord
 	 *            - the keyword to look for
@@ -56,36 +56,36 @@ public class keyWordFinder
 	 * @return - those sentences that contain the keyword with the given POS-Tag
 	 * @throws IOException
 	 */
-	static ArrayList<String> getNgramsWithCorrectPOSTag(ArrayList<String> sentences, String keyWord, String tag)
+	static ArrayList<String> getNgramsWithCorrectPOSTag(ArrayList<String> ngrams, String keyWord, String tag)
 			throws IOException
 	{
 		ArrayList<String> rval = new ArrayList<String>();
 
 		boolean found = false;
 
-		String sents = "";
-		for (String item : sentences){
-			// this %b will be used to mark the end of a sentence (tokenizer treats it as a single token)
-			sents += item + " %b ";
+		String ngramsToString = "";
+		for (String item : ngrams){
+			// this %b will be used to mark the end of an ngram (tokenizer treats "%b" as a single token)
+			ngramsToString += item + " %b ";
 		}
 
 		// remove special characters for word detection - it happened that I had a string such as <b>word,</b> which
 		// the method failed to recognise because of the comma
 
-		sents = sents.replaceAll("[,-.\"\';:]","");
+		ngramsToString = ngramsToString.replaceAll("[,-.\"\';:]","");
 
-		String[] tokens = POSTagging.tokenizer(sents); // array with tokens from selected sentences
+		String[] tokens = POSTagging.tokenizer(ngramsToString); // array with tokenized ngrams
 		String[] tags = POSTagging.postagger(tokens); // array with tags made from tokenized array
 
-		int sentenceCounter = 0; // keep track of how many of the input sentences you went through
+		int ngramCounter = 0; // keep track of how many of the input ngrams you went through
 
 		for(int i = 0; i<tokens.length; i++){
 
 			if(tokens[i].equals("%b")){
-				sentenceCounter+=1; // end of sentence reached, whether token found within it or not move to next one
+				ngramCounter+=1; // end of ngram reached, whether token found within it or not move to next one
 			}
 			if(tokens[i].equalsIgnoreCase("<b>"+keyWord+"</b>") && tags[i].equals(tag)){
-				rval.add(sentences.get(sentenceCounter)); // get sentence at specified index from list of input sentences
+				rval.add(ngrams.get(ngramCounter)); // get ngram at specified index from list of input nrgams
 				found = true;
 			}
 		}

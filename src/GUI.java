@@ -10,9 +10,6 @@ import java.util.ArrayList;
 
 import static javax.swing.BoxLayout.Y_AXIS;
 
-/**
- * Created by Joules on 10/07/2017. GUI for
- */
 public class GUI extends JPanel
 {
 
@@ -28,6 +25,9 @@ public class GUI extends JPanel
     private JRadioButton fileInput;
     private JRadioButton urlInput;
     private JRadioButton wikiInput;
+    //languages
+    private JRadioButton english;
+    private JRadioButton german;
     private JScrollPane scrollPane;
 
     // constructor
@@ -105,6 +105,7 @@ public class GUI extends JPanel
         npNorth.add(urlInput);
         npNorth.add(fileInput);
         npNorth.add(wikiInput);
+        urlInput.setSelected(true);
 
         // space between them
         npNorth.add(Box.createRigidArea(bigSep));
@@ -176,6 +177,15 @@ public class GUI extends JPanel
         BoxLayout bL = new BoxLayout(westPanel, Y_AXIS);
         westPanel.setLayout(bL);
 
+        english = new JRadioButton("English");
+        german = new JRadioButton("German");
+        ButtonGroup buttonGroup1 = new ButtonGroup();
+        buttonGroup1.add(english);
+        buttonGroup1.add(german);
+        westPanel.add(english);
+        westPanel.add(german);
+        english.setSelected(true);
+        westPanel.add(Box.createRigidArea(verSep));
         // add fun buttons here
         JButton but1 = new JButton("fun button");
         but1.addActionListener(new FunButton1Handler());
@@ -269,6 +279,8 @@ public class GUI extends JPanel
         urlInput.setBackground(new Color(223, 240, 255));
         fileInput.setBackground(new Color(223, 240, 255));
         wikiInput.setBackground(new Color(223, 240, 255));
+        english.setBackground(new Color(223, 240, 255));
+        german.setBackground(new Color(223, 240, 255));
         saveButton.setBackground(Color.white);
         posList.setBackground(Color.white);
         ngramList.setBackground(Color.white);

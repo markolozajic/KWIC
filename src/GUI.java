@@ -22,9 +22,9 @@ public class GUI extends JPanel
     private JTextField searchBox; // the thing to search
     private JComboBox<String> ngramList; // how many context words
     private JComboBox<String>  posList; //the different POS tags
-    private JTextField POSBox;
     private JList<String> sentenceList; // sentences word has been found in
     private JTable resultTable; // table displaying word, lemma, and POS tags
+    //types of input
     private JRadioButton fileInput;
     private JRadioButton urlInput;
     private JRadioButton wikiInput;
@@ -320,7 +320,7 @@ public class GUI extends JPanel
             // message for invalid file names/websites
             // or if text not found/access denied/??
 
-            String tag = POSBox.getText();
+            String tag = posList.getSelectedItem().toString();
             String toSearch = searchBox.getText();
             String url = urlField.getText();
             int contextWords = 0;

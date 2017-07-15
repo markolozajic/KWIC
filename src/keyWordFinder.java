@@ -91,7 +91,7 @@ public class keyWordFinder
 		}
 
 		if(!found){
-			rval.add("Sorry, could not find the word with that tag in the text!");
+			rval.add("Sorry, tag not found for given word!");
 		}
 
 		return rval;

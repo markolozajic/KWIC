@@ -446,89 +446,87 @@ public class GUI extends JPanel {
 
     private class ClearButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            try {
-                int n = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete everything?",
-                        "Warning!", JOptionPane.YES_NO_OPTION);
-                if (n == JOptionPane.YES_OPTION) {
-                    //clears sentence list
-                    String[] data = {"<html>Welcome to KWIC! Please click me</html>"};
-                    sentenceList.setListData(data);
-
-                    //clears table
-                    for (int i = 0; i < resultTable.getRowCount(); i++) {
-                        for (int j = 0; j < 3; j++)
-                            resultTable.setValueAt("", i, j);
-                    }
-
-                    //still needs to clear text boxes
-                    //exception thrown? why?
-
-                } else {
-                    //do nothing
+            int n = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete everything?",
+                    "Warning!", JOptionPane.YES_NO_OPTION);
+            if (n == JOptionPane.YES_OPTION) {
+                //clears sentence list
+                DefaultListModel model = new DefaultListModel();
+                sentenceList.setModel(model);
+                model.removeAllElements();
+                //clears table
+                for (int i = 0; i < resultTable.getRowCount(); i++) {
+                    for (int j = 0; j < 3; j++)
+                        resultTable.setValueAt("", i, j);
                 }
-            }
-            catch (Exception f) {
-                System.out.println(f.getStackTrace());
+
+                //clear text boxes still
+
+            } else {
+                //do nothing
             }
         }
     }
 
     private class SentenceListHandler implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent e) {
+            if (sentenceList.getModel().getSize() == 0) {
+                //do nothing
+            } else {
 
-            //clear the table before putting in new content
-            for (int i = 0; i < resultTable.getRowCount(); i++) {
-                for (int j = 0; j < 3; j++)
-                    resultTable.setValueAt("", i, j);
-            }
-
-            //this block removes the html tags that have been added for formatting earlier
-            String theSentence = "";
-            String listContent = sentenceList.getSelectedValue().substring(6, sentenceList.getSelectedValue().length() - 7);
-            String[] tmp1 = listContent.split("\\s+");
-            String[] tmp2 = new String[tmp1.length];
-
-            //find the marked keyword and remove the <b></b>
-            for (int i = 0; i < tmp1.length; i++) {
-                if (tmp1[i].startsWith("<b>")) {
-                    tmp2[i] = tmp1[i].substring(3, tmp1[i].length() - 4);
-                } else {
-                    tmp2[i] = tmp1[i];
+                //clear the table before putting in new content
+                for (int i = 0; i < resultTable.getRowCount(); i++) {
+                    for (int j = 0; j < 3; j++)
+                        resultTable.setValueAt("", i, j);
                 }
 
-            }
+                //this block removes the html tags that have been added for formatting earlier
+                String theSentence = "";
+                String listContent = sentenceList.getSelectedValue().substring(6, sentenceList.getSelectedValue().length() - 7);
+                String[] tmp1 = listContent.split("\\s+");
+                String[] tmp2 = new String[tmp1.length];
 
-            for (String item : tmp2) {
-                theSentence += item + " ";
-            }
-            theSentence = theSentence.substring(0, theSentence.length() - 1);
+                //find the marked keyword and remove the <b></b>
+                for (int i = 0; i < tmp1.length; i++) {
+                    if (tmp1[i].startsWith("<b>")) {
+                        tmp2[i] = tmp1[i].substring(3, tmp1[i].length() - 4);
+                    } else {
+                        tmp2[i] = tmp1[i];
+                    }
 
-
-            try {
-                String[] tokenized = POSTagging.tokenizer(theSentence);
-                String[] tagged = POSTagging.postagger(tokenized);
-                String[] lemmas = POSTagging.lemmatizer(tokenized, tagged);
-
-                for (int i = 0; i < tokenized.length; i++) {
-                    resultTable.setValueAt(tokenized[i], i, 0);
                 }
 
-                for (int i = 0; i < tokenized.length; i++) {
-                    resultTable.setValueAt(lemmas[i], i, 1);
+                for (String item : tmp2) {
+                    theSentence += item + " ";
+                }
+                theSentence = theSentence.substring(0, theSentence.length() - 1);
+
+
+                try {
+                    String[] tokenized = POSTagging.tokenizer(theSentence);
+                    String[] tagged = POSTagging.postagger(tokenized);
+                    String[] lemmas = POSTagging.lemmatizer(tokenized, tagged);
+
+                    for (int i = 0; i < tokenized.length; i++) {
+                        resultTable.setValueAt(tokenized[i], i, 0);
+                    }
+
+                    for (int i = 0; i < tokenized.length; i++) {
+                        resultTable.setValueAt(lemmas[i], i, 1);
+                    }
+
+                    for (int i = 0; i < tokenized.length; i++) {
+                        resultTable.setValueAt(tagged[i], i, 2);
+                    }
+
+                } catch (IOException e1) {
+                    System.out.println("Cannot tokenize for some reason");
                 }
 
-                for (int i = 0; i < tokenized.length; i++) {
-                    resultTable.setValueAt(tagged[i], i, 2);
-                }
+                // maybe format somehow, table or at least separate columns could
+                // look neater?
+                // word, pos tags and lemma in a table (if that's a thing)
 
-            } catch (IOException e1) {
-                System.out.println("Cannot tokenize for some reason");
             }
-
-            // maybe format somehow, table or at least separate columns could
-            // look neater?
-            // word, pos tags and lemma in a table (if that's a thing)
-
         }
     }
 //

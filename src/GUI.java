@@ -326,7 +326,14 @@ public class GUI extends JPanel {
             }
 
             try {
-                Saving.saveToFile(listContents, fileName);
+                if(english.isSelected()){
+                    Saving.saveToFile(listContents, fileName,"models/en-token.bin",
+                            "models/en-pos-maxent.bin", "models/en-lemmatizer.bin");
+                }
+                else{
+                    Saving.saveToFile(listContents, fileName,"models/de-token.bin",
+                            "models/de-pos-maxent.bin", "models/de-lemmatizer.bin");
+                }
             } catch (IOException e1) {
                 e1.printStackTrace(); // make error box pop up as well?
             }
@@ -351,14 +358,20 @@ public class GUI extends JPanel {
                  * I'm using the url field here, but it's very simple to
 				 * reassign this to another one if need be. What it's doing at
 				 * the moment is expecting a simple string as input (e.g.
-				 * "helen keller"), and attempts to find an English wikipedia
+				 * "helen keller"), and attempts to find an English/German wikipedia
 				 * article with such a title. If not found, an exception is
 				 * thrown. Note: for now we only have a general IOException,
 				 * maybe we could consider making more specific ones for
 				 * different failures (FileNotFound, URL not found) so we could
 				 * inform the user more precisely what went wrong?
 				 */
-                POSTagging.fetchFromWikipedia(url); // look for topic on
+                if(english.isSelected()) {
+                    POSTagging.fetchFromWikipedia(url,"English");
+                }
+                else{
+                    POSTagging.fetchFromWikipedia(url,"German");
+                }
+                // look for topic on
                 // wikipedia, save text to
                 // file
                 // readSentencesFromFile method has to make sure to read from
@@ -366,14 +379,28 @@ public class GUI extends JPanel {
                 // so the long parameter string is an attempt to predict what
                 // the filename will look like
                 String reader = POSTagging.readSentencesFromFile(url.replaceAll(" ", "_") + ".txt");
-                String[] sents = POSTagging.sentenceDetector(reader);
+                String[] sents;
+                if(english.isSelected()) {
+                    sents = POSTagging.sentenceDetector(reader, "models/en-sent.bin");
+                }
+                else{
+                    sents = POSTagging.sentenceDetector(reader, "models/de-sent.bin");
+                }
                 ArrayList<String> tmp1 = keyWordFinder.getSentencesWithKeyWord(sents, toSearch);
                 ArrayList<String> tmp2 = keyWordFinder.generateNgrams(tmp1, toSearch, contextWords);
 
 
                 // If there is a POSTag we have to take that into consideration
                 if (!tag.isEmpty()) {
-                    ArrayList<String> tmp3 = keyWordFinder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag);
+                    ArrayList<String> tmp3;
+                    if(english.isSelected()) {
+                        tmp3 = keyWordFinder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag,
+                                "models/en-token.bin", "models/en-pos-maxent.bin");
+                    }
+                    else {
+                        tmp3 = keyWordFinder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag,
+                                "models/de-token.bin", "models/de-pos-maxent.bin");
+                    }
                     
                     String[] filteredSentences = new String[tmp3.size()];
                     // this array is used to figure out how wide the cells in
@@ -468,12 +495,9 @@ public class GUI extends JPanel {
                     for (int j = 0; j < 3; j++)
                         resultTable.setValueAt("", i, j);
                 }
-
                 //clear text boxes still
 
-            } else {
-                //do nothing
-            }
+            } // else do nothing
         }
     }
 
@@ -512,40 +536,38 @@ public class GUI extends JPanel {
 
 
                 try {
-                    String[] tokenized = POSTagging.tokenizer(theSentence);
-                    String[] tagged = POSTagging.postagger(tokenized);
-                    String[] lemmas = POSTagging.lemmatizer(tokenized, tagged);
-
-                    for (int i = 0; i < tokenized.length; i++) {
-                        resultTable.setValueAt(tokenized[i], i, 0);
+                    String[] tokens, tags, lemmas;
+                    if(english.isSelected()){
+                        tokens = POSTagging.tokenizer(theSentence,"models/en-token.bin");
+                        tags = POSTagging.postagger(tokens,"models/en-pos-maxent.bin");
+                        lemmas = POSTagging.lemmatizer(tokens, tags,"models/en-lemmatizer.bin");
+                    }
+                    else{
+                        tokens = POSTagging.tokenizer(theSentence,"models/de-token.bin");
+                        tags = POSTagging.postagger(tokens,"models/de-pos-maxent.bin");
+                        lemmas = POSTagging.lemmatizer(tokens, tags,"models/de-lemmatizer.bin");
                     }
 
-                    for (int i = 0; i < tokenized.length; i++) {
+
+                    for (int i = 0; i < tokens.length; i++) {
+                        resultTable.setValueAt(tokens[i], i, 0);
+                    }
+
+                    for (int i = 0; i < tokens.length; i++) {
                         resultTable.setValueAt(lemmas[i], i, 1);
                     }
 
-                    for (int i = 0; i < tokenized.length; i++) {
-                        resultTable.setValueAt(tagged[i], i, 2);
+                    for (int i = 0; i < tokens.length; i++) {
+                        resultTable.setValueAt(tags[i], i, 2);
                     }
 
                 } catch (IOException e1) {
                     System.out.println("Cannot tokenize for some reason");
                 }
-
-                // maybe format somehow, table or at least separate columns could
-                // look neater?
-                // word, pos tags and lemma in a table (if that's a thing)
-
             }
         }
     }
-//
-//    private void languageChanger() {
-//        if (english.isSelected())
-//            posList = new JComboBox<>(englishPOS);
-//        if (german.isSelected())
-//            posList = new JComboBox<>(germanPOS);
-//    }
+
     
     private class FunButton1Handler implements ActionListener {
         public void actionPerformed(ActionEvent e) {

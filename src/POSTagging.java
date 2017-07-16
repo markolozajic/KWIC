@@ -18,9 +18,17 @@ import java.io.*;
 public class POSTagging {
 
 
-    static void fetchFromWikipedia(String article) throws IOException{
+    static void fetchFromWikipedia(String article, String language) throws IOException{
 
-        String sitename = "https://en.wikipedia.org/wiki/" + article.replace(" ", "_");
+        String sitename = "";
+
+        if(language.equals("English")){
+            sitename = "https://en.wikipedia.org/wiki/" + article.replace(" ", "_");
+        }
+        else if(language.equals("German")){
+            sitename = "https://de.wikipedia.org/wiki/" + article.replace(" ", "_");
+        }
+
         Document doc = Jsoup.connect(sitename).get();
         Elements lines = doc.select("p");
 
@@ -47,9 +55,9 @@ public class POSTagging {
         return sentences;
     }
 
-    static String[] sentenceDetector (String input) throws IOException {
+    static String[] sentenceDetector (String input, String sentenceModel) throws IOException {
 
-        InputStream modelIn = new FileInputStream("models/en-sent.bin");
+        InputStream modelIn = new FileInputStream(sentenceModel);
         SentenceModel model = new SentenceModel(modelIn);
         SentenceDetectorME sentenceDetector = new SentenceDetectorME(model);
         modelIn.close();
@@ -57,9 +65,9 @@ public class POSTagging {
         return sentenceDetector.sentDetect(input);
     }
 
-    static String[] tokenizer(String sentences) throws IOException {
+    static String[] tokenizer(String sentences, String tokenizerModel) throws IOException {
 
-        InputStream modelIn = new FileInputStream("models/en-token.bin");
+        InputStream modelIn = new FileInputStream(tokenizerModel);
         TokenizerModel model = new TokenizerModel(modelIn);
         Tokenizer tokenizer = new TokenizerME(model);
         modelIn.close();
@@ -67,9 +75,9 @@ public class POSTagging {
         return tokenizer.tokenize(sentences);
     }
 
-    static String[] postagger(String[] tokenizedText) throws IOException {
+    static String[] postagger(String[] tokenizedText, String taggerModel) throws IOException {
 
-        InputStream modelIn = new FileInputStream("models/en-pos-maxent.bin");
+        InputStream modelIn = new FileInputStream(taggerModel);
         POSModel model = new POSModel(modelIn);
         POSTaggerME tagger = new POSTaggerME(model);
         modelIn.close();
@@ -77,27 +85,12 @@ public class POSTagging {
         return tagger.tag(tokenizedText);
     }
 
-    static String[] lemmatizer(String[] tokens, String[] postags) throws IOException{
-        InputStream modelIn = new FileInputStream("models/en-lemmatizer.bin");
+    static String[] lemmatizer(String[] tokens, String[] postags, String lemmatizerModel) throws IOException{
+        InputStream modelIn = new FileInputStream(lemmatizerModel);
         LemmatizerModel model = new LemmatizerModel(modelIn);
         LemmatizerME lemmatizer = new LemmatizerME(model);
         modelIn.close();
 
         return lemmatizer.lemmatize(tokens, postags);
-    }
-
-
-    // use this part if you're curious what kind of output you get from the above methods
-
-    public static void main (String[] args) throws IOException{
-        String article = "helen keller";
-        fetchFromWikipedia(article);
-        String contents = readSentencesFromFile(article.replaceAll(" ","_") + ".txt");
-        String[] tokens = tokenizer(contents);
-        String[] tags = postagger(tokens);
-        String[] lemmas = lemmatizer(tokens, tags);
-        for(int i = 0; i<tokens.length; i++){
-            System.out.println(tokens[i] + " " + tags[i] + " " + lemmas[i]);
-        }
     }
 }

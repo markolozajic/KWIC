@@ -9,13 +9,15 @@ import java.io.Writer;
 import java.util.ArrayList;
 
 public class Saving {
-    static void saveToFile(ArrayList<String> ngrams, String addressFile) throws IOException {
+    static void saveToFile(ArrayList<String> ngrams, String addressFile, String tokenizerModel,
+                           String taggerModel, String lemmatizerModel) throws IOException {
         FileWriter fw = new FileWriter(new File(addressFile));
-        generateXML(ngrams, fw);
+        generateXML(ngrams, fw, tokenizerModel, taggerModel, lemmatizerModel);
         fw.close();
     }
 
-    static void generateXML(ArrayList<String> ngrams, Writer w) {
+    static void generateXML(ArrayList<String> ngrams, Writer w, String tokenizerModel,
+                            String taggerModel, String lemmatizerModel) {
 
         // defines a factory API that enables applications to obtain XML writers
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -30,9 +32,9 @@ public class Saving {
             s = s.replaceAll("<b>|</b>|<html>|</html>",""); // remove html tags used to bolden keyword
             s = s.substring(0,s.length()-3); // deletes last "%b ", don't want to generate extra empty ngram tag
 
-            String[] tokens = POSTagging.tokenizer(s);
-            String[] tags = POSTagging.postagger(tokens);
-            String[] lemmas = POSTagging.lemmatizer(tokens, tags);
+            String[] tokens = POSTagging.tokenizer(s, tokenizerModel);
+            String[] tags = POSTagging.postagger(tokens, taggerModel);
+            String[] lemmas = POSTagging.lemmatizer(tokens, tags, lemmatizerModel);
 
             // defines the interface to write XML documents, use writer passed as parameter
             XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(w);

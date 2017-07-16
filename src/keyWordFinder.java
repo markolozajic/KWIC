@@ -56,7 +56,8 @@ public class keyWordFinder
 	 * @return - those sentences that contain the keyword with the given POS-Tag
 	 * @throws IOException
 	 */
-	static ArrayList<String> getNgramsWithCorrectPOSTag(ArrayList<String> ngrams, String keyWord, String tag)
+	static ArrayList<String> getNgramsWithCorrectPOSTag(ArrayList<String> ngrams, String keyWord, String tag,
+														String tokenizerModel, String taggerModel)
 			throws IOException
 	{
 		ArrayList<String> rval = new ArrayList<String>();
@@ -74,8 +75,8 @@ public class keyWordFinder
 
 		ngramsToString = ngramsToString.replaceAll("[,-.\"\';:]","");
 
-		String[] tokens = POSTagging.tokenizer(ngramsToString); // array with tokenized ngrams
-		String[] tags = POSTagging.postagger(tokens); // array with tags made from tokenized array
+		String[] tokens = POSTagging.tokenizer(ngramsToString, tokenizerModel); // array with tokenized ngrams
+		String[] tags = POSTagging.postagger(tokens, taggerModel); // array with tags made from tokenized array
 
 		int ngramCounter = 0; // keep track of how many of the input ngrams you went through
 
@@ -96,28 +97,6 @@ public class keyWordFinder
 
 		return rval;
 	}
-
-	// I left the main method for now, just in case anyone feels like playing around with the above method
-
-//	public static void main (String[] args){
-//		try {
-//			String readThis = POSTagging.readSentencesFromFile("Sergey_Bubka.txt");
-//			String [] sentences = POSTagging.sentenceDetector(readThis);
-//
-//			ArrayList<String> tmp1 = keyWordFinder.getSentencesWithKeyWord(sentences, "jump");
-//			ArrayList<String> tmp2 = keyWordFinder.generateNgrams(tmp1, "jump",2);
-//			for (String t:tmp2){
-//				System.out.println(t);
-//			}
-//			ArrayList<String> tmp3 = keyWordFinder.getNgramsWithCorrectPOSTag(tmp2, "jump", "NN");
-//			for(String t:tmp3){
-//				System.out.println(t);
-//			}
-//		}
-//		catch (IOException i){
-//			i.printStackTrace();
-//		}
-//	}
 
 	/**
 	 * Method that takes an ArrayList of the sentences containing a words and a

@@ -6,6 +6,8 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static javax.swing.BoxLayout.Y_AXIS;
@@ -14,7 +16,6 @@ public class GUI extends JPanel {
 
     private JFrame frame; // top window
     private JTextField urlField; // to enter URL
-    private JTextField saveField; // to save file
     private JTextField searchBox; // the thing to search
     private JComboBox<String> ngramList; // how many context words
     private JComboBox<String> posList; //the different POS tags
@@ -92,15 +93,18 @@ public class GUI extends JPanel {
             public void focusLost(FocusEvent e) {
                 while (urlField.getText().equals("")) {
                     urlField.setForeground(Color.gray);
-                    urlField.setText("en.wikipedia.org/wiki/Java_(programming_language)");
+                    urlField.setText("https://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html");
                 }
             }
         });
 
         // buttons to select if it's a URL or file
         urlInput = new JRadioButton("URL");
+        urlInput.setToolTipText("e.g. https://docs.oracle.com/javase/tutorial/uiswing/components/tooltip.html");
         fileInput = new JRadioButton("File");
+        fileInput.setToolTipText("e.g. C:\\Users\\User1\\Corpus\\AEcorpus.txt");
         wikiInput = new JRadioButton("Wiki");
+        wikiInput.setToolTipText("an article you want to look for, e.g. programmer");
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(urlInput);
         buttonGroup.add(fileInput);
@@ -113,15 +117,6 @@ public class GUI extends JPanel {
 
         // space between them
         npNorth.add(Box.createRigidArea(bigSep));
-
-        // Filename for saving
-        JLabel fileLabel = new JLabel("Filename:");
-        fileLabel.setToolTipText("What would you like to name the file to save the results into?");
-        npNorth.add(fileLabel);
-        saveField = new JTextField((int) width / 75);
-        // example filename for saving the results
-        saveField.setText("defaultFile.xml");
-        npNorth.add(saveField);
 
         // south panel of north panel- flowlayout
         JPanel npSouth = new JPanel();
@@ -159,26 +154,12 @@ public class GUI extends JPanel {
         npSouth.add(searchButton);
         npSouth.add(Box.createRigidArea(bigSep));
 
-
-        //Clearing
-        JButton clearButton = new JButton("clear all");
-        clearButton.setToolTipText("Clear all results and search terms");
-        npSouth.add(clearButton);
-        clearButton.addActionListener(new ClearButtonHandler());
-        npSouth.add(Box.createRigidArea(smallSep));
-
-
-        //Saving
-        JButton saveButton = new JButton("save");
-        saveButton.setToolTipText("Save results into an XML file with the given filename");
-        saveButton.addActionListener(new SaveButtonHandler());
-        npSouth.add(saveButton);
-
         // westPanel- vertical boxlayout for buttons
         JPanel westPanel = new JPanel();
         BoxLayout bL = new BoxLayout(westPanel, Y_AXIS);
         westPanel.setLayout(bL);
-
+        westPanel.setBorder(BorderFactory.createLineBorder(new Color(223, 240, 255), 8));
+        //language buttons
         english = new JRadioButton("English");
         german = new JRadioButton("German");
         english.setSelected(true);
@@ -210,7 +191,19 @@ public class GUI extends JPanel {
         JButton but3 = new JButton("fun button");
         but3.addActionListener(new FunButton3Handler());
         westPanel.add(but3);
-        westPanel.setBorder(BorderFactory.createLineBorder(new Color(223, 240, 255), 7));
+        westPanel.add(Box.createRigidArea(new Dimension(0, (int) height/20)));
+        //Saving
+        JButton saveButton = new JButton("save");
+        saveButton.setToolTipText("Save results!");
+        saveButton.addActionListener(new SaveButtonHandler());
+        westPanel.add(saveButton);
+        westPanel.add(Box.createRigidArea(verSep));
+        //Clearing
+        JButton clearButton = new JButton("clear all");
+        clearButton.setToolTipText("Clear all results and search terms");
+        westPanel.add(clearButton);
+        clearButton.addActionListener(new ClearButtonHandler());
+        westPanel.add(Box.createRigidArea(verSep));
 
         // centerPanel- boxlayout containing main two boxes
         JPanel centerPanel = new JPanel();
@@ -272,6 +265,8 @@ public class GUI extends JPanel {
         // fonts
         Font medFont = new Font("Serif", Font.PLAIN, 18);
         Font smallFont = new Font("Serif", Font.PLAIN, 14);
+        saveButton.setFont(smallFont);
+        clearButton.setFont(smallFont);
         but1.setFont(smallFont);
         but2.setFont(smallFont);
         but3.setFont(smallFont);
@@ -313,7 +308,7 @@ public class GUI extends JPanel {
     // actionlisteners
     private class SaveButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            String fileName = saveField.getText();
+            String fileName = JOptionPane.showInputDialog(frame, "Please enter a filename:");
 
             ArrayList<String> listContents = new ArrayList<>();
 
@@ -326,16 +321,14 @@ public class GUI extends JPanel {
             }
 
             try {
-                if(english.isSelected()){
-                    Saving.saveToFile(listContents, fileName,"models/en-token.bin",
-                            "models/en-pos-maxent.bin", "models/en-lemmatizer.bin");
-                }
-                else{
-                    Saving.saveToFile(listContents, fileName,"models/de-token.bin",
-                            "models/de-pos-maxent.bin", "models/de-lemmatizer.bin");
-                }
+                Saving.saveToFile(listContents, fileName);
+                Path p = Paths.get(fileName);
+                JOptionPane.showMessageDialog(frame, "File has been saved in " + p,
+                        "Save successful!", JOptionPane.PLAIN_MESSAGE);
             } catch (IOException e1) {
-                e1.printStackTrace(); // make error box pop up as well?
+                e1.printStackTrace();
+                JOptionPane.showMessageDialog(frame, "There was an error saving the file.",
+                        "Saving error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -358,20 +351,14 @@ public class GUI extends JPanel {
                  * I'm using the url field here, but it's very simple to
 				 * reassign this to another one if need be. What it's doing at
 				 * the moment is expecting a simple string as input (e.g.
-				 * "helen keller"), and attempts to find an English/German wikipedia
+				 * "helen keller"), and attempts to find an English wikipedia
 				 * article with such a title. If not found, an exception is
 				 * thrown. Note: for now we only have a general IOException,
 				 * maybe we could consider making more specific ones for
 				 * different failures (FileNotFound, URL not found) so we could
 				 * inform the user more precisely what went wrong?
 				 */
-                if(english.isSelected()) {
-                    POSTagging.fetchFromWikipedia(url,"English");
-                }
-                else{
-                    POSTagging.fetchFromWikipedia(url,"German");
-                }
-                // look for topic on
+                POSTagging.fetchFromWikipedia(url); // look for topic on
                 // wikipedia, save text to
                 // file
                 // readSentencesFromFile method has to make sure to read from
@@ -379,29 +366,15 @@ public class GUI extends JPanel {
                 // so the long parameter string is an attempt to predict what
                 // the filename will look like
                 String reader = POSTagging.readSentencesFromFile(url.replaceAll(" ", "_") + ".txt");
-                String[] sents;
-                if(english.isSelected()) {
-                    sents = POSTagging.sentenceDetector(reader, "models/en-sent.bin");
-                }
-                else{
-                    sents = POSTagging.sentenceDetector(reader, "models/de-sent.bin");
-                }
+                String[] sents = POSTagging.sentenceDetector(reader);
                 ArrayList<String> tmp1 = keyWordFinder.getSentencesWithKeyWord(sents, toSearch);
                 ArrayList<String> tmp2 = keyWordFinder.generateNgrams(tmp1, toSearch, contextWords);
 
 
                 // If there is a POSTag we have to take that into consideration
                 if (!tag.isEmpty()) {
-                    ArrayList<String> tmp3;
-                    if(english.isSelected()) {
-                        tmp3 = keyWordFinder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag,
-                                "models/en-token.bin", "models/en-pos-maxent.bin");
-                    }
-                    else {
-                        tmp3 = keyWordFinder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag,
-                                "models/de-token.bin", "models/de-pos-maxent.bin");
-                    }
-                    
+                    ArrayList<String> tmp3 = keyWordFinder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag);
+
                     String[] filteredSentences = new String[tmp3.size()];
                     // this array is used to figure out how wide the cells in
                     // the Jlist should be
@@ -483,6 +456,7 @@ public class GUI extends JPanel {
 
     private class ClearButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            //confirmation the user wants to clear it
             int n = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete everything?",
                     "Warning!", JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
@@ -495,9 +469,16 @@ public class GUI extends JPanel {
                     for (int j = 0; j < 3; j++)
                         resultTable.setValueAt("", i, j);
                 }
-                //clear text boxes still
 
-            } // else do nothing
+                //clear text boxes
+                urlField.setText("");
+                searchBox.setText("");
+                posList.setSelectedIndex(0);
+                ngramList.setSelectedIndex(0);
+
+            } else if (n == JOptionPane.CLOSED_OPTION || n == JOptionPane.NO_OPTION){
+                //do nothing
+            }
         }
     }
 
@@ -536,39 +517,41 @@ public class GUI extends JPanel {
 
 
                 try {
-                    String[] tokens, tags, lemmas;
-                    if(english.isSelected()){
-                        tokens = POSTagging.tokenizer(theSentence,"models/en-token.bin");
-                        tags = POSTagging.postagger(tokens,"models/en-pos-maxent.bin");
-                        lemmas = POSTagging.lemmatizer(tokens, tags,"models/en-lemmatizer.bin");
-                    }
-                    else{
-                        tokens = POSTagging.tokenizer(theSentence,"models/de-token.bin");
-                        tags = POSTagging.postagger(tokens,"models/de-pos-maxent.bin");
-                        lemmas = POSTagging.lemmatizer(tokens, tags,"models/de-lemmatizer.bin");
+                    String[] tokenized = POSTagging.tokenizer(theSentence);
+                    String[] tagged = POSTagging.postagger(tokenized);
+                    String[] lemmas = POSTagging.lemmatizer(tokenized, tagged);
+
+                    for (int i = 0; i < tokenized.length; i++) {
+                        resultTable.setValueAt(tokenized[i], i, 0);
                     }
 
-
-                    for (int i = 0; i < tokens.length; i++) {
-                        resultTable.setValueAt(tokens[i], i, 0);
-                    }
-
-                    for (int i = 0; i < tokens.length; i++) {
+                    for (int i = 0; i < tokenized.length; i++) {
                         resultTable.setValueAt(lemmas[i], i, 1);
                     }
 
-                    for (int i = 0; i < tokens.length; i++) {
-                        resultTable.setValueAt(tags[i], i, 2);
+                    for (int i = 0; i < tokenized.length; i++) {
+                        resultTable.setValueAt(tagged[i], i, 2);
                     }
 
                 } catch (IOException e1) {
                     System.out.println("Cannot tokenize for some reason");
                 }
+
+                // maybe format somehow, table or at least separate columns could
+                // look neater?
+                // word, pos tags and lemma in a table (if that's a thing)
+
             }
         }
     }
+//
+//    private void languageChanger() {
+//        if (english.isSelected())
+//            posList = new JComboBox<>(englishPOS);
+//        if (german.isSelected())
+//            posList = new JComboBox<>(germanPOS);
+//    }
 
-    
     private class FunButton1Handler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             // whatever this button is actually gonna do

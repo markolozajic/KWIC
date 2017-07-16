@@ -27,8 +27,8 @@ public class GUI extends JPanel {
     private JRadioButton wikiInput;
     //languages
     private JRadioButton english;
-    private JRadioButton german;
     private JScrollPane scrollPane;
+    private JTabbedPane helpPane;
 
     //POS tags for english and german
     String[] englishPOS = {"", "CC", "CD", "DT", "EX", "FW", "IN", "JJ", "JJR", "JJS", "LS", "MD", "NN", "NNS", "NNP",
@@ -40,15 +40,19 @@ public class GUI extends JPanel {
             "PTKA", "TRUNC", "VVFIN", "VVIMP", "VVINF", "VVIZU", "VVPP", "VAFIN", "VAIMP", "VAINF", "VAPP", "VMFIN",
             "VMINF", "VMPP", "XY", "$,", "$.", "$("};
 
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    double width = screenSize.getWidth();
+    double height = screenSize.getHeight();
+
     // constructor
     GUI() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
 
         // top window- set size and name of window
         frame = new JFrame("KWIC search");
         // get the size of the screen it's on, so that everything is relative to screen size
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
         double windowWidth = width * 0.7;
         double windowHeight = height * 0.7;
         frame.setSize((int) windowWidth, (int) windowHeight);
@@ -160,7 +164,7 @@ public class GUI extends JPanel {
         westPanel.setBorder(BorderFactory.createLineBorder(new Color(223, 240, 255), 8));
         //language buttons
         english = new JRadioButton("English");
-        german = new JRadioButton("German");
+        JRadioButton german = new JRadioButton("German");
         english.setSelected(true);
         english.addActionListener(e -> {
             posList.removeAllItems();
@@ -203,6 +207,11 @@ public class GUI extends JPanel {
         westPanel.add(clearButton);
         clearButton.addActionListener(new ClearButtonHandler());
         westPanel.add(Box.createRigidArea(verSep));
+        //Help button
+        JButton helpButton = new JButton("help");
+        clearButton.setToolTipText("Confused?");
+        westPanel.add(helpButton);
+        clearButton.addActionListener(new HelpButtonHandler());
 
         // centerPanel- boxlayout containing main two boxes
         JPanel centerPanel = new JPanel();
@@ -272,6 +281,7 @@ public class GUI extends JPanel {
         tH.setFont(smallFont);
         sentenceList.setFont(medFont);
         resultTable.setFont(medFont);
+        helpButton.setFont(smallFont);
         // colours
         panel.setBackground(Color.white);
         npNorth.setBackground(new Color(223, 240, 255));
@@ -292,6 +302,7 @@ public class GUI extends JPanel {
         resultTable.setBackground(Color.white);
         tH.setBackground(Color.white);
         clearButton.setBackground(Color.white);
+        helpButton.setBackground(Color.white);
         but1.setBackground(Color.white);
         but2.setBackground(Color.white);
         but3.setBackground(Color.white);
@@ -508,6 +519,114 @@ public class GUI extends JPanel {
             } else if (n == JOptionPane.CLOSED_OPTION || n == JOptionPane.NO_OPTION){
                 //do nothing
             }
+        }
+    }
+
+    private class HelpButtonHandler implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+            //doesn't work
+            //panel doesn't show up
+            //but it's a start
+
+            helpPane = new JTabbedPane();
+            helpPane.setSize((int) width/5, (int) height/5);
+            helpPane.setVisible(true);
+            JPanel panel1 = new JPanel();
+            //construct jpanel
+            helpPane.addTab("How to use the program", panel1);
+            JPanel panel2 = new JPanel();
+            JTextField postagList = new JTextField("English POS tags:\nCC Coordinating conjunction\nCD Cardinal number\n" +
+                    "DT Determiner\nEX Existential there\nFW Foreign word\nIN Preposition or subordinating conjunction\n" +
+                    "JJ Adjective\nJJR Adjective, comparative\nJJS Adjective, superlative\nLS List item marker\n" +
+                    "MD Modal\nNN Noun, singular or mass\nNNS Noun, plural\nNNP Proper noun, singular\n" +
+                    "NNPS Proper noun, plural\nPDT Predeterminer\nPOS Possessive ending\nPRP Personal pronoun\n" +
+                    "PRP$ Possessive pronoun\nRB Adverb\nRBR Adverb, comparative\nRBS Adverb, superlative\n" +
+                    "RP Particle\nSYM Symbol\nTO to\nUH Interjection\nVB Verb, base form\nVBD Verb, past tense\n" +
+                    "VBG Verb, gerund or present participle\nVBN Verb, past participle\n" +
+                    "VBP Verb, non\u00AD3rd person singular present\nVBZ Verb, 3rd person singular present\n" +
+                    "WDT Wh\u00ADdeterminer\nWP Wh\u00ADpronoun\nWP$ Possessive wh\u00ADpronoun\n" +
+                    "WRB Wh\u00ADadverb\n" +
+                    "German POS tags:\nADJA\tattributives Adjektiv.\t[das] große [Haus]\n" +
+                    "ADJD\tadverbiales oder prädikatives Adjektiv\t[er fährt] schnell, [er ist] schnell\n" +
+                    " \t \t \n" +
+                    "ADV\tAdverb\tschon, bald, doch\n" +
+                    " \t \t \n" +
+                    "APPR\tPräposition; Zirkumposition links\tin [der Stadt], ohne [mich]\n" +
+                    "APPRART\tPräposition mit Artikel\tim [Haus], zur [Sache]\n" +
+                    "APPO\tPostposition\t[ihm] zufolge, [der Sache] wegen\n" +
+                    "APZR\tZirkumposition rechts\t[von jetzt] an\n" +
+                    " \t \t \n" +
+                    "ART\tbestimmter oder unbestimmter Artikel\tder, die, das, ein, eine\n" +
+                    " \t \t \n" +
+                    "CARD\tKardinalzahl\tzwei [Männer], [im Jahre] 1994\n" +
+                    " \t \t \n" +
+                    "FM\tFremdsprachliches Material\t[Er hat das mit ``] A big fish ['' übersetzt]\n" +
+                    " \t \t \n" +
+                    "ITJ\tInterjektion\tmhm, ach, tja\n" +
+                    " \t \t \n" +
+                    "KOUI\tunterordnende Konjunktion mit ``zu'' und Infinitiv\tum [zu leben], anstatt [zu fragen]\n" +
+                    "KOUS\tunterordnende Konjunktion mit Satz\tweil, dass, damit, wenn, ob\n" +
+                    "KON\tnebenordnende Konjunktion\tund, oder, aber\n" +
+                    "KOKOM\tVergleichskonjunktion\tals, wie\n" +
+                    " \t \t \n" +
+                    "NN\tnormales Nomen\tTisch, Herr, [das] Reisen\n" +
+                    "NE\tEigennamen\tHans, Hamburg, HSV\n" +
+                    " \t \t \n" +
+                    "PDS\tsubstituierendes Demonstrativpronomen\tdieser, jener\n" +
+                    "PDAT\tattribuierendes Demonstrativpronomen\tjener [Mensch]\n" +
+                    " \t \t \n" +
+                    "PIS\tsubstituierendes Indefinitpronomen\tkeiner, viele, man, niemand\n" +
+                    "PIAT\tattribuierendes Indefinitpronomen ohne Determiner\tkein [Mensch], irgendein [Glas]\n" +
+                    "PIDAT\tattribuierendes Indefinitpronomen mit Determiner\t[ein] wenig [Wasser], [die] beiden [Brüder]\n" +
+                    " \t \t \n" +
+                    "PPER\tirreflexives Personalpronomen\tich, er, ihm, mich, dir\n" +
+                    " \t \t \n" +
+                    "PPOSS\tsubstituierendes Possessivpronomen\tmeins, deiner\n" +
+                    "PPOSAT\tattribuierendes Possessivpronomen\tmein [Buch], deine [Mutter]\n" +
+                    " \t \t \n" +
+                    "PRELS\tsubstituierendes Relativpronomen\t[der Hund ,] der\n" +
+                    "PRELAT\tattribuierendes Relativpronomen\t[der Mann ,] dessen [Hund]\n" +
+                    " \t \t \n" +
+                    "PRF\treflexives Personalpronomen\tsich, einander, dich, mir\n" +
+                    " \t \t \n" +
+                    "PWS\tsubstituierendes Interrogativpronomen\twer, was\n" +
+                    "PWAT\tattribuierendes Interrogativpronomen\twelche[Farbe], wessen [Hut]\n" +
+                    "PWAV\tadverbiales Interrogativ- oder Relativpronomen\twarum, wo, wann, worüber, wobei\n" +
+                    " \t \t \n" +
+                    "PAV\tPronominaladverb\tdafür, dabei, deswegen, trotzdem\n" +
+                    " \t \t \n" +
+                    "PTKZU\t``zu'' vor Infinitiv\tzu [gehen]\n" +
+                    "PTKNEG\tNegationspartikel\tnicht\n" +
+                    "PTKVZ\tabgetrennter Verbzusatz\t[er kommt] an, [er fährt] rad\n" +
+                    "PTKANT\tAntwortpartikel\tja, nein, danke, bitte\n" +
+                    "PTKA\tPartikel bei Adjektiv oder Adverb\tam [schönsten], zu [schnell]\n" +
+                    " \t \t \n" +
+                    "TRUNC\tKompositions-Erstglied\tAn- [und Abreise]\n" +
+                    " \t \t \n" +
+                    "VVFIN\tfinites Verb, voll\t[du] gehst, [wir] kommen [an]\n" +
+                    "VVIMP\tImperativ, voll\tkomm [!]\n" +
+                    "VVINF\tInfinitiv, voll\tgehen, ankommen\n" +
+                    "VVIZU\tInfinitiv mit ``zu'', voll\tanzukommen, loszulassen\n" +
+                    "VVPP\tPartizip Perfekt, voll\tgegangen, angekommen\n" +
+                    "VAFIN\tfinites Verb, aux\t[du] bist, [wir] werden\n" +
+                    "VAIMP\tImperativ, aux\tsei [ruhig !]\n" +
+                    "VAINF\tInfinitiv, aux\twerden, sein\n" +
+                    "VAPP\tPartizip Perfekt, aux\tgewesen\n" +
+                    "VMFIN\tfinites Verb, modal\tdürfen\n" +
+                    "VMINF\tInfinitiv, modal\twollen\n" +
+                    "VMPP\tPartizip Perfekt, modal\tgekonnt, [er hat gehen] können\n" +
+                    " \t \t \n" +
+                    "XY\tNichtwort, Sonderzeichen enthaltend\t3:7, H2O, D2XW3\n" +
+                    " \t \t \n" +
+                    "$,\tKomma\t,\n" +
+                    "$.\tSatzbeendende Interpunktion\t. ? ! ; :\n" +
+                    "$(\tsonstige Satzzeichen; satzintern\t- [,]()" );
+            panel2.add(postagList);
+            helpPane.addTab("POS tag meanings", panel2);
+
+            frame.add(helpPane);
+
         }
     }
 

@@ -211,7 +211,7 @@ public class GUI extends JPanel {
         JButton helpButton = new JButton("help");
         clearButton.setToolTipText("Confused?");
         westPanel.add(helpButton);
-        clearButton.addActionListener(new HelpButtonHandler());
+        helpButton.addActionListener(new HelpButtonHandler());
 
         // centerPanel- boxlayout containing main two boxes
         JPanel centerPanel = new JPanel();
@@ -529,16 +529,23 @@ public class GUI extends JPanel {
             //panel doesn't show up
             //but it's a start
 
+            JFrame helpFrame = new JFrame();
+            helpFrame.setVisible(true);
+            helpFrame.setSize((int) width/3, (int) height/2);
+            helpFrame.setResizable(false);
+            Dimension size = helpFrame.getSize();
             helpPane = new JTabbedPane();
-            helpPane.setSize((int) width/5, (int) height/5);
-            helpPane.setVisible(true);
             JPanel panel1 = new JPanel();
             JTextField helpText = new JTextField();
             helpText.setText("The whole entire how to");
+            //todo
+            //how to use the program- what the buttons do, what you can/can't enter, etc.
             helpText.setEditable(false);
             panel1.add(helpText);
             helpPane.addTab("How to use the program", panel1);
             JPanel panel2 = new JPanel();
+            panel2.setLayout(new GridLayout(1, 1));
+            JPanel innerPanel = new JPanel();
             JTextField postagList = new JTextField("English POS tags:\nCC Coordinating conjunction\nCD Cardinal number\n" +
                     "DT Determiner\nEX Existential there\nFW Foreign word\nIN Preposition or subordinating conjunction\n" +
                     "JJ Adjective\nJJR Adjective, comparative\nJJS Adjective, superlative\nLS List item marker\n" +
@@ -571,13 +578,18 @@ public class GUI extends JPanel {
                     "VMFIN\tfinites Verb, modal\nVMINF\tInfinitiv, modal\nVMPP\tPartizip Perfekt, modal\n" +
                     "XY\tNichtwort, Sonderzeichen enthaltend\n$,\tKomma\n$.\tSatzbeendende Interpunktion\n" +
                     "$(\tsonstige Satzzeichen; satzintern" );
-            panel2.add(postagList);
+            //scrollpane doesn't' work yet lol
+            JScrollPane SP = new JScrollPane(postagList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+            //this needs to be added into a list/some other text thing where you can set height and width
+            //maybe some other tabs with other helpful shit idk
+
+
+            innerPanel.add(postagList);
+            panel2.add(innerPanel);
             helpPane.addTab("POS tag meanings", panel2);
 
-
-            frame.getContentPane().add(helpPane);
-            //STILL DOESN'T FUCKING WORK
-            //FUCKING INVISIBLE
+            helpFrame.getContentPane().add(helpPane);
 
         }
     }

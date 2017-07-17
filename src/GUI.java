@@ -432,7 +432,7 @@ public class GUI extends JPanel {
                             maxWidth = filteredSentencesLength[i];
                         }
                     }
-                    // multiply it by 6.5 and use that as cellwidth
+                    // multiply it by 6.3 and use that as cellwidth
                     maxWidth *= 6.3;
 
                     // the following block of code is just repeating what is
@@ -468,7 +468,7 @@ public class GUI extends JPanel {
                             maxWidth = filteredSentencesLength[i];
                         }
                     }
-                    // multiply it by 6.5 and use that as cellwidth
+                    // multiply it by 6.3 and use that as cellwidth
                     maxWidth *= 6.3;
 
                     // the following block of code is just repeating what is
@@ -531,10 +531,6 @@ public class GUI extends JPanel {
     private class HelpButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
 
-            //doesn't work
-            //panel doesn't show up
-            //but it's a start
-
             JFrame helpFrame = new JFrame();
             helpFrame.setVisible(true);
             helpFrame.setSize((int) width/3, (int) height/2);
@@ -552,51 +548,22 @@ public class GUI extends JPanel {
             JPanel panel2 = new JPanel();
             panel2.setLayout(new GridLayout(1, 1));
             JPanel innerPanel = new JPanel();
-            JTextField postagList = new JTextField("English POS tags:\nCC Coordinating conjunction\nCD Cardinal number\n" +
-                    "DT Determiner\nEX Existential there\nFW Foreign word\nIN Preposition or subordinating conjunction\n" +
-                    "JJ Adjective\nJJR Adjective, comparative\nJJS Adjective, superlative\nLS List item marker\n" +
-                    "MD Modal\nNN Noun, singular or mass\nNNS Noun, plural\nNNP Proper noun, singular\n" +
-                    "NNPS Proper noun, plural\nPDT Predeterminer\nPOS Possessive ending\nPRP Personal pronoun\n" +
-                    "PRP$ Possessive pronoun\nRB Adverb\nRBR Adverb, comparative\nRBS Adverb, superlative\n" +
-                    "RP Particle\nSYM Symbol\nTO to\nUH Interjection\nVB Verb, base form\nVBD Verb, past tense\n" +
-                    "VBG Verb, gerund or present participle\nVBN Verb, past participle\n" +
-                    "VBP Verb, non\u00AD3rd person singular present\nVBZ Verb, 3rd person singular present\n" +
-                    "WDT Wh\u00ADdeterminer\nWP Wh\u00ADpronoun\nWP$ Possessive wh\u00ADpronoun\n" +
-                    "WRB Wh\u00ADadverb\n" +
-                    "German POS tags:\nADJA\tattributives Adjektiv.\nADJD\tadverbiales oder prädikatives Adjektiv\n" +
-                    "ADV\tAdverb\nAPPR\tPräposition; Zirkumposition links\nAPPRART\tPräposition mit Artikel\n" +
-                    "APPO\tPostposition\nAPZR\tZirkumposition rechts\nART\tbestimmter oder unbestimmter Artikel\n" +
-                    "CARD\tKardinalzahl\nFM\tFremdsprachliches Material\nITJ\tInterjektion\n" +
-                    "KOUI\tunterordnende Konjunktion mit ``zu'' und Infinitiv\nKOUS\tunterordnende Konjunktion mit Satz\n" +
-                    "KON\tnebenordnende Konjunktion\nKOKOM\tVergleichskonjunktion\nNN\tnormales Nomen\n" +
-                    "NE\tEigennamen\nPDS\tsubstituierendes Demonstrativpronomen\nPDAT\tattribuierendes Demonstrativpronomen\n" +
-                    "PIS\tsubstituierendes Indefinitpronomen\nPIAT\tattribuierendes Indefinitpronomen ohne Determiner\n" +
-                    "PIDAT\tattribuierendes Indefinitpronomen mit Determiner\nPPER\tirreflexives Personalpronomen\n" +
-                    "PPOSS\tsubstituierendes Possessivpronomen\nPPOSAT\tattribuierendes Possessivpronomen\n" +
-                    "PRELS\tsubstituierendes Relativpronomen\nPRELAT\tattribuierendes Relativpronomen\n" +
-                    "PRF\treflexives Personalpronomen\nPWS\tsubstituierendes Interrogativpronomen\n" +
-                    "PWAT\tattribuierendes Interrogativpronomen\nPWAV\tadverbiales Interrogativ- oder Relativpronomen\n" +
-                    "PAV\tPronominaladverb\nPTKZU\t``zu'' vor Infinitiv\nPTKNEG\tNegationspartikel\n" +
-                    "PTKVZ\tabgetrennter Verbzusatz\nPTKANT\tAntwortpartikel\nPTKA\tPartikel bei Adjektiv oder Adverb\n" +
-                    "TRUNC\tKompositions-Erstglied\nVVFIN\tfinites Verb, voll\nVVIMP\tImperativ, voll\n" +
-                    "VVINF\tInfinitiv, voll\nVVIZU\tInfinitiv mit ``zu'', voll\nVVPP\tPartizip Perfekt, voll\n" +
-                    "VAFIN\tfinites Verb, aux\nVAIMP\tImperativ, aux\nVAINF\tInfinitiv, aux\nVAPP\tPartizip Perfekt, aux\n" +
-                    "VMFIN\tfinites Verb, modal\nVMINF\tInfinitiv, modal\nVMPP\tPartizip Perfekt, modal\n" +
-                    "XY\tNichtwort, Sonderzeichen enthaltend\n$,\tKomma\n$.\tSatzbeendende Interpunktion\n" +
-                    "$(\tsonstige Satzzeichen; satzintern" );
-            //scrollpane doesn't' work yet lol
-            JScrollPane SP = new JScrollPane(postagList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+            JEditorPane postagList = new JEditorPane("text/html","");
+            postagList.setPreferredSize(new Dimension((int)(width / 3.5), (int) height / 2));
+            try{
+                postagList.setText(POSTagging.readSentencesFromFile("help.html"));
+            }
+            catch (IOException i){
+                i.printStackTrace();
+            }
+            JScrollPane scrollPane = new JScrollPane(postagList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-            //this needs to be added into a list/some other text thing where you can set height and width
-            //maybe some other tabs with other helpful shit idk
 
-
-            innerPanel.add(postagList);
+            innerPanel.add(scrollPane);
             panel2.add(innerPanel);
             helpPane.addTab("POS tag meanings", panel2);
 
             helpFrame.getContentPane().add(helpPane);
-
         }
     }
 

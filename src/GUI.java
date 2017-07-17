@@ -212,7 +212,7 @@ public class GUI extends JPanel {
         JButton helpButton = new JButton("help");
         clearButton.setToolTipText("Confused?");
         westPanel.add(helpButton);
-        clearButton.addActionListener(new HelpButtonHandler());
+        helpButton.addActionListener(new HelpButtonHandler());
 
         // centerPanel- boxlayout containing main two boxes
         JPanel centerPanel = new JPanel();
@@ -535,13 +535,23 @@ public class GUI extends JPanel {
             //panel doesn't show up
             //but it's a start
 
+            JFrame helpFrame = new JFrame();
+            helpFrame.setVisible(true);
+            helpFrame.setSize((int) width/3, (int) height/2);
+            helpFrame.setResizable(false);
+            Dimension size = helpFrame.getSize();
             helpPane = new JTabbedPane();
-            helpPane.setSize((int) width/5, (int) height/5);
-            helpPane.setVisible(true);
             JPanel panel1 = new JPanel();
-            //construct jpanel
+            JTextField helpText = new JTextField();
+            helpText.setText("The whole entire how to");
+            //todo
+            //how to use the program- what the buttons do, what you can/can't enter, etc.
+            helpText.setEditable(false);
+            panel1.add(helpText);
             helpPane.addTab("How to use the program", panel1);
             JPanel panel2 = new JPanel();
+            panel2.setLayout(new GridLayout(1, 1));
+            JPanel innerPanel = new JPanel();
             JTextField postagList = new JTextField("English POS tags:\nCC Coordinating conjunction\nCD Cardinal number\n" +
                     "DT Determiner\nEX Existential there\nFW Foreign word\nIN Preposition or subordinating conjunction\n" +
                     "JJ Adjective\nJJR Adjective, comparative\nJJS Adjective, superlative\nLS List item marker\n" +
@@ -553,85 +563,39 @@ public class GUI extends JPanel {
                     "VBP Verb, non\u00AD3rd person singular present\nVBZ Verb, 3rd person singular present\n" +
                     "WDT Wh\u00ADdeterminer\nWP Wh\u00ADpronoun\nWP$ Possessive wh\u00ADpronoun\n" +
                     "WRB Wh\u00ADadverb\n" +
-                    "German POS tags:\nADJA\tattributives Adjektiv.\t[das] große [Haus]\n" +
-                    "ADJD\tadverbiales oder prädikatives Adjektiv\t[er fährt] schnell, [er ist] schnell\n" +
-                    " \t \t \n" +
-                    "ADV\tAdverb\tschon, bald, doch\n" +
-                    " \t \t \n" +
-                    "APPR\tPräposition; Zirkumposition links\tin [der Stadt], ohne [mich]\n" +
-                    "APPRART\tPräposition mit Artikel\tim [Haus], zur [Sache]\n" +
-                    "APPO\tPostposition\t[ihm] zufolge, [der Sache] wegen\n" +
-                    "APZR\tZirkumposition rechts\t[von jetzt] an\n" +
-                    " \t \t \n" +
-                    "ART\tbestimmter oder unbestimmter Artikel\tder, die, das, ein, eine\n" +
-                    " \t \t \n" +
-                    "CARD\tKardinalzahl\tzwei [Männer], [im Jahre] 1994\n" +
-                    " \t \t \n" +
-                    "FM\tFremdsprachliches Material\t[Er hat das mit ``] A big fish ['' übersetzt]\n" +
-                    " \t \t \n" +
-                    "ITJ\tInterjektion\tmhm, ach, tja\n" +
-                    " \t \t \n" +
-                    "KOUI\tunterordnende Konjunktion mit ``zu'' und Infinitiv\tum [zu leben], anstatt [zu fragen]\n" +
-                    "KOUS\tunterordnende Konjunktion mit Satz\tweil, dass, damit, wenn, ob\n" +
-                    "KON\tnebenordnende Konjunktion\tund, oder, aber\n" +
-                    "KOKOM\tVergleichskonjunktion\tals, wie\n" +
-                    " \t \t \n" +
-                    "NN\tnormales Nomen\tTisch, Herr, [das] Reisen\n" +
-                    "NE\tEigennamen\tHans, Hamburg, HSV\n" +
-                    " \t \t \n" +
-                    "PDS\tsubstituierendes Demonstrativpronomen\tdieser, jener\n" +
-                    "PDAT\tattribuierendes Demonstrativpronomen\tjener [Mensch]\n" +
-                    " \t \t \n" +
-                    "PIS\tsubstituierendes Indefinitpronomen\tkeiner, viele, man, niemand\n" +
-                    "PIAT\tattribuierendes Indefinitpronomen ohne Determiner\tkein [Mensch], irgendein [Glas]\n" +
-                    "PIDAT\tattribuierendes Indefinitpronomen mit Determiner\t[ein] wenig [Wasser], [die] beiden [Brüder]\n" +
-                    " \t \t \n" +
-                    "PPER\tirreflexives Personalpronomen\tich, er, ihm, mich, dir\n" +
-                    " \t \t \n" +
-                    "PPOSS\tsubstituierendes Possessivpronomen\tmeins, deiner\n" +
-                    "PPOSAT\tattribuierendes Possessivpronomen\tmein [Buch], deine [Mutter]\n" +
-                    " \t \t \n" +
-                    "PRELS\tsubstituierendes Relativpronomen\t[der Hund ,] der\n" +
-                    "PRELAT\tattribuierendes Relativpronomen\t[der Mann ,] dessen [Hund]\n" +
-                    " \t \t \n" +
-                    "PRF\treflexives Personalpronomen\tsich, einander, dich, mir\n" +
-                    " \t \t \n" +
-                    "PWS\tsubstituierendes Interrogativpronomen\twer, was\n" +
-                    "PWAT\tattribuierendes Interrogativpronomen\twelche[Farbe], wessen [Hut]\n" +
-                    "PWAV\tadverbiales Interrogativ- oder Relativpronomen\twarum, wo, wann, worüber, wobei\n" +
-                    " \t \t \n" +
-                    "PAV\tPronominaladverb\tdafür, dabei, deswegen, trotzdem\n" +
-                    " \t \t \n" +
-                    "PTKZU\t``zu'' vor Infinitiv\tzu [gehen]\n" +
-                    "PTKNEG\tNegationspartikel\tnicht\n" +
-                    "PTKVZ\tabgetrennter Verbzusatz\t[er kommt] an, [er fährt] rad\n" +
-                    "PTKANT\tAntwortpartikel\tja, nein, danke, bitte\n" +
-                    "PTKA\tPartikel bei Adjektiv oder Adverb\tam [schönsten], zu [schnell]\n" +
-                    " \t \t \n" +
-                    "TRUNC\tKompositions-Erstglied\tAn- [und Abreise]\n" +
-                    " \t \t \n" +
-                    "VVFIN\tfinites Verb, voll\t[du] gehst, [wir] kommen [an]\n" +
-                    "VVIMP\tImperativ, voll\tkomm [!]\n" +
-                    "VVINF\tInfinitiv, voll\tgehen, ankommen\n" +
-                    "VVIZU\tInfinitiv mit ``zu'', voll\tanzukommen, loszulassen\n" +
-                    "VVPP\tPartizip Perfekt, voll\tgegangen, angekommen\n" +
-                    "VAFIN\tfinites Verb, aux\t[du] bist, [wir] werden\n" +
-                    "VAIMP\tImperativ, aux\tsei [ruhig !]\n" +
-                    "VAINF\tInfinitiv, aux\twerden, sein\n" +
-                    "VAPP\tPartizip Perfekt, aux\tgewesen\n" +
-                    "VMFIN\tfinites Verb, modal\tdürfen\n" +
-                    "VMINF\tInfinitiv, modal\twollen\n" +
-                    "VMPP\tPartizip Perfekt, modal\tgekonnt, [er hat gehen] können\n" +
-                    " \t \t \n" +
-                    "XY\tNichtwort, Sonderzeichen enthaltend\t3:7, H2O, D2XW3\n" +
-                    " \t \t \n" +
-                    "$,\tKomma\t,\n" +
-                    "$.\tSatzbeendende Interpunktion\t. ? ! ; :\n" +
-                    "$(\tsonstige Satzzeichen; satzintern\t- [,]()" );
-            panel2.add(postagList);
+                    "German POS tags:\nADJA\tattributives Adjektiv.\nADJD\tadverbiales oder prädikatives Adjektiv\n" +
+                    "ADV\tAdverb\nAPPR\tPräposition; Zirkumposition links\nAPPRART\tPräposition mit Artikel\n" +
+                    "APPO\tPostposition\nAPZR\tZirkumposition rechts\nART\tbestimmter oder unbestimmter Artikel\n" +
+                    "CARD\tKardinalzahl\nFM\tFremdsprachliches Material\nITJ\tInterjektion\n" +
+                    "KOUI\tunterordnende Konjunktion mit ``zu'' und Infinitiv\nKOUS\tunterordnende Konjunktion mit Satz\n" +
+                    "KON\tnebenordnende Konjunktion\nKOKOM\tVergleichskonjunktion\nNN\tnormales Nomen\n" +
+                    "NE\tEigennamen\nPDS\tsubstituierendes Demonstrativpronomen\nPDAT\tattribuierendes Demonstrativpronomen\n" +
+                    "PIS\tsubstituierendes Indefinitpronomen\nPIAT\tattribuierendes Indefinitpronomen ohne Determiner\n" +
+                    "PIDAT\tattribuierendes Indefinitpronomen mit Determiner\nPPER\tirreflexives Personalpronomen\n" +
+                    "PPOSS\tsubstituierendes Possessivpronomen\nPPOSAT\tattribuierendes Possessivpronomen\n" +
+                    "PRELS\tsubstituierendes Relativpronomen\nPRELAT\tattribuierendes Relativpronomen\n" +
+                    "PRF\treflexives Personalpronomen\nPWS\tsubstituierendes Interrogativpronomen\n" +
+                    "PWAT\tattribuierendes Interrogativpronomen\nPWAV\tadverbiales Interrogativ- oder Relativpronomen\n" +
+                    "PAV\tPronominaladverb\nPTKZU\t``zu'' vor Infinitiv\nPTKNEG\tNegationspartikel\n" +
+                    "PTKVZ\tabgetrennter Verbzusatz\nPTKANT\tAntwortpartikel\nPTKA\tPartikel bei Adjektiv oder Adverb\n" +
+                    "TRUNC\tKompositions-Erstglied\nVVFIN\tfinites Verb, voll\nVVIMP\tImperativ, voll\n" +
+                    "VVINF\tInfinitiv, voll\nVVIZU\tInfinitiv mit ``zu'', voll\nVVPP\tPartizip Perfekt, voll\n" +
+                    "VAFIN\tfinites Verb, aux\nVAIMP\tImperativ, aux\nVAINF\tInfinitiv, aux\nVAPP\tPartizip Perfekt, aux\n" +
+                    "VMFIN\tfinites Verb, modal\nVMINF\tInfinitiv, modal\nVMPP\tPartizip Perfekt, modal\n" +
+                    "XY\tNichtwort, Sonderzeichen enthaltend\n$,\tKomma\n$.\tSatzbeendende Interpunktion\n" +
+                    "$(\tsonstige Satzzeichen; satzintern" );
+            //scrollpane doesn't' work yet lol
+            JScrollPane SP = new JScrollPane(postagList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+            //this needs to be added into a list/some other text thing where you can set height and width
+            //maybe some other tabs with other helpful shit idk
+
+
+            innerPanel.add(postagList);
+            panel2.add(innerPanel);
             helpPane.addTab("POS tag meanings", panel2);
 
-            frame.add(helpPane);
+            helpFrame.getContentPane().add(helpPane);
 
         }
     }

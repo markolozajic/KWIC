@@ -13,10 +13,30 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 public class POSTagging {
 
+    static void fetchFromUrl(String givenurl) throws MalformedURLException, IOException {
+        //was thinking about regex, but it works bad with matching long links (like "https://stackoverflow.com/questions/161738/what-is-the-best-r.." will not work for example
+        URL url = new URL(givenurl);
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        if(Integer.parseInt(Integer.toString(connection.getResponseCode()).substring(0,1))!=2){
+            return;
+            //throw new MalformedURLException();
+            //2** means that URL ok, 4** - bad bad bad, 3** - redirection - do we try to handle it or just put with 4?
+        }
+        Document doc = Jsoup.connect(givenurl).get();
+        Elements lines = doc.select("p");
+        PrintWriter writer = new PrintWriter("url.txt");
+        for (Element line : lines) {
+            writer.println(line.text().replaceAll("\\[\\d*\\]|\\[citation needed\\]" , ""));
+        }
+        writer.close();
+    }
 
     static void fetchFromWikipedia(String article, String language) throws IOException{
 

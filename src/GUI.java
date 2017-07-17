@@ -6,6 +6,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class GUI extends JPanel {
     private JList<String> sentenceList; // sentences word has been found in
     private JTable resultTable; // table displaying word, lemma, and POS tags
     //types of input
-    private JRadioButton fileInput;
     private JRadioButton urlInput;
+    private JRadioButton fileInput;
     private JRadioButton wikiInput;
     //languages
     private JRadioButton english;
@@ -367,22 +368,21 @@ public class GUI extends JPanel {
                 contextWords = Integer.parseInt((String) ngramList.getSelectedItem());
             }
             try {
-                /*
-                 * I'm using the url field here, but it's very simple to
-				 * reassign this to another one if need be. What it's doing at
-				 * the moment is expecting a simple string as input (e.g.
-				 * "helen keller"), and attempts to find an English/German wikipedia
-				 * article with such a title. If not found, an exception is
-				 * thrown. Note: for now we only have a general IOException,
-				 * maybe we could consider making more specific ones for
-				 * different failures (FileNotFound, URL not found) so we could
-				 * inform the user more precisely what went wrong?
-				 */
-                if(english.isSelected()) {
-                    POSTagging.fetchFromWikipedia(url,"English");
+                String reader;
+                if(urlInput.isSelected()){
+                    POSTagging.fetchFromUrl(url);
+                    reader = POSTagging.readSentencesFromFile("url.txt");
+                }
+                else if(wikiInput.isSelected()) {
+                    if (english.isSelected()) {
+                        POSTagging.fetchFromWikipedia(url, "English");
+                    } else {
+                        POSTagging.fetchFromWikipedia(url, "German");
+                    }
+                    reader = POSTagging.readSentencesFromFile(url.replaceAll(" ", "_") + ".txt");
                 }
                 else{
-                    POSTagging.fetchFromWikipedia(url,"German");
+                    reader = POSTagging.readSentencesFromFile(url);
                 }
                 // look for topic on
                 // wikipedia, save text to
@@ -391,7 +391,7 @@ public class GUI extends JPanel {
                 // the file the previous method just created,
                 // so the long parameter string is an attempt to predict what
                 // the filename will look like
-                String reader = POSTagging.readSentencesFromFile(url.replaceAll(" ", "_") + ".txt");
+
                 String[] sents;
                 if(english.isSelected()) {
                     sents = POSTagging.sentenceDetector(reader, "models/en-sent.bin");
@@ -485,6 +485,12 @@ public class GUI extends JPanel {
                     scrollPane.setViewportView(sentenceList); // replace old
                     // scrollpane
                 }
+            }
+            catch (MalformedURLException m) {
+                // show error message in scrollpane
+                String[] errorMessage = {"Text could not be fetched from URL!"};
+                JList<String> whoops = new JList<>(errorMessage);
+                scrollPane.setViewportView(whoops);
             } catch (IOException i) {
                 // show error message in scrollpane
                 String[] errorMessage = {"Something unfortunate just happened"};

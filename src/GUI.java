@@ -533,7 +533,10 @@ public class GUI extends JPanel {
             helpPane.setSize((int) width/5, (int) height/5);
             helpPane.setVisible(true);
             JPanel panel1 = new JPanel();
-            //construct jpanel
+            JTextField helpText = new JTextField();
+            helpText.setText("The whole entire how to");
+            helpText.setEditable(false);
+            panel1.add(helpText);
             helpPane.addTab("How to use the program", panel1);
             JPanel panel2 = new JPanel();
             JTextField postagList = new JTextField("English POS tags:\nCC Coordinating conjunction\nCD Cardinal number\n" +
@@ -572,7 +575,9 @@ public class GUI extends JPanel {
             helpPane.addTab("POS tag meanings", panel2);
 
 
-            frame.add(helpPane);
+            frame.getContentPane().add(helpPane);
+            //STILL DOESN'T FUCKING WORK
+            //FUCKING INVISIBLE
 
         }
     }

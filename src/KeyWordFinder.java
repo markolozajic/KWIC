@@ -5,11 +5,12 @@ import java.util.Arrays;
 
 public class KeyWordFinder
 {
-	//sentenceCount is used to say how many sentences the document contains in the statistics
+	// sentenceCount is used to say how many sentences the document contains in
+	// the statistics
 	private static int sentenceCount;
 	private static int keyWordCount;
 	private static int sentencesWithKeyWordCount;
-	
+
 	public static int getSentenceCount()
 	{
 		return sentenceCount;
@@ -19,7 +20,7 @@ public class KeyWordFinder
 	{
 		return keyWordCount;
 	}
-	
+
 	public static int getSentencesWithKeyWordCount()
 	{
 		return sentencesWithKeyWordCount;
@@ -55,20 +56,19 @@ public class KeyWordFinder
 				// set the control boolean to true
 				if (words[j].equals(keyWord) && (!rval.contains(sentences[i])))
 				{
-						rval.add(sentences[i]);				
+					rval.add(sentences[i]);
 				}
 			}
 		}
-	    
+
 		sentencesWithKeyWordCount = rval.size();
 
 		return rval;
 	}
 
-
 	/**
-	 * Method that takes the result of getSentencesWithKeyWord  and filters it so
-	 * it returns a new ArrayList that only contains those sentences in which
+	 * Method that takes the result of getSentencesWithKeyWord + generateNgrams and filters it so
+	 * it returns a new ArrayList that only contains those ngrams in which
 	 * the keyword has the correct POSTag
 	 * 
 	 * @param ngrams
@@ -80,55 +80,58 @@ public class KeyWordFinder
 	 * @return - those sentences that contain the keyword with the given POS-Tag
 	 * @throws IOException
 	 */
-	static ArrayList<String> getSentencesWithCorrectPOSTag(ArrayList<String> sentences, String keyWord, String tag,
+	static ArrayList<String> getNgramsWithCorrectPOSTag(ArrayList<String> ngrams, String keyWord, String tag,
 														String tokenizerModel, String taggerModel)
 			throws IOException
 	{
-		//reset the count for sentences with keyword since we are going to potentially have less sentences after this method
 		sentencesWithKeyWordCount = 0;
-		
 		ArrayList<String> rval = new ArrayList<String>();
 
 		boolean found = false;
 
-		String sentencesToString = "";
-		for (String item : sentences){
+		String ngramsToString = "";
+		for (String item : ngrams){
 			// this %b will be used to mark the end of an ngram (tokenizer treats "%b" as a single token)
-			sentencesToString += item + " %b ";
+			ngramsToString += item + " %b ";
 		}
 
 		// remove special characters for word detection - it happened that I had a string such as <b>word,</b> which
 		// the method failed to recognise because of the comma
 
-		sentencesToString = sentencesToString.replaceAll("[,-.\"\';:]","");
+		ngramsToString = ngramsToString.replaceAll("[,-.\"\';:]","");
 
-		String[] tokens = POSTagging.tokenizer(sentencesToString, tokenizerModel); // array with tokenized ngrams
+		String[] tokens = POSTagging.tokenizer(ngramsToString, tokenizerModel); // array with tokenized ngrams
 		String[] tags = POSTagging.postagger(tokens, taggerModel); // array with tags made from tokenized array
 
-		int sentenceCounter = 0; // keep track of how many of the input ngrams you went through
+		int ngramCounter = 0; // keep track of how many of the input ngrams you went through
 
 		for(int i = 0; i<tokens.length; i++){
 
 			if(tokens[i].equals("%b")){
-				sentenceCounter+=1; // end of ngram reached, whether token found within it or not move to next one
+				ngramCounter+=1; // end of ngram reached, whether token found within it or not move to next one
 			}
 			if(tokens[i].equalsIgnoreCase("<b>"+keyWord+"</b>") && tags[i].equals(tag)){
-				rval.add(sentences.get(sentenceCounter)); // get ngram at specified index from list of input nrgams
-				//increment th
-				if (!rval.contains(sentences.get(sentenceCounter)))
-						{
-							sentencesWithKeyWordCount++;
-						}
+				if (!rval.contains(ngrams.get(ngramCounter)))
+				{
+					sentencesWithKeyWordCount++;
+				}
+				
+				rval.add(ngrams.get(ngramCounter)); // get ngram at specified index from list of input nrgams
+
 				found = true;
 			}
 		}
 
 		if(!found){
 			rval.add("Sorry, tag not found for given word!");
+			keyWordCount = 0;
+		} else
+		{
+			keyWordCount = rval.size();
 		}
+
 		return rval;
 	}
-
 	/**
 	 * Method that takes an ArrayList of the sentences containing a words and a
 	 * given n-gram and generates an ArrayList with those n-grams of the keyword
@@ -269,7 +272,7 @@ public class KeyWordFinder
 			keyWordCount = 0;
 		} else
 		{
-		keyWordCount = rval.size();
+			keyWordCount = rval.size();
 		}
 		return rval;
 	}

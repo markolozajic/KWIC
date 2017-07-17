@@ -435,22 +435,22 @@ public class GUI extends JPanel
 					sents = POSTagging.sentenceDetector(reader, "models/de-sent.bin");
 				}
 				ArrayList<String> tmp1 = finder.getSentencesWithKeyWord(sents, toSearch);
+				ArrayList<String> tmp2 = finder.generateNgrams(tmp1, toSearch, contextWords);
 
 				// If there is a POSTag we have to take that into consideration
 				if (!tag.isEmpty())
 				{
-					ArrayList<String> tmp2;
+					ArrayList<String> tmp3;
 					if (english.isSelected())
 					{
-						tmp2 = finder.getSentencesWithCorrectPOSTag(tmp1, toSearch, tag, "models/en-token.bin",
+						tmp3 = finder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag, "models/en-token.bin",
 								"models/en-pos-maxent.bin");
 					} else
 					{
-						tmp2 = finder.getSentencesWithCorrectPOSTag(tmp1, toSearch, tag, "models/de-token.bin",
+						tmp3 = finder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag, "models/de-token.bin",
 								"models/de-pos-maxent.bin");
 					}
 
-					ArrayList<String> tmp3 = finder.generateNgrams(tmp2, toSearch, contextWords);
 
 					String[] filteredSentences = new String[tmp3.size()];
 					// this array is used to figure out how wide the cells in
@@ -490,7 +490,6 @@ public class GUI extends JPanel
 					// scrollpane
 				} else
 				{
-					ArrayList<String> tmp2 = finder.generateNgrams(tmp1, toSearch, contextWords);
 
 					String[] filteredSentences = new String[tmp2.size()];
 					// this array is used to figure out how wide the cells in
@@ -710,7 +709,7 @@ public class GUI extends JPanel
 		public void actionPerformed(ActionEvent e)
 		{
 			String output = "The word \"" + searchBox.getText() + "\" has been found " + finder.getKeyWordCount()
-					+ " times in " + finder.getSentencesWithKeyWordCount() + " out of " + finder.getSentenceCount() + " sentences";
+					+ " times in " + finder.getSentencesWithKeyWordCount() + " out of " + finder.getSentenceCount() + " sentences.";
 		
 			JOptionPane.showMessageDialog(frame, output, "Statistics", 1);
 

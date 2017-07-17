@@ -551,7 +551,7 @@ public class GUI extends JPanel {
             JEditorPane postagList = new JEditorPane("text/html","");
             postagList.setPreferredSize(new Dimension((int)(width / 3.5), (int) height / 2));
             try{
-                postagList.setText(POSTagging.readSentencesFromFile("help.html"));
+                postagList.setText(POSTagging.readSentencesFromFile("help/help.html"));
             }
             catch (IOException i){
                 i.printStackTrace();
@@ -559,6 +559,7 @@ public class GUI extends JPanel {
             JScrollPane scrollPane = new JScrollPane(postagList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
+            scrollPane.setVisible(true);
             innerPanel.add(scrollPane);
             panel2.add(innerPanel);
             helpPane.addTab("POS tag meanings", panel2);

@@ -60,12 +60,12 @@ public class Saving {
                 }
 
                 eventWriter.add(eventFactory.createCharacters("\n\t\t"));
-                eventWriter.add(eventFactory.createStartElement("", "", "word"));
+                eventWriter.add(eventFactory.createStartElement("", "", "token"));
 
-                eventWriter.add(eventFactory.createAttribute("token", tokens[i]));
                 eventWriter.add(eventFactory.createAttribute("lemma", lemmas[i]));
                 eventWriter.add(eventFactory.createAttribute("pos_tag", tags[i]));
-                eventWriter.add(eventFactory.createEndElement("", "", "word"));
+                eventWriter.add(eventFactory.createCharacters(tokens[i]));
+                eventWriter.add(eventFactory.createEndElement("", "", "token"));
 
             }
             eventWriter.add(eventFactory.createCharacters("\n\t"));

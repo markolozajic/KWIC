@@ -4,7 +4,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -37,6 +36,15 @@ public class GUI extends JPanel
 	// need this to be an instance variable so i can access the instance
 	// variables of the keywordfinder class in the statistics
 	private KeyWordFinder finder = new KeyWordFinder();
+	private ArrayList<String> tagList = new ArrayList<String>();
+
+	// these are control booleans that are changed in the searchButtonHandler
+	// and used in the statsButtonHandler
+	private boolean wordSearchDone = false;
+	private boolean wordAndTagSearchDone = false;
+	
+	//number that gives the searchTime in the statsButton
+	private double searchTime;
 
 	// POS tags for english and german
 	String[] englishPOS = { "", "CC", "CD", "DT", "EX", "FW", "IN", "JJ", "JJR", "JJS", "LS", "MD", "NN", "NNS", "NNP",
@@ -399,6 +407,7 @@ public class GUI extends JPanel
 			}
 			try
 			{
+				double startTime = System.nanoTime();
 				String reader;
 				if (urlInput.isSelected())
 				{
@@ -451,7 +460,9 @@ public class GUI extends JPanel
 								"models/de-pos-maxent.bin");
 					}
 
-
+					//search time
+					searchTime = (System.nanoTime() - startTime) * Math.pow(10, -9);
+					
 					String[] filteredSentences = new String[tmp3.size()];
 					// this array is used to figure out how wide the cells in
 					// the Jlist should be
@@ -475,6 +486,10 @@ public class GUI extends JPanel
 					// multiply it by 6.3 and use that as cellwidth
 					maxWidth *= 6.3;
 
+					// set the control boolean to true
+					wordAndTagSearchDone = true;
+					wordSearchDone = false;
+
 					// the following block of code is just repeating what is
 					// already
 					// written above (look for "centerLeft")
@@ -490,6 +505,15 @@ public class GUI extends JPanel
 					// scrollpane
 				} else
 				{
+					if (english.isSelected())
+					{
+						tagList = finder.generateTagList(tmp1, toSearch, "models/en-token.bin",
+								"models/en-pos-maxent.bin");
+					} else
+					{
+						tagList = finder.generateTagList(tmp1, toSearch, "models/de-token.bin",
+								"models/de-pos-maxent.bin");
+					}
 
 					String[] filteredSentences = new String[tmp2.size()];
 					// this array is used to figure out how wide the cells in
@@ -502,6 +526,8 @@ public class GUI extends JPanel
 						// add the length of each item into the int array
 						filteredSentencesLength[i] = filteredSentences[i].length();
 					}
+					searchTime = (System.nanoTime() - startTime) * Math.pow(10, -9);
+
 
 					int maxWidth = 0;
 					// find the biggest value in the int array
@@ -514,6 +540,10 @@ public class GUI extends JPanel
 					}
 					// multiply it by 6.3 and use that as cellwidth
 					maxWidth *= 6.3;
+
+					// set the control boolean to true
+					wordSearchDone = true;
+					wordAndTagSearchDone = false;
 
 					// the following block of code is just repeating what is
 					// already
@@ -570,6 +600,10 @@ public class GUI extends JPanel
 				searchBox.setText("");
 				posList.setSelectedIndex(0);
 				ngramList.setSelectedIndex(0);
+
+				// set the control booleans for stats to false;
+				wordSearchDone = false;
+				wordAndTagSearchDone = false;
 
 			} else if (n == JOptionPane.CLOSED_OPTION || n == JOptionPane.NO_OPTION)
 			{
@@ -708,9 +742,62 @@ public class GUI extends JPanel
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			String output = "The word \"" + searchBox.getText() + "\" has been found " + finder.getKeyWordCount()
-					+ " times in " + finder.getSentencesWithKeyWordCount() + " out of " + finder.getSentenceCount() + " sentences.";
-		
+			String output = "";
+			// this block alters the message in the messageDialog depending on
+			// whether there has been a word without tag search, a word with tag
+			// search, or neither
+			if (wordSearchDone)
+			{
+				output = "The word \"" + searchBox.getText() + "\" has been found " + finder.getKeyWordCount()
+						+ " times in " + finder.getSentencesWithKeyWordCount() + " out of " + finder.getSentenceCount()
+						+ " sentences." + "\n\n" + "POS Tag Distribution: \n";
+
+				// make a new ArrayList and add the unique items in the tagList
+				// to it
+				ArrayList<String> uniqueTags = new ArrayList<String>();
+				for (String item : tagList)
+				{
+					if (!uniqueTags.contains(item))
+					{
+						uniqueTags.add(item);
+					}
+				}
+
+				// go through the list of unique tags and find the amount of
+				// times the tags occurs in tagList then add this information to
+				// the ouput string
+				for (String uniqueTagsItem : uniqueTags)
+				{
+					int count = 0;
+					for (String tagListItem : tagList)
+					{
+						if (tagListItem.equals(uniqueTagsItem))
+						{
+							count++;
+						}
+					}
+					double percentage = count * 100 / tagList.size();
+					output += uniqueTagsItem + ": " + count + "/" + tagList.size() + " (" + percentage + "%)" + "\n";
+				}
+				
+				//add search time
+				output +=  "\n\nThe search took " + searchTime + " seconds.";
+				
+			} else
+			{
+				if (wordAndTagSearchDone)
+				{
+					output = "The word \"" + searchBox.getText() + "\" with the tag \""
+							+ posList.getSelectedItem().toString() + "\" has been found " + finder.getKeyWordCount()
+							+ " times in " + finder.getSentencesWithKeyWordCount() + " out of "
+							+ finder.getSentenceCount() + " sentences." + "\n\nThe search took " + searchTime + " seconds.";
+				} else
+				{
+					output = "There is nothing to show statistics for!";
+				}
+			}
+
+			// show a message dialog with the output string
 			JOptionPane.showMessageDialog(frame, output, "Statistics", 1);
 
 		}

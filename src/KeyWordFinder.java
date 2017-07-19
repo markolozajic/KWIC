@@ -256,7 +256,11 @@ public class KeyWordFinder
 		// list that's returned
 		for (int i = 0; i < tokens.length; i++)
 		{
-			if (tokens[i].equals(keyWord))
+			if (tokens[i].equalsIgnoreCase(keyWord)
+					|| tokens[i]
+							.matches("[\"'(\\[](?i)" + keyWord + "(?-i)[\")'\\]]")
+					|| tokens[i].matches("(?i)" + keyWord + "(?-i)[?;,.!:\"')\\]]")
+					|| tokens[i].matches("[\"'(\\[] (?i)" + keyWord))
 			{
 				tagList.add(tags[i]);
 			}
@@ -292,17 +296,16 @@ public class KeyWordFinder
 
 		for (String item : ngrams)
 		{
-			System.out.println(item);
 			// split the ArrayList content by whitespace
 			String[] words = item.split("\\s+");
 			// if you find the keyword
 			for (int i = 0; i < words.length; i++)
 			{
-				if (words[i].equals("<b> (?i)" + keyWord + "</b>")
+				if (words[i].equalsIgnoreCase("<b>" + keyWord + "</b>")
 						|| words[i]
-								.matches("<b>" + "[\"'(\\[] (?i)" + keyWord + "(?-i)[\")'\\]]" + "</b>")
-						|| words[i].matches("<b> (?i)" + keyWord + "(?-i)[?;,.!:\"')\\]]" + "</b>")
-						|| words[i].matches("<b>" + "[\"'(\\[] (?i)" + keyWord + "(?-i)</b>"))
+								.matches("<b>" + "[\"'(\\[](?i)" + keyWord + "(?-i)[\")'\\]]" + "</b")
+						|| words[i].matches("<b>(?i)" + keyWord + "(?-i)[?;,.!:\"')\\]]</b>")
+						|| words[i].matches("<b>[\"'(\\[] (?i)" + keyWord + "</b>"))
 				{
 					tagsIndex++;
 					//if the keyword has the correct tag

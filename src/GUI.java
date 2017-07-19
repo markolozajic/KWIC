@@ -614,14 +614,28 @@ public class GUI extends JPanel
             helpFrame.setResizable(false);
             Dimension size = helpFrame.getSize();
             helpPane = new JTabbedPane();
-            JPanel panel1 = new JPanel();
-            JTextField helpText = new JTextField();
-            helpText.setText("The whole entire how to");
-            // todo
-            // how to use the program- what the buttons do, what you can/can't
-            // enter, etc.
-            helpText.setEditable(false);
-            panel1.add(helpText);
+            JPanel panel1 = new JPanel();;
+            panel1.setLayout(new GridLayout(1, 1));
+            JPanel innPanel = new JPanel();
+            JEditorPane helpInstructions = new JEditorPane("text/html", "");
+            helpInstructions.setEditable(false);
+            helpInstructions.setPreferredSize(new Dimension((int) (width / 3.5), (int) (height / 2.5)));
+            try
+            {
+                helpInstructions.setText(POSTagging.readSentencesFromFile("help/helpText.html"));
+            } catch (IOException i)
+            {
+                JOptionPane.showMessageDialog(frame,
+                        "A problem occurred",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            JScrollPane sPane = new JScrollPane(helpInstructions, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+            sPane.setVisible(true);
+            innPanel.add(sPane);
+            panel1.add(innPanel);
             helpPane.addTab("How to use the program", panel1);
             JPanel panel2 = new JPanel();
             panel2.setLayout(new GridLayout(1, 1));
@@ -653,7 +667,7 @@ public class GUI extends JPanel
             panel1.setBackground(new Color(223, 240, 255));
             panel2.setBackground(new Color(223, 240, 255));
             innerPanel.setBackground(new Color(223, 240, 255));
-            helpText.setBackground(new Color(223, 240, 255));
+            innPanel.setBackground(new Color(223, 240, 255));
         }
     }
 

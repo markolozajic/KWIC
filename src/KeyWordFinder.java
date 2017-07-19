@@ -27,7 +27,7 @@ public class KeyWordFinder
 	/**
 	 * takes an array of strings and returns the keyword (if found) with the
 	 * specified n-gram
-	 * 
+	 *
 	 * @param sentences
 	 *            - the original array
 	 * @param keyWord
@@ -36,7 +36,7 @@ public class KeyWordFinder
 	 *         the original sentence
 	 */
 	static ArrayList<String> getSentencesWithKeyWord(String[] sentences,
-			String keyWord)
+													 String keyWord)
 	{
 		sentenceCount = sentences.length;
 		ArrayList<String> rval = new ArrayList<String>();
@@ -68,7 +68,7 @@ public class KeyWordFinder
 	/**
 	 * Method that takes an ArrayList of the sentences containing a words and a
 	 * given n-gram and generates an ArrayList with those n-grams of the keyword
-	 * 
+	 *
 	 * @param sentences
 	 *            - the ArrayList to get n-grams of
 	 * @param keyWord
@@ -78,7 +78,7 @@ public class KeyWordFinder
 	 * @return the n-gram of the keyword specified
 	 */
 	static ArrayList<String> generateNgrams(ArrayList<String> sentences,
-			String keyWord, int ngram)
+											String keyWord, int ngram)
 	{
 		ArrayList<String> rval = new ArrayList<String>();
 		// boolean to check whether we actually found the keyword
@@ -97,11 +97,11 @@ public class KeyWordFinder
 			for (int i = 0; i < words.length; i++)
 			{
 				// if you find the keyword
-				if (words[i].equalsIgnoreCase(keyWord)
+				if (words[i].equals(keyWord)
 						|| words[i]
-								.matches("[\"'(\\[](?i)" + keyWord + "(?-i)[\")'\\]]")
-						|| words[i].matches("(?i)" + keyWord + "(?-i)[?;,.!:\"')\\]]")
-						|| words[i].matches("[\"'(\\[] (?i)" + keyWord))
+						.matches("[\"'(\\[]" + keyWord + "[\")'\\]]")
+						|| words[i].matches(keyWord + "[?;,.!:\"')\\]]")
+						|| words[i].matches("[\"'(\\[]" + keyWord))
 				{
 					keyWordFound = true;
 					// this block adds the specified amount of words around the
@@ -216,7 +216,7 @@ public class KeyWordFinder
 
 	/**
 	 * method that generates a list of tags for the keyword
-	 * 
+	 *
 	 * @param sentences
 	 *            - sentences to search for the keyword in
 	 * @param keyWord
@@ -229,7 +229,7 @@ public class KeyWordFinder
 	 * @throws IOException
 	 */
 	static ArrayList<String> generateTagList(ArrayList<String> sentences,
-			String keyWord, String tokenizerModel, String taggerModel)
+											 String keyWord, String tokenizerModel, String taggerModel)
 			throws IOException
 	{
 		ArrayList<String> tagList = new ArrayList<String>();
@@ -247,20 +247,16 @@ public class KeyWordFinder
 		String[] tokens = POSTagging.tokenizer(sentencesToString,
 				tokenizerModel); // array with tokenized sentences
 		String[] tags = POSTagging.postagger(tokens, taggerModel); // array with
-																	// tags made
-																	// from
-																	// tokenized
-																	// array
+		// tags made
+		// from
+		// tokenized
+		// array
 
 		// go through the array, if the token is the keyword add its tag to the
 		// list that's returned
 		for (int i = 0; i < tokens.length; i++)
 		{
-			if (tokens[i].equalsIgnoreCase(keyWord)
-					|| tokens[i]
-							.matches("[\"'(\\[](?i)" + keyWord + "(?-i)[\")'\\]]")
-					|| tokens[i].matches("(?i)" + keyWord + "(?-i)[?;,.!:\"')\\]]")
-					|| tokens[i].matches("[\"'(\\[] (?i)" + keyWord))
+			if (tokens[i].equals(keyWord))
 			{
 				tagList.add(tags[i]);
 			}
@@ -273,7 +269,7 @@ public class KeyWordFinder
 	 * Method that takes the result of getSentencesWithKeyWord + generateNgrams
 	 * + generate tagList and filters it so it returns a new ArrayList that only
 	 * contains those ngrams in which the keyword has the correct POSTag
-	 * 
+	 *
 	 * @param ngrams
 	 *            - the sentences to go through
 	 * @param keyWord
@@ -296,16 +292,17 @@ public class KeyWordFinder
 
 		for (String item : ngrams)
 		{
+			System.out.println(item);
 			// split the ArrayList content by whitespace
 			String[] words = item.split("\\s+");
 			// if you find the keyword
 			for (int i = 0; i < words.length; i++)
 			{
-				if (words[i].equalsIgnoreCase("<b>" + keyWord + "</b>")
+				if (words[i].equals("<b>" + keyWord + "</b>")
 						|| words[i]
-								.matches("<b>" + "[\"'(\\[](?i)" + keyWord + "(?-i)[\")'\\]]" + "</b")
-						|| words[i].matches("<b>(?i)" + keyWord + "(?-i)[?;,.!:\"')\\]]</b>")
-						|| words[i].matches("<b>[\"'(\\[] (?i)" + keyWord + "</b>"))
+						.matches("<b>" + "[\"'(\\[]" + keyWord + "[\")'\\]]" + "</b>")
+						|| words[i].matches("<b>" + keyWord + "[?;,.!:\"')\\]]" + "</b>")
+						|| words[i].matches("<b>" + "[\"'(\\[]" + keyWord + "</b>"))
 				{
 					tagsIndex++;
 					//if the keyword has the correct tag
@@ -315,7 +312,7 @@ public class KeyWordFinder
 						{
 							sentencesWithKeyWordCount++;
 						}
-						
+
 						//add the ngram to the return value
 						rval.add((item));
 

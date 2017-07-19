@@ -3,8 +3,10 @@ import jdk.nashorn.internal.scripts.JO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -712,6 +714,12 @@ public class GUI extends JPanel
                         tags = POSTagging.postagger(tokens, "models/de-pos-maxent.bin");
                         lemmas = POSTagging.lemmatizer(tokens, tags, "models/de-lemmatizer.bin");
                     }
+
+                    String[] columnNames = { "Word", "Lemma", "POS Tags" };
+
+                    DefaultTableModel model = new DefaultTableModel(tokens.length, 3);
+                    model.setColumnIdentifiers(columnNames);
+                    resultTable.setModel(model);
 
                     for (int i = 0; i < tokens.length; i++)
                     {

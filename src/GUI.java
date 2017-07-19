@@ -375,6 +375,14 @@ public class GUI extends JPanel
             String tag = posList.getSelectedItem().toString();
             String toSearch = searchBox.getText();
             String url = urlField.getText();
+            if (toSearch.equals(""))
+            {
+            	JOptionPane.showMessageDialog(frame,
+                        "You did not enter a keyword!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            
             int contextWords = 0;
             if (ngramList.getSelectedItem().equals("sentence"))
             {
@@ -418,8 +426,7 @@ public class GUI extends JPanel
                     reader = POSTagging.readSentencesFromFile(url);
                 }
                 // look for topic on
-                // wikipedia, save text to
-                // file
+                // wikipedia, save text to file
                 // readSentencesFromFile method has to make sure to read from
                 // the file the previous method just created,
                 // so the long parameter string is an attempt to predict what
@@ -545,9 +552,11 @@ public class GUI extends JPanel
                     sentenceList.setFixedCellWidth(maxWidth);
                     sentenceList.setVisibleRowCount(24);
                     sentenceList.addListSelectionListener(new SentenceListHandler());
-
-                    scrollPane.setViewportView(sentenceList); // replace old
-                    // scrollpane
+                    
+                  
+                    // replace old scrollpane
+                    scrollPane.setViewportView(sentenceList); 
+ 
                 }
             } catch (MalformedURLException m)
             {
@@ -731,22 +740,26 @@ public class GUI extends JPanel
                         lemmas = POSTagging.lemmatizer(tokens, tags, "models/de-lemmatizer.bin");
                     }
 
+                    //adjust the length of the table
                     String[] columnNames = { "Word", "Lemma", "POS Tags" };
 
                     DefaultTableModel model = new DefaultTableModel(tokens.length, 3);
                     model.setColumnIdentifiers(columnNames);
                     resultTable.setModel(model);
 
+                    //fill in the tokens in the first column
                     for (int i = 0; i < tokens.length; i++)
                     {
                         resultTable.setValueAt(tokens[i], i, 0);
                     }
 
+                    //fill in the lemmas in the second column
                     for (int i = 0; i < tokens.length; i++)
                     {
                         resultTable.setValueAt(lemmas[i], i, 1);
                     }
 
+                    //fill in the tags in the third column
                     for (int i = 0; i < tokens.length; i++)
                     {
                         resultTable.setValueAt(tags[i], i, 2);

@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class KeyWordFinder
 {
@@ -10,17 +9,17 @@ public class KeyWordFinder
 	private static int keyWordCount;
 	private static int sentencesWithKeyWordCount;
 
-	public static int getSentenceCount()
+	static int getSentenceCount()
 	{
 		return sentenceCount;
 	}
 
-	public static int getKeyWordCount()
+	static int getKeyWordCount()
 	{
 		return keyWordCount;
 	}
 
-	public static int getSentencesWithKeyWordCount()
+	static int getSentencesWithKeyWordCount()
 	{
 		return sentencesWithKeyWordCount;
 	}

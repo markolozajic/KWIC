@@ -6,7 +6,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -377,6 +376,14 @@ public class GUI extends JPanel
             String tag = posList.getSelectedItem().toString();
             String toSearch = searchBox.getText();
             String url = urlField.getText();
+            if (toSearch.equals(""))
+            {
+            	JOptionPane.showMessageDialog(frame,
+                        "You did not enter a keyword!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            
             int contextWords = 0;
             if (ngramList.getSelectedItem().equals("sentence"))
             {
@@ -408,8 +415,7 @@ public class GUI extends JPanel
                     reader = POSTagging.readSentencesFromFile(url);
                 }
                 // look for topic on
-                // wikipedia, save text to
-                // file
+                // wikipedia, save text to file
                 // readSentencesFromFile method has to make sure to read from
                 // the file the previous method just created,
                 // so the long parameter string is an attempt to predict what

@@ -418,7 +418,12 @@ public class GUI extends JPanel
                         //System.out.println(s);
                         if((s!=null) && (s.length() > 0)) { // if item in list is not empty
                             urlField.setText(s);
-                            POSTagging.fetchFromWikipedia(s, "English");
+                            if(english.isSelected()){
+                                POSTagging.fetchFromWikipedia(s, "English");
+                            }
+                            else{
+                                POSTagging.fetchFromWikipedia(s, "German");
+                            }
                         }
                     }
                     reader = POSTagging.readSentencesFromFile("wiki.txt");
@@ -558,8 +563,7 @@ public class GUI extends JPanel
                     scrollPane.setViewportView(sentenceList); 
  
                 }
-            } catch (MalformedURLException m)
-            {
+            } catch (MalformedURLException m) {
                 JOptionPane.showMessageDialog(frame,
                         "Text could not be fetched from URL",
                         "URL error",

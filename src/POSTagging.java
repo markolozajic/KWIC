@@ -23,13 +23,12 @@ import java.util.List;
 
 public class POSTagging {
 
-    static void fetchFromUrl(String givenurl) throws MalformedURLException, IOException {
+    static void fetchFromUrl(String givenurl) throws IOException {
         //was thinking about regex, but it works bad with matching long links (like "https://stackoverflow.com/questions/161738/what-is-the-best-r.." will not work for example
         URL url = new URL(givenurl);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         if(Integer.parseInt(Integer.toString(connection.getResponseCode()).substring(0,1))!=2){
-            return;
-            //throw new MalformedURLException();
+            throw new MalformedURLException();
             //2** means that URL ok, 4** - bad bad bad, 3** - redirection - do we try to handle it or just put with 4?
         }
         Document doc = Jsoup.connect(givenurl).get();
@@ -47,7 +46,7 @@ public class POSTagging {
         if(language.equals("English")){
             sitename = "https://en.wikipedia.org/wiki/" + article.replace(" ", "_");
             detect = "a[title=Help:Disambiguation]";
-            //all pages with disambgiuation have a link with this title, this way it's possible to detect is it meaningful
+            //all pages with disambiguation have a link with this title, this way it's possible to detect is it meaningful
         }
         else {
             sitename = "https://de.wikipedia.org/wiki/" + article.replace(" ", "_");

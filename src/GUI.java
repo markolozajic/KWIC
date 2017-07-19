@@ -334,12 +334,10 @@ public class GUI extends JPanel
 
                 ArrayList<String> listContents = new ArrayList<>();
 
-                ListModel model = sentenceList.getModel(); // have to make listModel
-                // to access all
-                // elements in JList
+                // have to make listModel in order to access all elements in JList
+                ListModel model = sentenceList.getModel();
 
-                // add all the elements in JList to model as strings (Object by
-                // default)
+                // add all the elements in JList to model as strings (Object by default)
 
                 for (int i = 0; i < model.getSize(); i++) {
                     listContents.add(model.getElementAt(i).toString());
@@ -384,7 +382,7 @@ public class GUI extends JPanel
                         JOptionPane.ERROR_MESSAGE);
             }
             
-            int contextWords = 0;
+            int contextWords;
             if (ngramList.getSelectedItem().equals("sentence"))
             {
                 contextWords = 100;
@@ -394,7 +392,7 @@ public class GUI extends JPanel
             }
             try
             {
-            	double startTime = System.nanoTime();
+            	double startTime = System.nanoTime(); // mark point from which time can be measured
                 String reader;
                 List<String> wikiText;
                 if (urlInput.isSelected())
@@ -410,39 +408,36 @@ public class GUI extends JPanel
                         wikiText = POSTagging.fetchFromWikipedia(url, "German");
                     }
                     if(wikiText.size() != 0) {
-                        String[] wow = new String[wikiText.size()];
-                        for (int i = 0; i < wow.length; i++) {
-                            wow[i] = wikiText.get(i);
+                        String[] suggestedTerms = new String[wikiText.size()];
+                        for (int i = 0; i < suggestedTerms.length; i++) {
+                            suggestedTerms[i] = wikiText.get(i);
                         }
-                        String s = (String) JOptionPane.showInputDialog(frame, "Pick a search term", "Input",
-                                JOptionPane.PLAIN_MESSAGE, null, wow, wow[0]);
-                        //System.out.println(s);
-                        if((s!=null) && (s.length() > 0)) { // if item in list is not empty
-                            urlField.setText(s);
-                            startTime = System.nanoTime();
+                        String selection = (String) JOptionPane.showInputDialog(frame, "Did you mean...?", "Disambiguation",
+                                JOptionPane.PLAIN_MESSAGE, null, suggestedTerms, suggestedTerms[0]);
+
+                        if((selection!=null) && (selection.length() > 0)) { // if item in list is not empty
+                            urlField.setText(selection); // change text in urlField to correspond to selected item
+                            startTime = System.nanoTime(); // overwrite startTime (measurement starts from here)
                             if(english.isSelected()){
-                                POSTagging.fetchFromWikipedia(s, "English");
+                                POSTagging.fetchFromWikipedia(selection, "English");
                             }
-                            else{
-                                POSTagging.fetchFromWikipedia(s, "German");
+                            else{ // if German is selected
+                                POSTagging.fetchFromWikipedia(selection, "German");
                             }
                         }
                         else{
-                            return;
+                            return; // do nothing if no item in list selected
                         }
                     }
-                    reader = POSTagging.readSentencesFromFile("wiki.txt");
+                    reader = POSTagging.readSentencesFromFile("wiki.txt"); // file to store wiki output
                 } else {
                     reader = POSTagging.readSentencesFromFile(url);
                 }
-                // look for topic on
-                // wikipedia, save text to file
-                // readSentencesFromFile method has to make sure to read from
-                // the file the previous method just created,
-                // so the long parameter string is an attempt to predict what
-                // the filename will look like
 
                 String[] sents;
+
+                // choose which opennlp models to use based on language selected
+
                 if (english.isSelected())
                 {
                     sents = POSTagging.sentenceDetector(reader, "models/en-sent.bin");
@@ -450,44 +445,44 @@ public class GUI extends JPanel
                 {
                     sents = POSTagging.sentenceDetector(reader, "models/de-sent.bin");
                 }
-                ArrayList<String> tmp1 = finder.getSentencesWithKeyWord(sents, toSearch);
-                ArrayList<String> tmp2 = finder.generateNgrams(tmp1, toSearch, contextWords);
+                ArrayList<String> sentsWithKeyword = finder.getSentencesWithKeyWord(sents, toSearch);
+                ArrayList<String> ngramsWithKeyword = finder.generateNgrams(sentsWithKeyword, toSearch, contextWords);
 
                 if (english.isSelected())
                 {
-                    tagList = finder.generateTagList(tmp1, toSearch, "models/en-token.bin",
+                    tagList = finder.generateTagList(sentsWithKeyword, toSearch, "models/en-token.bin",
                             "models/en-pos-maxent.bin");
                 } else
                 {
-                    tagList = finder.generateTagList(tmp1, toSearch, "models/de-token.bin",
+                    tagList = finder.generateTagList(sentsWithKeyword, toSearch, "models/de-token.bin",
                             "models/de-pos-maxent.bin");
                 }
 
                 // If there is a POSTag we have to take that into consideration
                 if (!tag.isEmpty())
                 {
-                    ArrayList<String> tmp3;
+                    ArrayList<String> ngramsWithTag;
                     if (english.isSelected())
                     {
-                        tmp3 = finder.getNgramsWithCorrectPOSTag(tmp2, tagList, toSearch, tag, "models/en-token.bin",
+                        ngramsWithTag = finder.getNgramsWithCorrectPOSTag(ngramsWithKeyword, tagList, toSearch, tag, "models/en-token.bin",
                                 "models/en-pos-maxent.bin");
                     } else
                     {
-                        tmp3 = finder.getNgramsWithCorrectPOSTag(tmp2, tagList, toSearch, tag, "models/de-token.bin",
+                        ngramsWithTag = finder.getNgramsWithCorrectPOSTag(ngramsWithKeyword, tagList, toSearch, tag, "models/de-token.bin",
                                 "models/de-pos-maxent.bin");
                     }
 
                     //search time
                     searchTime = (System.nanoTime() - startTime) * Math.pow(10, -9);
 
-                    String[] filteredSentences = new String[tmp3.size()];
+                    String[] filteredSentences = new String[ngramsWithTag.size()];
                     // this array is used to figure out how wide the cells in
                     // the Jlist should be
-                    int[] filteredSentencesLength = new int[tmp3.size()];
+                    int[] filteredSentencesLength = new int[ngramsWithTag.size()];
 
                     for (int i = 0; i < filteredSentences.length; i++)
                     {
-                        filteredSentences[i] = "<html>" + tmp3.get(i) + "</html>";
+                        filteredSentences[i] = "<html>" + ngramsWithTag.get(i) + "</html>";
                         filteredSentencesLength[i] = filteredSentences[i].length();
                     }
 
@@ -522,14 +517,14 @@ public class GUI extends JPanel
                     // scrollpane
                 } else
                 {
-                    String[] filteredSentences = new String[tmp2.size()];
+                    String[] filteredSentences = new String[ngramsWithKeyword.size()];
                     // this array is used to figure out how wide the cells in
                     // the Jlist should be
-                    int[] filteredSentencesLength = new int[tmp2.size()];
+                    int[] filteredSentencesLength = new int[ngramsWithKeyword.size()];
 
                     for (int i = 0; i < filteredSentences.length; i++)
                     {
-                        filteredSentences[i] = "<html>" + tmp2.get(i) + "</html>";
+                        filteredSentences[i] = "<html>" + ngramsWithKeyword.get(i) + "</html>";
                         // add the length of each item into the int array
                         filteredSentencesLength[i] = filteredSentences[i].length();
                     }

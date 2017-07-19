@@ -97,11 +97,11 @@ public class KeyWordFinder
 			for (int i = 0; i < words.length; i++)
 			{
 				// if you find the keyword
-				if (words[i].equals(keyWord)
+				if (words[i].equalsIgnoreCase(keyWord)
 						|| words[i]
-								.matches("[\"'(\\[]" + keyWord + "[\")'\\]]")
-						|| words[i].matches(keyWord + "[?;,.!:\"')\\]]")
-						|| words[i].matches("[\"'(\\[]" + keyWord))
+								.matches("[\"'(\\[](?i)" + keyWord + "(?-i)[\")'\\]]")
+						|| words[i].matches("(?i)" + keyWord + "(?-i)[?;,.!:\"')\\]]")
+						|| words[i].matches("[\"'(\\[] (?i)" + keyWord))
 				{
 					keyWordFound = true;
 					// this block adds the specified amount of words around the
@@ -298,11 +298,11 @@ public class KeyWordFinder
 			// if you find the keyword
 			for (int i = 0; i < words.length; i++)
 			{
-				if (words[i].equals("<b>" + keyWord + "</b>")
+				if (words[i].equals("<b> (?i)" + keyWord + "</b>")
 						|| words[i]
-								.matches("<b>" + "[\"'(\\[]" + keyWord + "[\")'\\]]" + "</b>")
-						|| words[i].matches("<b>" + keyWord + "[?;,.!:\"')\\]]" + "</b>")
-						|| words[i].matches("<b>" + "[\"'(\\[]" + keyWord + "</b>"))
+								.matches("<b>" + "[\"'(\\[] (?i)" + keyWord + "(?-i)[\")'\\]]" + "</b>")
+						|| words[i].matches("<b> (?i)" + keyWord + "(?-i)[?;,.!:\"')\\]]" + "</b>")
+						|| words[i].matches("<b>" + "[\"'(\\[] (?i)" + keyWord + "(?-i)</b>"))
 				{
 					tagsIndex++;
 					//if the keyword has the correct tag

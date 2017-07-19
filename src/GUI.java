@@ -1,3 +1,5 @@
+import jdk.nashorn.internal.scripts.JO;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -187,7 +189,7 @@ public class GUI extends JPanel
         westPanel.add(german);
         westPanel.add(Box.createRigidArea(verSep));
         // add fun buttons here
-        JButton but1 = new JButton("Statistics");
+        JButton but1 = new JButton("statistics");
         but1.addActionListener(new StatisticsButtonHandler());
         westPanel.add(but1);
         westPanel.add(Box.createRigidArea(verSep));
@@ -257,7 +259,6 @@ public class GUI extends JPanel
         JScrollPane sP = new JScrollPane(resultTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         JTableHeader tH = resultTable.getTableHeader(); // for assigning colours
-        // later
         centerRight.add(sP);
 
         // add sub-panels to panels
@@ -328,43 +329,40 @@ public class GUI extends JPanel
         public void actionPerformed(ActionEvent e)
         {
             String fileName = JOptionPane.showInputDialog(frame, "Please enter a filename:");
+            if (fileName != null && !"".equals(fileName)) {
 
-            ArrayList<String> listContents = new ArrayList<>();
+                ArrayList<String> listContents = new ArrayList<>();
 
-            ListModel model = sentenceList.getModel(); // have to make listModel
-            // to access all
-            // elements in JList
+                ListModel model = sentenceList.getModel(); // have to make listModel
+                // to access all
+                // elements in JList
 
-            // add all the elements in JList to model as strings (Object by
-            // default)
+                // add all the elements in JList to model as strings (Object by
+                // default)
 
-            for (int i = 0; i < model.getSize(); i++)
-            {
-                listContents.add(model.getElementAt(i).toString());
-            }
-
-            try
-            {
-                if (english.isSelected())
-                {
-                    Saving.saveToFile(listContents, fileName, "models/en-token.bin", "models/en-pos-maxent.bin",
-                            "models/en-lemmatizer.bin");
-                    Path p = Paths.get(fileName);
-                    JOptionPane.showMessageDialog(frame, "File has been saved in " + p, "Save successful!",
-                            JOptionPane.PLAIN_MESSAGE);
-                } else
-                {
-                    Saving.saveToFile(listContents, fileName, "models/de-token.bin", "models/de-pos-maxent.bin",
-                            "models/de-lemmatizer.bin");
-                    Path p = Paths.get(fileName);
-                    JOptionPane.showMessageDialog(frame, "File has been saved in " + p, "Save successful!",
-                            JOptionPane.PLAIN_MESSAGE);
+                for (int i = 0; i < model.getSize(); i++) {
+                    listContents.add(model.getElementAt(i).toString());
                 }
-            } catch (IOException e1)
-            {
-                e1.printStackTrace();
-                JOptionPane.showMessageDialog(frame, "There was an error saving the file.", "Saving error",
-                        JOptionPane.ERROR_MESSAGE);
+
+                try {
+                    if (english.isSelected()) {
+                        Saving.saveToFile(listContents, fileName, "models/en-token.bin", "models/en-pos-maxent.bin",
+                                "models/en-lemmatizer.bin");
+                        Path p = Paths.get(fileName);
+                        JOptionPane.showMessageDialog(frame, "File has been saved in " + p, "Save successful!",
+                                JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        Saving.saveToFile(listContents, fileName, "models/de-token.bin", "models/de-pos-maxent.bin",
+                                "models/de-lemmatizer.bin");
+                        Path p = Paths.get(fileName);
+                        JOptionPane.showMessageDialog(frame, "File has been saved in " + p, "Save successful!",
+                                JOptionPane.PLAIN_MESSAGE);
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(frame, "There was an error saving the file.", "Saving error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }

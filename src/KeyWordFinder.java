@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +36,8 @@ public class KeyWordFinder
 	 * @return - an ArrayList of the Strings that are the keyword + n-gram of
 	 *         the original sentence
 	 */
-	static ArrayList<String> getSentencesWithKeyWord(String[] sentences, String keyWord)
+	static ArrayList<String> getSentencesWithKeyWord(String[] sentences,
+			String keyWord)
 	{
 		sentenceCount = sentences.length;
 		ArrayList<String> rval = new ArrayList<String>();
@@ -67,93 +67,9 @@ public class KeyWordFinder
 	}
 
 	/**
-	 * Method that takes the result of getSentencesWithKeyWord + generateNgrams
-	 * and filters it so it returns a new ArrayList that only contains those
-	 * ngrams in which the keyword has the correct POSTag
-	 * 
-	 * @param ngrams
-	 *            - the sentences to go through
-	 * @param keyWord
-	 *            - the keyword to look for
-	 * @param tag
-	 *            - the tag to look for
-	 * @return - those sentences that contain the keyword with the given POS-Tag
-	 * @throws IOException
-	 */
-	static ArrayList<String> getNgramsWithCorrectPOSTag(ArrayList<String> ngrams, String keyWord, String tag,
-			String tokenizerModel, String taggerModel) throws IOException
-	{
-		sentencesWithKeyWordCount = 0;
-		ArrayList<String> rval = new ArrayList<String>();
-
-		boolean found = false;
-
-		String ngramsToString = "";
-		for (String item : ngrams)
-		{
-			// this %b will be used to mark the end of an ngram (tokenizer
-			// treats "%b" as a single token)
-			ngramsToString += item + " %b ";
-		}
-
-		// remove special characters for word detection - it happened that I had
-		// a string such as <b>word,</b> which
-		// the method failed to recognise because of the comma
-
-		ngramsToString = ngramsToString.replaceAll("[,-.\"\';:]", "");
-
-		String[] tokens = POSTagging.tokenizer(ngramsToString, tokenizerModel); // array
-																				// with
-																				// tokenized
-																				// ngrams
-		String[] tags = POSTagging.postagger(tokens, taggerModel); // array with
-																	// tags made
-																	// from
-																	// tokenized
-																	// array
-
-		int ngramCounter = 0; // keep track of how many of the input ngrams you
-								// went through
-
-		for (int i = 0; i < tokens.length; i++)
-		{
-
-			if (tokens[i].equals("%b"))
-			{
-				ngramCounter += 1; // end of ngram reached, whether token found
-									// within it or not move to next one
-			}
-			if (tokens[i].equalsIgnoreCase("<b>" + keyWord + "</b>") && tags[i].equals(tag))
-			{
-				if (!rval.contains(ngrams.get(ngramCounter)))
-				{
-					sentencesWithKeyWordCount++;
-				}
-
-				rval.add(ngrams.get(ngramCounter)); // get ngram at specified
-													// index from list of input
-													// nrgams
-
-				found = true;
-			}
-		}
-
-		if (!found)
-		{
-			rval.add("Sorry, tag not found for given word!");
-			keyWordCount = 0;
-		} else
-		{
-			keyWordCount = rval.size();
-		}
-
-		return rval;
-	}
-
-	/**
 	 * Method that takes an ArrayList of the sentences containing a words and a
 	 * given n-gram and generates an ArrayList with those n-grams of the keyword
-	 *
+	 * 
 	 * @param sentences
 	 *            - the ArrayList to get n-grams of
 	 * @param keyWord
@@ -162,7 +78,8 @@ public class KeyWordFinder
 	 *            - the number of words to each side of the keyword
 	 * @return the n-gram of the keyword specified
 	 */
-	static ArrayList<String> generateNgrams(ArrayList<String> sentences, String keyWord, int ngram)
+	static ArrayList<String> generateNgrams(ArrayList<String> sentences,
+			String keyWord, int ngram)
 	{
 		ArrayList<String> rval = new ArrayList<String>();
 		// boolean to check whether we actually found the keyword
@@ -181,8 +98,11 @@ public class KeyWordFinder
 			for (int i = 0; i < words.length; i++)
 			{
 				// if you find the keyword
-				if (words[i].equals(keyWord) || words[i].matches("[\"'(\\[]" + keyWord + "[\")'\\]]")
-						|| words[i].matches(keyWord + "[?;,.!:\"')\\]]") || words[i].matches("[\"'(\\[]" + keyWord))
+				if (words[i].equals(keyWord)
+						|| words[i]
+								.matches("[\"'(\\[]" + keyWord + "[\")'\\]]")
+						|| words[i].matches(keyWord + "[?;,.!:\"')\\]]")
+						|| words[i].matches("[\"'(\\[]" + keyWord))
 				{
 					keyWordFound = true;
 					// this block adds the specified amount of words around the
@@ -295,8 +215,23 @@ public class KeyWordFinder
 		return rval;
 	}
 
-	static ArrayList<String> generateTagList(ArrayList<String> sentences, String keyWord, String tokenizerModel,
-			String taggerModel) throws IOException
+	/**
+	 * method that generates a list of tags for the keyword
+	 * 
+	 * @param sentences
+	 *            - sentences to search for the keyword in
+	 * @param keyWord
+	 *            - the keyword
+	 * @param tokenizerModel
+	 *            - tokenizermodel for language change
+	 * @param taggerModel
+	 *            - taggerModel for language change
+	 * @return a list of the tags of the keyword
+	 * @throws IOException
+	 */
+	static ArrayList<String> generateTagList(ArrayList<String> sentences,
+			String keyWord, String tokenizerModel, String taggerModel)
+			throws IOException
 	{
 		ArrayList<String> tagList = new ArrayList<String>();
 
@@ -306,14 +241,20 @@ public class KeyWordFinder
 		{
 			sentencesToString += item + " ";
 		}
-		
-		// remove special characters for word detection
-		sentencesToString = sentencesToString.replaceAll("[,-.\"\';:]","");
 
-		String[] tokens = POSTagging.tokenizer(sentencesToString, tokenizerModel); // array with tokenized sentences
-		String[] tags = POSTagging.postagger(tokens, taggerModel); // array with tags made from tokenized array
-		
-		//go through the array, if the token is the keyword add its tag to the list that's returned
+		// remove special characters for word detection
+		sentencesToString = sentencesToString.replaceAll("[,-.\"\';:]", "");
+
+		String[] tokens = POSTagging.tokenizer(sentencesToString,
+				tokenizerModel); // array with tokenized sentences
+		String[] tags = POSTagging.postagger(tokens, taggerModel); // array with
+																	// tags made
+																	// from
+																	// tokenized
+																	// array
+
+		// go through the array, if the token is the keyword add its tag to the
+		// list that's returned
 		for (int i = 0; i < tokens.length; i++)
 		{
 			if (tokens[i].equals(keyWord))
@@ -323,5 +264,74 @@ public class KeyWordFinder
 		}
 
 		return tagList;
+	}
+
+	/**
+	 * Method that takes the result of getSentencesWithKeyWord + generateNgrams
+	 * + generate tagList and filters it so it returns a new ArrayList that only
+	 * contains those ngrams in which the keyword has the correct POSTag
+	 * 
+	 * @param ngrams
+	 *            - the sentences to go through
+	 * @param keyWord
+	 *            - the keyword to look for
+	 * @param tag
+	 *            - the tag to look for
+	 * @return - those sentences that contain the keyword with the given POS-Tag
+	 * @throws IOException
+	 */
+	static ArrayList<String> getNgramsWithCorrectPOSTag(
+			ArrayList<String> ngrams, ArrayList<String> tags, String keyWord,
+			String tag, String tokenizerModel, String taggerModel)
+			throws IOException
+	{
+		sentencesWithKeyWordCount = 0;
+		ArrayList<String> rval = new ArrayList<String>();
+
+		boolean found = false;
+		int tagsIndex = -1;
+
+		for (String item : ngrams)
+		{
+			System.out.println(item);
+			// split the ArrayList content by whitespace
+			String[] words = item.split("\\s+");
+			// if you find the keyword
+			for (int i = 0; i < words.length; i++)
+			{
+				if (words[i].equals("<b>" + keyWord + "</b>")
+						|| words[i]
+								.matches("<b>" + "[\"'(\\[]" + keyWord + "[\")'\\]]" + "</b>")
+						|| words[i].matches("<b>" + keyWord + "[?;,.!:\"')\\]]" + "</b>")
+						|| words[i].matches("<b>" + "[\"'(\\[]" + keyWord + "</b>"))
+				{
+					tagsIndex++;
+					//if the keyword has the correct tag
+					if (tags.get(tagsIndex).equals(tag))
+					{
+						if (!rval.contains(item))
+						{
+							sentencesWithKeyWordCount++;
+						}
+						
+						//add the ngram to the return value
+						rval.add((item));
+
+						found = true;
+					}
+				}
+			}
+		}
+
+		if (!found)
+		{
+			rval.add("Sorry, tag not found for given word!");
+			keyWordCount = 0;
+		} else
+		{
+			keyWordCount = rval.size();
+		}
+
+		return rval;
 	}
 }

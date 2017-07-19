@@ -423,6 +423,16 @@ public class GUI extends JPanel
                 }
                 ArrayList<String> tmp1 = finder.getSentencesWithKeyWord(sents, toSearch);
                 ArrayList<String> tmp2 = finder.generateNgrams(tmp1, toSearch, contextWords);
+                
+                if (english.isSelected())
+                {
+                    tagList = finder.generateTagList(tmp1, toSearch, "models/en-token.bin",
+                            "models/en-pos-maxent.bin");
+                } else
+                {
+                    tagList = finder.generateTagList(tmp1, toSearch, "models/de-token.bin",
+                            "models/de-pos-maxent.bin");
+                }
 
                 // If there is a POSTag we have to take that into consideration
                 if (!tag.isEmpty())
@@ -430,11 +440,11 @@ public class GUI extends JPanel
                     ArrayList<String> tmp3;
                     if (english.isSelected())
                     {
-                        tmp3 = finder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag, "models/en-token.bin",
+                        tmp3 = finder.getNgramsWithCorrectPOSTag(tmp2, tagList, toSearch, tag, "models/en-token.bin",
                                 "models/en-pos-maxent.bin");
                     } else
                     {
-                        tmp3 = finder.getNgramsWithCorrectPOSTag(tmp2, toSearch, tag, "models/de-token.bin",
+                        tmp3 = finder.getNgramsWithCorrectPOSTag(tmp2, tagList, toSearch, tag, "models/de-token.bin",
                                 "models/de-pos-maxent.bin");
                     }
 

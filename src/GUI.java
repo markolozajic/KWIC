@@ -359,7 +359,6 @@ public class GUI extends JPanel
                                 JOptionPane.PLAIN_MESSAGE);
                     }
                 } catch (IOException e1) {
-                    e1.printStackTrace();
                     JOptionPane.showMessageDialog(frame, "There was an error saving the file.", "Saving error",
                             JOptionPane.ERROR_MESSAGE);
                 }
@@ -540,16 +539,16 @@ public class GUI extends JPanel
                 }
             } catch (MalformedURLException m)
             {
-                // show error message in scrollpane
-                String[] errorMessage = { "Text could not be fetched from URL!" };
-                JList<String> whoops = new JList<>(errorMessage);
-                scrollPane.setViewportView(whoops);
+                JOptionPane.showMessageDialog(frame,
+                        "Text could not be fetched from URL",
+                        "URL error",
+                        JOptionPane.ERROR_MESSAGE);
             } catch (IOException i)
             {
-                // show error message in scrollpane
-                String[] errorMessage = { "Something unfortunate just happened" };
-                JList<String> whoops = new JList<>(errorMessage);
-                scrollPane.setViewportView(whoops);
+                JOptionPane.showMessageDialog(frame,
+                        "Text could not be fetched from file \n Word could not be found in file",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -622,7 +621,10 @@ public class GUI extends JPanel
                 postagList.setText(POSTagging.readSentencesFromFile("help/help.html"));
             } catch (IOException i)
             {
-                i.printStackTrace();
+                JOptionPane.showMessageDialog(frame,
+                        "A problem occurred",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
             JScrollPane scrollPane = new JScrollPane(postagList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -718,7 +720,10 @@ public class GUI extends JPanel
 
                 } catch (IOException e1)
                 {
-                    System.out.println("Cannot tokenize for some reason");
+                    JOptionPane.showMessageDialog(frame,
+                            "Tokenisation failed :(",
+                            "Tokenisation error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         }

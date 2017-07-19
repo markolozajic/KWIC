@@ -245,7 +245,7 @@ public class GUI extends JPanel
         // centerRight- word, lemma, pos tags
         JPanel centerRight = new JPanel();
         String[] columnNames = { "Word", "Lemma", "POS Tags" };
-        Object[][] data = new Object[100][3];
+        Object[][] data = new Object[30][3];
         resultTable = new JTable(data, columnNames);
         TableColumn column = null;
         // for each column, set preferred width
@@ -425,7 +425,7 @@ public class GUI extends JPanel
                 }
                 ArrayList<String> tmp1 = finder.getSentencesWithKeyWord(sents, toSearch);
                 ArrayList<String> tmp2 = finder.generateNgrams(tmp1, toSearch, contextWords);
-                
+
                 if (english.isSelected())
                 {
                     tagList = finder.generateTagList(tmp1, toSearch, "models/en-token.bin",

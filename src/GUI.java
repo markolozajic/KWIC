@@ -1,12 +1,9 @@
-import jdk.nashorn.internal.scripts.JO;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -14,7 +11,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
 import static javax.swing.BoxLayout.Y_AXIS;
 
@@ -389,22 +387,34 @@ public class GUI extends JPanel
             {
                 double startTime = System.nanoTime();
                 String reader;
+                List<String> wikiText;
                 if (urlInput.isSelected())
                 {
                     POSTagging.fetchFromUrl(url);
                     reader = POSTagging.readSentencesFromFile("url.txt");
-                } else if (wikiInput.isSelected())
-                {
+                } else if (wikiInput.isSelected()) {
                     if (english.isSelected())
                     {
-                        POSTagging.fetchFromWikipedia(url, "English");
+                        wikiText = POSTagging.fetchFromWikipedia(url, "English");
                     } else
                     {
-                        POSTagging.fetchFromWikipedia(url, "German");
+                        wikiText = POSTagging.fetchFromWikipedia(url, "German");
                     }
-                    reader = POSTagging.readSentencesFromFile(url.replaceAll(" ", "_") + ".txt");
-                } else
-                {
+                    if(wikiText.size() != 0) {
+                        String[] wow = new String[wikiText.size()];
+                        for (int i = 0; i < wow.length; i++) {
+                            wow[i] = wikiText.get(i);
+                        }
+                        String s = (String) JOptionPane.showInputDialog(frame, "Pick a search term", "Input",
+                                JOptionPane.PLAIN_MESSAGE, null, wow, wow[0]);
+                        //System.out.println(s);
+                        if((s!=null) && (s.length() > 0)) { // if item in list is not empty
+                            urlField.setText(s);
+                            POSTagging.fetchFromWikipedia(s, "English");
+                        }
+                    }
+                    reader = POSTagging.readSentencesFromFile("wiki.txt");
+                } else {
                     reader = POSTagging.readSentencesFromFile(url);
                 }
                 // look for topic on
@@ -547,6 +557,7 @@ public class GUI extends JPanel
                         JOptionPane.ERROR_MESSAGE);
             } catch (IOException i)
             {
+                i.printStackTrace();
                 JOptionPane.showMessageDialog(frame,
                         "Text could not be fetched from file \n Word could not be found in file",
                         "Error",
@@ -635,7 +646,7 @@ public class GUI extends JPanel
             postagList.setPreferredSize(new Dimension((int) (width / 3.5), (int) (height / 2.5)));
             try
             {
-                postagList.setText(POSTagging.readSentencesFromFile("help/help.html"));
+                postagList.setText(POSTagging.readSentencesFromFile("help/helpPOS.html"));
             } catch (IOException i)
             {
                 JOptionPane.showMessageDialog(frame,

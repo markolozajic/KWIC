@@ -38,7 +38,7 @@ public class GUI extends JPanel
     // need this to be an instance variable so i can access the instance
     // variables of the keywordfinder class in the statistics
     private KeyWordFinder finder = new KeyWordFinder();
-    private ArrayList<String> tagList = new ArrayList<String>();
+    private ArrayList<String> tagList = new ArrayList<>();
 
     // these are control booleans that are changed in the searchButtonHandler
     // and used in the statsButtonHandler
@@ -49,18 +49,18 @@ public class GUI extends JPanel
     private double searchTime;
 
     // POS tags for english and german
-    String[] englishPOS = { "", "CC", "CD", "DT", "EX", "FW", "IN", "JJ", "JJR", "JJS", "LS", "MD", "NN", "NNS", "NNP",
+    private String[] englishPOS = { "", "CC", "CD", "DT", "EX", "FW", "IN", "JJ", "JJR", "JJS", "LS", "MD", "NN", "NNS", "NNP",
             "NNPS", "PDT", "POS", "PRP", "PRP$", "RB", "RBR", "RBS", "RP", "SYM", "TO", "UH", "VB", "VBD", "VBG", "VBN",
             "VBP", "VBZ", "WDT", "WP", "WP$", "WRB" };
-    String[] germanPOS = { "", "ADJA", "ADJD", "ADV", "APPR", "APPRART", "APPO", "APZR", "ART", "CARD", "FM", "ITJ",
+    private String[] germanPOS = { "", "ADJA", "ADJD", "ADV", "APPR", "APPRART", "APPO", "APZR", "ART", "CARD", "FM", "ITJ",
             "KOUI", "KOUS", "KON", "KOKOM", "NN", "NE", "PDS", "PDAT", "PIS", "PIAT", "PIDAT", "PPER", "PPOSS",
             "PPOSAT", "PRELS", "PRELAT", "PRF", "PWS", "PWAT", "PWAV", "PAV", "PTKZU", "PTKNEG", "PTKVZ", "PTKANT",
             "PTKA", "TRUNC", "VVFIN", "VVIMP", "VVINF", "VVIZU", "VVPP", "VAFIN", "VAIMP", "VAINF", "VAPP", "VMFIN",
             "VMINF", "VMPP", "XY", "$,", "$.", "$(" };
 
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    double width = screenSize.getWidth();
-    double height = screenSize.getHeight();
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private double width = screenSize.getWidth();
+    private double height = screenSize.getHeight();
 
     // constructor
     GUI()

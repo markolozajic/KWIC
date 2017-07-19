@@ -420,7 +420,15 @@ public class GUI extends JPanel
                         if((s!=null) && (s.length() > 0)) { // if item in list is not empty
                             urlField.setText(s);
                             startTime = System.nanoTime();
-                            POSTagging.fetchFromWikipedia(s, "English");
+                            if(english.isSelected()){
+                                POSTagging.fetchFromWikipedia(s, "English");
+                            }
+                            else{
+                                POSTagging.fetchFromWikipedia(s, "German");
+                            }
+                        }
+                        else{
+                            return;
                         }
                     }
                     reader = POSTagging.readSentencesFromFile("wiki.txt");
@@ -794,7 +802,7 @@ public class GUI extends JPanel
 
                 // make a new ArrayList and add the unique items in the tagList
                 // to it
-                ArrayList<String> uniqueTags = new ArrayList<String>();
+                ArrayList<String> uniqueTags = new ArrayList<>();
                 for (String item : tagList)
                 {
                     if (!uniqueTags.contains(item))

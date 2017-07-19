@@ -292,7 +292,6 @@ public class KeyWordFinder
 
 		for (String item : ngrams)
 		{
-			System.out.println(item);
 			// split the ArrayList content by whitespace
 			String[] words = item.split("\\s+");
 			// if you find the keyword

@@ -1,4 +1,3 @@
-import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -541,9 +540,11 @@ public class GUI extends JPanel
                     sentenceList.setFixedCellWidth(maxWidth);
                     sentenceList.setVisibleRowCount(24);
                     sentenceList.addListSelectionListener(new SentenceListHandler());
-
-                    scrollPane.setViewportView(sentenceList); // replace old
-                    // scrollpane
+                    
+                  
+                    // replace old scrollpane
+                    scrollPane.setViewportView(sentenceList); 
+ 
                 }
             } catch (MalformedURLException m)
             {
@@ -641,7 +642,7 @@ public class GUI extends JPanel
             postagList.setPreferredSize(new Dimension((int) (width / 3.5), (int) (height / 2.5)));
             try
             {
-                postagList.setText(POSTagging.readSentencesFromFile("help/help.html"));
+                postagList.setText(POSTagging.readSentencesFromFile("help/helpPOS.html"));
             } catch (IOException i)
             {
                 JOptionPane.showMessageDialog(frame,
@@ -726,22 +727,26 @@ public class GUI extends JPanel
                         lemmas = POSTagging.lemmatizer(tokens, tags, "models/de-lemmatizer.bin");
                     }
 
+                    //adjust the length of the table
                     String[] columnNames = { "Word", "Lemma", "POS Tags" };
 
                     DefaultTableModel model = new DefaultTableModel(tokens.length, 3);
                     model.setColumnIdentifiers(columnNames);
                     resultTable.setModel(model);
 
+                    //fill in the tokens in the first column
                     for (int i = 0; i < tokens.length; i++)
                     {
                         resultTable.setValueAt(tokens[i], i, 0);
                     }
 
+                    //fill in the lemmas in the second column
                     for (int i = 0; i < tokens.length; i++)
                     {
                         resultTable.setValueAt(lemmas[i], i, 1);
                     }
 
+                    //fill in the tags in the third column
                     for (int i = 0; i < tokens.length; i++)
                     {
                         resultTable.setValueAt(tags[i], i, 2);

@@ -495,16 +495,6 @@ public class GUI extends JPanel
                     // scrollpane
                 } else
                 {
-                    if (english.isSelected())
-                    {
-                        tagList = finder.generateTagList(tmp1, toSearch, "models/en-token.bin",
-                                "models/en-pos-maxent.bin");
-                    } else
-                    {
-                        tagList = finder.generateTagList(tmp1, toSearch, "models/de-token.bin",
-                                "models/de-pos-maxent.bin");
-                    }
-
                     String[] filteredSentences = new String[tmp2.size()];
                     // this array is used to figure out how wide the cells in
                     // the Jlist should be

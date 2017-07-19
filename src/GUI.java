@@ -419,6 +419,7 @@ public class GUI extends JPanel
                         //System.out.println(s);
                         if((s!=null) && (s.length() > 0)) { // if item in list is not empty
                             urlField.setText(s);
+                            startTime = System.nanoTime();
                             POSTagging.fetchFromWikipedia(s, "English");
                         }
                     }

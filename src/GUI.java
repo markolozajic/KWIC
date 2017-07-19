@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
@@ -393,7 +394,7 @@ public class GUI extends JPanel
             }
             try
             {
-                double startTime = System.nanoTime();
+            	double startTime = System.nanoTime();
                 String reader;
                 List<String> wikiText;
                 if (urlInput.isSelected())
@@ -418,12 +419,8 @@ public class GUI extends JPanel
                         //System.out.println(s);
                         if((s!=null) && (s.length() > 0)) { // if item in list is not empty
                             urlField.setText(s);
-                            if(english.isSelected()){
-                                POSTagging.fetchFromWikipedia(s, "English");
-                            }
-                            else{
-                                POSTagging.fetchFromWikipedia(s, "German");
-                            }
+                            startTime = System.nanoTime();
+                            POSTagging.fetchFromWikipedia(s, "English");
                         }
                     }
                     reader = POSTagging.readSentencesFromFile("wiki.txt");
@@ -563,7 +560,8 @@ public class GUI extends JPanel
                     scrollPane.setViewportView(sentenceList); 
  
                 }
-            } catch (MalformedURLException m) {
+            } catch (MalformedURLException m)
+            {
                 JOptionPane.showMessageDialog(frame,
                         "Text could not be fetched from URL",
                         "URL error",
@@ -818,8 +816,9 @@ public class GUI extends JPanel
                             count++;
                         }
                     }
-                    double percentage = count * 100 / tagList.size();
-                    output += uniqueTagsItem + ": " + count + "/" + tagList.size() + " (" + percentage + "%)" + "\n";
+                    double percentage =  (double) count * 100 / tagList.size();
+                    DecimalFormat df = new DecimalFormat("####0.00");
+                    output += uniqueTagsItem + ": " + count + "/" + tagList.size() + " (" + df.format(percentage) + "%)" + "\n";
                 }
 
                 //add search time

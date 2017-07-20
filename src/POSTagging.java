@@ -22,71 +22,102 @@ import java.util.List;
 
 
 public class POSTagging {
+	
+	/** Method to scrape a site with given by user URL 
+	 * 
+	 * @param givenurl - String input by user
+	 * @throws IOException, MalformedURLException
+	 */
 
     static void fetchFromUrl(String givenurl) throws IOException {
-        //was thinking about regex, but it works bad with matching long links (like "https://stackoverflow.com/questions/161738/what-is-the-best-r.." will not work for example
         URL url = new URL(givenurl);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        //checking for code of connection and keep going only in case of "2**"
+        //another possibility was to do it with regex
         if(Integer.parseInt(Integer.toString(connection.getResponseCode()).substring(0,1))!=2){
             throw new MalformedURLException();
-            //2** means that URL ok, 4** - bad bad bad, 3** - redirection - do we try to handle it or just put with 4?
+            //throwing separate exception in case of bad formed URL
+           
         }
         Document doc = Jsoup.connect(givenurl).get();
         Elements lines = doc.select("p");
+        //in program only text in <p> considered to be worth for scraping 
         PrintWriter writer = new PrintWriter("url.txt");
+        //instead of saving every file separately, file is overwritten every time
         for (Element line : lines) {
             writer.println(line.text().replaceAll("\\[\\d*\\]|\\[citation needed\\]" , ""));
         }
         writer.close();
     }
+    /** Method to scrape a Wiki-page with user search word.
+     * 
+     * @param String article - the name of Wiki page, for which user is looking
+     * @param String language - have "German or "English" as content, depend on User's choice
+     * @return List<String> TheList - list of Strings with names of possible Wiki-pages, in case of disambiguation, aList<String> - empty list
+     * @throws IOException, MalformedURLException
+     */
 
     static List<String> fetchFromWikipedia(String article, String language) throws IOException{
+    	//the variables are initialized
         String sitename = "";
         String detect = "";
         if(language.equals("English")){
+        	//depending on language (chosen by user earlier) Wiki links would be different
             sitename = "https://en.wikipedia.org/wiki/" + article.replace(" ", "_");
             detect = "a[title=Help:Disambiguation]";
-            //all pages with disambiguation have a link with this title, this way it's possible to detect is it meaningful
+            //<almost> all pages with disambiguation have a link with this title, this way it's possible to detect is it meaningful
         }
         else {
             sitename = "https://de.wikipedia.org/wiki/" + article.replace(" ", "_");
             detect = "a[title=Wikipedia:Begriffsklärung]";
             //in case page consists of links like zB "Chelsea"
         }
-        //considering program support only two languages there is no need to specify
+        //considering program support only two languages there is no need to specify that it is "German"
         URL url = new URL(sitename);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        //checking for code of connection and keep going only in case of "2**"
+        //another possibility was to do it with regex
         if(Integer.parseInt(Integer.toString(connection.getResponseCode()).substring(0,1))!=2){
             throw new MalformedURLException();
+            //throwing separate exception in case of bad formed URL
         }
         Document doc = Jsoup.connect(sitename).get();
         String content = "";
         Elements checker = doc.select(detect);
+        //detect is it a disambiguation page
         if(checker.text().length() > 0){
-            // this way we check does this thing exist or not (
+            // if it is it handled differently
             Elements links = doc.select("a[title*="+article+"]:not([lang])");
+            //getting all links for redirection to more specific pages ("Maria" - Maria (Blondie song))
             //if lang attribute won't be excluded will get names of languages like "Русский" etc
             //because links in wiki have this format <...> title="Maria – French" lang="fr" <...>Français</a>
             for (Element link : links){
-                String linky = link.text();
-                content = content + linky + " ; ";
+                String tmp = link.text();
+                content = content + tmp + " ; ";
                 //use ; as delimiter because "," can actually be part of a link's name
             }
             content = content.substring(0, content.lastIndexOf(";"));
+            // remove extra ";" in the end
             List<String> TheList = Arrays.asList(content.split(";"));
+            //convert String to List <String> (splitting on ";")
             for (int i = 0;  i < TheList.size(); i++){
                 String temp = TheList.get(i);
                 if(temp.trim().equalsIgnoreCase(article))
                 {
                     TheList.set(i,"");
+                    //this loop for removing identical links to Wiki (if list has links to "Maria" which is identical to String article
+                    //and will not give any result, this item is removed;
                 }
             }
             return TheList;
         }
         else{
             List<String> aList = new ArrayList<>();
+            //empty list to take care of return statement
             Elements lines = doc.select("p");
+            //in program only text in <p> considered to be worth for scraping 
             PrintWriter writer = new PrintWriter("wiki.txt");
+            //instead of saving every file separately, file is overwritten every time
             for (Element line : lines) {
                 // write next line to file, without citations (e.g. "[56]" or "[citation needed]")
                 writer.println(line.text().replaceAll("\\[\\d*\\]|\\[citation needed\\]" , ""));
@@ -95,14 +126,14 @@ public class POSTagging {
             return aList;
         }
     }
-    public static void main (String[] args){
-        try {
-            fetchFromWikipedia("Helen Keller","English");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
+    /** Method which reads from file and converting them to String
+     * 
+     * @param String filename - name of the file
+     * @return String sentences - all sentences from given by user file
+     * @throws IOException
+     */
+    
     static String readSentencesFromFile(String filename) throws IOException{
 
         BufferedReader buff = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
@@ -112,7 +143,7 @@ public class POSTagging {
         while((nextLine = buff.readLine()) != null) {
             sentences += nextLine + "\n";
         }
-
+        buff.close();
         return sentences;
     }
 

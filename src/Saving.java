@@ -8,7 +8,17 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 
+// class dedicated to saving XML version of the results to a file
 class Saving {
+
+    /**
+     *
+     * @param ngrams text input to be converted to xml
+     * @param addressFile file the xml output should be directed to
+     * @param language toggled in GUI, models differ depending on choice
+     * @throws XMLStreamException
+     * @throws IOException
+     */
     static void saveToFile(ArrayList<String> ngrams, String addressFile, String language) throws
             XMLStreamException, IOException {
         FileWriter fw = new FileWriter(new File(addressFile));
@@ -21,6 +31,14 @@ class Saving {
         fw.close();
     }
 
+    /**
+     *
+     * @param ngrams text input to be converted to xml
+     * @param w // used to write XML events
+     * @param language // choice of opennlp models differs based on language selected
+     * @throws XMLStreamException
+     * @throws IOException
+     */
     private static void generateXML(ArrayList<String> ngrams, Writer w, String language)
             throws XMLStreamException, IOException {
 
@@ -96,6 +114,5 @@ class Saving {
         eventWriter.add(eventFactory.createEndElement("", "", "results"));
         eventWriter.add(eventFactory.createEndDocument()); // mark end of document
         eventWriter.close(); // close writer
-
     }
 }

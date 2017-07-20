@@ -21,42 +21,43 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class POSTagging {
+class POSTagging {
 	
 	/** Method to scrape a site with given by user URL 
 	 * 
 	 * @param givenurl - String input by user
 	 * @throws IOException, MalformedURLException
 	 */
-
     static void fetchFromUrl(String givenurl) throws IOException {
         URL url = new URL(givenurl);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+
         //checking for code of connection and keep going only in case of "2**"
         //another possibility was to do it with regex
         if(Integer.parseInt(Integer.toString(connection.getResponseCode()).substring(0,1))!=2){
-            throw new MalformedURLException();
             //throwing separate exception in case of bad formed URL
-           
+            throw new MalformedURLException();
         }
+
         Document doc = Jsoup.connect(givenurl).get();
         Elements lines = doc.select("p");
         //in program only text in <p> considered to be worth for scraping 
         PrintWriter writer = new PrintWriter("url.txt");
+
         //instead of saving every file separately, file is overwritten every time
         for (Element line : lines) {
             writer.println(line.text().replaceAll("\\[\\d*\\]|\\[citation needed\\]" , ""));
         }
         writer.close();
     }
+
     /** Method to scrape a Wiki-page with user search word.
      * 
-     * @param String article - the name of Wiki page, for which user is looking
-     * @param String language - have "German or "English" as content, depend on User's choice
+     * @param article - the name of Wiki page, for which user is looking
+     * @param language - have "German or "English" as content, depend on User's choice
      * @return List<String> TheList - list of Strings with names of possible Wiki-pages, in case of disambiguation, aList<String> - empty list
      * @throws IOException, MalformedURLException
      */
-
     static List<String> fetchFromWikipedia(String article, String language) throws IOException{
     	//the variables are initialized
         String sitename = "";
@@ -78,15 +79,17 @@ public class POSTagging {
         //checking for code of connection and keep going only in case of "2**"
         //another possibility was to do it with regex
         if(Integer.parseInt(Integer.toString(connection.getResponseCode()).substring(0,1))!=2){
-            throw new MalformedURLException();
             //throwing separate exception in case of bad formed URL
+            throw new MalformedURLException();
         }
+
         Document doc = Jsoup.connect(sitename).get();
         String content = "";
+        //detect whether it is a disambiguation page
         Elements checker = doc.select(detect);
-        //detect is it a disambiguation page
+        
+        // if yes, it is handled differently
         if(checker.text().length() > 0){
-            // if it is it handled differently
             Elements links = doc.select("a[title*="+article+"]:not([lang])");
             //getting all links for redirection to more specific pages ("Maria" - Maria (Blondie song))
             //if lang attribute won't be excluded will get names of languages like "Русский" etc
@@ -129,11 +132,10 @@ public class POSTagging {
 
     /** Method which reads from file and converting them to String
      * 
-     * @param String filename - name of the file
-     * @return String sentences - all sentences from given by user file
+     * @param filename - name of the file
+     * @return sentences - all sentences from given by user file
      * @throws IOException
      */
-    
     static String readSentencesFromFile(String filename) throws IOException{
 
         BufferedReader buff = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
@@ -147,6 +149,13 @@ public class POSTagging {
         return sentences;
     }
 
+    /**
+     *
+     * @param input the text to split into sentences
+     * @param sentenceModel differs depending on language
+     * @return text separated into sentences
+     * @throws IOException
+     */
     static String[] sentenceDetector (String input, String sentenceModel) throws IOException {
 
         InputStream modelIn = new FileInputStream(sentenceModel);
@@ -157,6 +166,14 @@ public class POSTagging {
         return sentenceDetector.sentDetect(input);
     }
 
+
+    /**
+     *
+     * @param sentences input text split by the sentence model
+     * @param tokenizerModel differs depending on language
+     * @return an array containing all the tokens
+     * @throws IOException
+     */
     static String[] tokenizer(String sentences, String tokenizerModel) throws IOException {
 
         InputStream modelIn = new FileInputStream(tokenizerModel);
@@ -167,6 +184,13 @@ public class POSTagging {
         return tokenizer.tokenize(sentences);
     }
 
+    /**
+     *
+     * @param tokenizedText array containing tokens found in input
+     * @param taggerModel differs depending on language
+     * @return an array containing all the POS tags for the input tokens, in the same order
+     * @throws IOException
+     */
     static String[] postagger(String[] tokenizedText, String taggerModel) throws IOException {
 
         InputStream modelIn = new FileInputStream(taggerModel);
@@ -177,6 +201,14 @@ public class POSTagging {
         return tagger.tag(tokenizedText);
     }
 
+    /**
+     *
+     * @param tokens array of tokens
+     * @param postags array of POS tags, in the same order as the tokens
+     * @param lemmatizerModel differs depending on language
+     * @return array containing lemmas according to token/POS tag, in the same order as both
+     * @throws IOException
+     */
     static String[] lemmatizer(String[] tokens, String[] postags, String lemmatizerModel) throws IOException{
         InputStream modelIn = new FileInputStream(lemmatizerModel);
         LemmatizerModel model = new LemmatizerModel(modelIn);

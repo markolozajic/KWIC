@@ -158,7 +158,6 @@ public class GUI extends JPanel
 
         //search button
         JButton searchButton = new JButton("search");
-        searchButton.setEnabled(false);
         searchButton.setToolTipText("Let's find it!");
         searchButton.addActionListener(new SearchButtonHandler());
         npSouth.add(searchButton);
@@ -179,16 +178,12 @@ public class GUI extends JPanel
             posList.removeAllItems();
             for (String s : englishPOS)
                 posList.addItem(s);
-            german.setEnabled(false);
-            searchButton.setEnabled(true);
         });
         german.addActionListener(e ->
         {
             posList.removeAllItems();
             for (String s : germanPOS)
                 posList.addItem(s);
-            english.setEnabled(false);
-            searchButton.setEnabled(true);
         });
         //so you can only select one button
         ButtonGroup buttonGroup1 = new ButtonGroup();
@@ -333,16 +328,15 @@ public class GUI extends JPanel
             //listModel in order to access all elements in JList
             ListModel model = sentenceList.getModel();
 
-            if (model.getSize() == 0) { // if results were cleared previously
-                JOptionPane.showMessageDialog(frame, "Why would you save empty results, silly?", "Saving error",
+            if (model.getSize() == 0) { //if results were cleared previously
+                JOptionPane.showMessageDialog(frame, "Oops! You can't save empty results", "Saving error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            // prompt for input
+            //prompt for input
             String fileName = JOptionPane.showInputDialog(frame, "Please enter a filename:");
 
-            // so that an exception isn't thrown when the user closes the dialog box
+            //so that an exception isn't thrown when the user closes the dialog box
             if (fileName != null && !fileName.equals("")) {
 
                 ArrayList<String> listContents = new ArrayList<>();
@@ -352,7 +346,7 @@ public class GUI extends JPanel
                     listContents.add(model.getElementAt(i).toString());
                 }
 
-                // tags differently depending on english or german
+                //tags differently depending on english or german
                 try {
                     if (english.isSelected()) {
                         Saving.saveToFile(listContents, fileName, "English");
@@ -823,7 +817,8 @@ public class GUI extends JPanel
                 {
                     output = "The word \"" + searchBox.getText() + "\" with the tag \""
                             + posList.getSelectedItem().toString() + "\" has been found " + finder.getKeyWordCount()
-                            + " times in " + finder.getSentenceCount() + " sentences." + "\n\nThe search took " + searchTime + " seconds.";
+                            + " times in " + finder.getSentenceCount() + " sentences." + "\n\nThe search took " +
+                            searchTime + " seconds.";
                 } else {
                     output = "There is nothing to show statistics for!";
                 }
@@ -837,25 +832,30 @@ public class GUI extends JPanel
     public static void main(String[] args)
     {
         new GUI();
-		Object[] options = {"English", "German"};
-		int n = JOptionPane.showOptionDialog(frame,
-				"Please choose a language",
-"Welcome!",
-JOptionPane.YES_NO_OPTION,
-JOptionPane.QUESTION_MESSAGE,
-null,    
-options, 
-options[0]);
-		if (n == JOptionPane.YES_OPTION) {
-			english.setSelected(true);
-			german.setEnabled(false);
-		}
-		else {
-			german.setSelected(true);
-			english.setEnabled(false);
-		}
-		}
-			
-		}
+        //choose between english or german
+        Object[] options = {"English", "German"};
+        int n = JOptionPane.showOptionDialog(frame,
+                "Please choose a language",
+                "Welcome!",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+        //if english, in english
+        if (n == JOptionPane.YES_OPTION) {
+            english.setSelected(true);
+            german.setEnabled(false);
+        }
+        //if german, in german
+        else if (n == JOptionPane.NO_OPTION) {
+            german.setSelected(true);
+            english.setEnabled(false);
+        }
+        //if they press x, exit program
+        else {
+            System.exit(0);
+        }
+    }
 
-    
+}

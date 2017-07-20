@@ -1,4 +1,3 @@
-package that;
 /**
  * Authors: Helen Joules, Anna Soboleva, Marko Lozajic, Jonas Biegert
  * Class which launches the GUI of KWIC search, a key word in context program,

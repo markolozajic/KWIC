@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 
-public class Saving {
+class Saving {
     static void saveToFile(ArrayList<String> ngrams, String addressFile, String language) throws
             XMLStreamException, IOException {
         FileWriter fw = new FileWriter(new File(addressFile));

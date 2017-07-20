@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class KeyWordFinder
+class KeyWordFinder
 {
 	// sentenceCount is used to say how many sentences the document contains in
 	// the statistics

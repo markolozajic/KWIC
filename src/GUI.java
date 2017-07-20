@@ -335,7 +335,7 @@ public class GUI extends JPanel
             }
 
             if (model.getElementAt(0).equals("<html>Sorry, tag not found for given word!</html>") ||
-            model.getElementAt(0).equals("<html>Sorry, could not find the keyword in the text!</html>")){
+                    model.getElementAt(0).equals("<html>Sorry, could not find the keyword in the text!</html>")){
                 JOptionPane.showMessageDialog(frame, "Nothing to save!", "Saving error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
@@ -390,6 +390,13 @@ public class GUI extends JPanel
     {
         public void actionPerformed(ActionEvent e)
         {
+            // clears table
+            for (int i = 0; i < resultTable.getRowCount(); i++)
+            {
+                for (int j = 0; j < 3; j++)
+                    resultTable.setValueAt("", i, j);
+            }
+            
             //see if there's a POSTag, what the keyword to search is, and where to search
             String POStag = posList.getSelectedItem().toString();
             String keyword = searchBox.getText();
@@ -582,8 +589,8 @@ public class GUI extends JPanel
         public void actionPerformed(ActionEvent e)
         {
             // confirmation the user wants to clear it
-            int n = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete everything?", "Warning!",
-                    JOptionPane.YES_NO_OPTION);
+            int n = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete everything?",
+                    "Clear all?", JOptionPane.YES_NO_OPTION);
             //if yes
             if (n == JOptionPane.YES_OPTION)
             {

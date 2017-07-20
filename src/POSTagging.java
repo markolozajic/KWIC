@@ -105,6 +105,11 @@ class POSTagging {
             //convert String to List <String> (splitting on ";")
             for (int i = 0;  i < TheList.size(); i++){
                 String temp = TheList.get(i);
+                if(temp.contains("\"")){
+                	//in case that in list something like - "John" (Desireless song) - the link will not be made with " marks
+                	temp = temp.replace("\"", "");
+                	TheList.set(i, temp);
+                }
                 if(temp.trim().equalsIgnoreCase(article))
                 {
                     TheList.set(i,"");

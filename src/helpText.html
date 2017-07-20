@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "UTF-8"/>
+</head>
+<body>
+<h2>How to use KWIC search:</h2>
+<h3>About KWIC search:</h3>
+KWIC search is a Key Word In Context search program, in which you identify the website,
+file, or wikipedia article you would like to search, and the keyword (search term) you
+would like to look for. <br/> Please indicate if you are looking at a website, file, or
+wikipedia article.<br/>
+In the left-hand box you will see the all the sentences in which the keyword occurs,
+and the keyword will be displayed in bold.<br/>
+Once you select a sentence, the table on the right-hand side will display the form, lemma,
+and POS tag of each word in the sentence.
+<p>
+<h3>URL/Filename:</h3>
+This field should contain the URL/Filename/Wikipedia term you would like to search for.<br/>
+<b>URL:</b>
+The URL you want to search, including http:// or https:// <br/>
+e.g. https://docs.oracle.com/javase/tutorial/uiswing/components/tooltip.html<br/>
+<b>File:</b>
+The file you want to search, including the whole path to find it on your computer.<br/>
+e.g. C:\Users\User1\Corpus\AECorpus.txt<br/>
+<b>Wiki:</b>
+Enter the name of a wikipedia article you would like to search for; if multiple options
+are possible, a box will pop up with possible articles to choose from.
+Keep in mind: searching on wikipedia is case-senstive.<br/>
+e.g. Berlin<br/>
+If "German" is selected as the language, German Wikipedia will be searched.
+</p>
+<p>
+<h3>Search  term:</h3>
+This field should contain the word you would like to search for.<br/>
+(e.g. see)<br/>
+Keep in mind: The search is case-sensitive.
+</p>
+<p>
+<h3>POS:</h3>
+Select a POS tag if you would like to search for a keyword with a specific POS tag.<br/>
+If the POS tag box is left blank, the program will search for all instances of the keyword.
+e.g. if you search for "see" with POS tag VB, it will only return instances in which
+"see" is the base form of the verb.<br/>
+If you search for "see" without a POS tag, it will return all instances of "see".<br/>
+To see what the different POS tags mean, look at the "POS tag meanings" tab.
+</p>
+<p>
+<h3>N-grams:</h3>
+The number of context words (words on either side of the keyword) you would like to
+be displayed.<br/>
+The default n-gram is the whole sentence, so the whole sentence will be displayed.
+</p>
+<p>
+<h3>Search button:</h3>
+To search for the keyword (optionally with a specific POS tag) in the given URL/File,
+press the search button.
+</p>
+<p>
+<h3>Language options:</h3>
+KWIC search works in both English and German, but is in English as a default.<br/>
+When German is selected, German OpenNLP tools are used, so the search term, POS tags,
+lemmas, etc. will be displayed as their German equivalents.
+</p>
+<p>
+<h3>Statistics button:</h3>
+Once a search has been completed, you can click the "statistics" button to find out:<br/>
+how many instances of the keyword occur in the text<br/>
+how many sentences the keyword is in<br/>
+the distribution of the word over the POS tags it has<br/>
+the time it took to complete the search
+</p>
+<p>
+	<h3>Save button:</h3>
+Pressing this button prompts the user for a filename, in which to save the results<br/>
+of the search. <br/>
+If you attempt to save before you conduct a search, the program will show an error message.
+</p>
+<p>
+<h3>Clear all button:</h3>
+Pressing this button will clear all search boxes, results, tags, and reset the POS
+and N-gram boxes.
+</p>
+<p>
+<h3>Help button:</h3>
+Pressing this button will show the help pages for the program, including how to use
+the program, and the meanings of the POS tags.
+</p>
+</body>
+</html>

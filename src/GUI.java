@@ -74,7 +74,6 @@ public class GUI extends JPanel
     {
         // top window- set size and name of window
         frame = new JFrame("KWIC search");
-        frame.setSize((int) (width * 0.7), (int) (height * 0.7));
 
         // main panel with borderlayout
         JPanel panel = new JPanel();
@@ -302,6 +301,9 @@ public class GUI extends JPanel
         clearButton.setBackground(Color.white);
         helpButton.setBackground(Color.white);
         statsbutton.setBackground(Color.white);
+
+        //so it fits the screen
+        frame.pack();
     }
 
     /**
@@ -494,6 +496,8 @@ public class GUI extends JPanel
                     wordAndTagSearchDone = true;
                     wordSearchDone = false;
 
+                    scrollPane.setViewportView(sentenceList); // replace old scrollpane with new results
+
                 } else
                 {
                     filteredSentences = new String[ngramsWithKeyword.size()];
@@ -519,7 +523,7 @@ public class GUI extends JPanel
                     wordAndTagSearchDone = false;
                 }
 
-                // multiply longest sentence length by 6.3 and use that as cellwidth
+                // multiply longest sentence length by 9 and use that as cellwidth
                 maxWidth *= 9;
 
                 sentenceList = new JList<>(filteredSentences);

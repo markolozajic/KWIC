@@ -589,7 +589,7 @@ public class GUI extends JPanel
                 searchBox.setText("");
                 posList.setSelectedIndex(0);
                 ngramList.setSelectedIndex(0);
-                wikiInput.setSelected(true);
+                urlInput.setSelected(true);
                 // set the control booleans for stats to false;
                 wordSearchDone = false;
                 wordAndTagSearchDone = false;

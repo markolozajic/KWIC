@@ -157,6 +157,7 @@ public class GUI extends JPanel
 
         //search button
         JButton searchButton = new JButton("search");
+        searchButton.setEnabled(false);
         searchButton.setToolTipText("Let's find it!");
         searchButton.addActionListener(new SearchButtonHandler());
         npSouth.add(searchButton);
@@ -170,7 +171,6 @@ public class GUI extends JPanel
         // language buttons- change POS tag list
         english = new JRadioButton("English");
         JRadioButton german = new JRadioButton("German");
-        english.setSelected(true);
 
         // edit list of pos tags based on language selected
         english.addActionListener(e ->
@@ -178,12 +178,16 @@ public class GUI extends JPanel
             posList.removeAllItems();
             for (String s : englishPOS)
                 posList.addItem(s);
+            german.setEnabled(false);
+            searchButton.setEnabled(true);
         });
         german.addActionListener(e ->
         {
             posList.removeAllItems();
             for (String s : germanPOS)
                 posList.addItem(s);
+            english.setEnabled(false);
+            searchButton.setEnabled(true);
         });
         //so you can only select one button
         ButtonGroup buttonGroup1 = new ButtonGroup();

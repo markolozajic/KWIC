@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+// class used to fetch text from webpages, and containing all opennlp tools for corpus analysis
 class POSTagging {
 	
 	/** Method to scrape a site with given by user URL 
@@ -87,7 +87,7 @@ class POSTagging {
         String content = "";
         //detect whether it is a disambiguation page
         Elements checker = doc.select(detect);
-        
+
         // if yes, it is handled differently
         if(checker.text().length() > 0){
             Elements links = doc.select("a[title*="+article+"]:not([lang])");
@@ -138,12 +138,13 @@ class POSTagging {
      */
     static String readSentencesFromFile(String filename) throws IOException{
 
+        // open buffered reader on user specified file
         BufferedReader buff = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
         String nextLine = "";
         String sentences = "";
 
-        while((nextLine = buff.readLine()) != null) {
-            sentences += nextLine + "\n";
+        while((nextLine = buff.readLine()) != null) { // until end of file reached, read next line
+            sentences += nextLine + "\n"; // add newline after each line read
         }
         buff.close();
         return sentences;
@@ -165,7 +166,6 @@ class POSTagging {
 
         return sentenceDetector.sentDetect(input);
     }
-
 
     /**
      *

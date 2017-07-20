@@ -333,6 +333,14 @@ public class GUI extends JPanel
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
+            if (model.getElementAt(0).equals("<html>Sorry, tag not found for given word!</html>") ||
+            model.getElementAt(0).equals("<html>Sorry, could not find the keyword in the text!</html>")){
+                JOptionPane.showMessageDialog(frame, "Nothing to save!", "Saving error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             //prompt for input
             String fileName = JOptionPane.showInputDialog(frame, "Please enter a filename:");
 

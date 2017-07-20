@@ -342,10 +342,15 @@ public class GUI extends JPanel
             }
 
             //prompt for input
-            String fileName = JOptionPane.showInputDialog(frame, "Please enter a filename:");
+            String fileName = JOptionPane.showInputDialog(frame, "Please enter a filename:\n" +
+                    "e.g. outputFile.xml");
 
             //so that an exception isn't thrown when the user closes the dialog box
             if (fileName != null && !fileName.equals("")) {
+
+                if (!fileName.endsWith(".xml")){
+                    fileName += ".xml";
+                }
 
                 ArrayList<String> listContents = new ArrayList<>();
 

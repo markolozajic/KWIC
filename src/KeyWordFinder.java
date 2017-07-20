@@ -99,8 +99,8 @@ public class KeyWordFinder
 				// if you find the keyword
 				if (words[i].equals(keyWord)
 						|| words[i]
-						.matches("[\"!'(\\[]" + keyWord + "[\")'\\]]?[?;,.!:\"')]")
-						|| words[i].matches(keyWord + "[?;,.!:\"')\\]]?[?;,.!:\"')]")
+						.matches("[\"!'(\\[]" + keyWord + "[\")'\\]][?;,.!:\"')]*")
+						|| words[i].matches(keyWord + "[?;,.!:\"')\\]][?;,.!:\"')]*")
 						|| words[i].matches("[\"'(\\[]" + keyWord))
 				{
 					keyWordFound = true;
@@ -299,8 +299,8 @@ public class KeyWordFinder
 			{
 				if (words[i].equals("<b>" + keyWord + "</b>")
 						|| words[i]
-						.matches("<b>" + "[\"'(\\[]" + keyWord + "[\")'\\]]?[?;,.!:\"')]" + "</b>")
-						|| words[i].matches("<b>" + keyWord + "[?;,.!:\"')\\]]?[?;,.!:\"')]" + "</b>")
+						.matches("<b>" + "[\"'(\\[]" + keyWord + "[\")'\\]][?;,.!:\"')]*" + "</b>")
+						|| words[i].matches("<b>" + keyWord + "[?;,.!:\"')\\]][?;,.!:\"')]*" + "</b>")
 						|| words[i].matches("<b>" + "[\"'(\\[]" + keyWord + "</b>"))
 				{
 					tagsIndex++;

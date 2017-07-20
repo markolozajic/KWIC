@@ -9,22 +9,26 @@ import java.io.Writer;
 import java.util.ArrayList;
 
 public class Saving {
-    static void saveToFile(ArrayList<String> ngrams, String addressFile, String tokenizerModel,
-                           String taggerModel, String lemmatizerModel) throws IOException {
+    static void saveToFile(ArrayList<String> ngrams, String addressFile, String language) throws
+            XMLStreamException, IOException {
         FileWriter fw = new FileWriter(new File(addressFile));
-        generateXML(ngrams, fw, tokenizerModel, taggerModel, lemmatizerModel);
+        if (language.equals("English")){
+            generateXML(ngrams, fw, "English");
+        }
+        else {
+            generateXML(ngrams, fw, "German");
+        }
         fw.close();
     }
 
-    static void generateXML(ArrayList<String> ngrams, Writer w, String tokenizerModel,
-                            String taggerModel, String lemmatizerModel) {
+    private static void generateXML(ArrayList<String> ngrams, Writer w, String language)
+    throws XMLStreamException, IOException {
 
         // defines a factory API that enables applications to obtain XML writers
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         // defines the interface for creating instances of XMLEvents
         XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
-        try {
             String s = "";
             for(String ngram : ngrams){
                 s += ngram + " %b "; // as with POStag search method, "%b" marks end of ngram
@@ -32,9 +36,21 @@ public class Saving {
             s = s.replaceAll("<b>|</b>|<html>|</html>",""); // remove html tags used to bolden keyword
             s = s.substring(0,s.length()-3); // deletes last "%b ", don't want to generate extra empty ngram tag
 
-            String[] tokens = POSTagging.tokenizer(s, tokenizerModel);
-            String[] tags = POSTagging.postagger(tokens, taggerModel);
-            String[] lemmas = POSTagging.lemmatizer(tokens, tags, lemmatizerModel);
+            String[] tokens, tags, lemmas;
+
+            // choose opennlp tools based on language selected (in GUI)
+
+            if(language.equals("English")){
+                tokens = POSTagging.tokenizer(s, "models/en-token.bin");
+                tags = POSTagging.postagger(tokens, "models/en-pos-maxent.bin");
+                lemmas = POSTagging.lemmatizer(tokens, tags, "models/en-lemmatizer.bin");
+            }
+            else {
+                tokens = POSTagging.tokenizer(s, "models/de-token.bin");
+                tags = POSTagging.postagger(tokens, "models/de-pos-maxent.bin");
+                lemmas = POSTagging.lemmatizer(tokens, tags, "models/de-lemmatizer.bin");
+            }
+
 
             // defines the interface to write XML documents, use writer passed as parameter
             XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(w);
@@ -76,11 +92,5 @@ public class Saving {
             eventWriter.add(eventFactory.createEndDocument()); // mark end of document
             eventWriter.close(); // close writer
 
-        } catch (XMLStreamException e) {
-            e.printStackTrace(); // TODO handle exceptions here or in the GUI?
-        }
-        catch (IOException i) {
-            i.printStackTrace();
         }
     }
-}

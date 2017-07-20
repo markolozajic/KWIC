@@ -10,6 +10,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import javax.xml.stream.XMLStreamException;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -341,18 +342,19 @@ public class GUI extends JPanel
                 //tags differently depending on english or german
                 try {
                     if (english.isSelected()) {
-                        Saving.saveToFile(listContents, fileName, "models/en-token.bin", "models/en-pos-maxent.bin",
-                                "models/en-lemmatizer.bin");
+                        Saving.saveToFile(listContents, fileName, "English");
                         Path p = Paths.get(fileName);
                         JOptionPane.showMessageDialog(frame, "File has been saved in " + p, "Save successful!",
                                 JOptionPane.PLAIN_MESSAGE);
                     } else {
-                        Saving.saveToFile(listContents, fileName, "models/de-token.bin", "models/de-pos-maxent.bin",
-                                "models/de-lemmatizer.bin");
+                        Saving.saveToFile(listContents, fileName, "German");
                         Path p = Paths.get(fileName);
                         JOptionPane.showMessageDialog(frame, "File has been saved in " + p, "Save successful!",
                                 JOptionPane.PLAIN_MESSAGE);
                     }
+                } catch (XMLStreamException x1) {
+                    JOptionPane.showMessageDialog(frame, "Error in serializing XML.", "Saving error",
+                            JOptionPane.ERROR_MESSAGE);
                 } catch (IOException e1) {
                     JOptionPane.showMessageDialog(frame, "There was an error saving the file.", "Saving error",
                             JOptionPane.ERROR_MESSAGE);

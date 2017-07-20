@@ -151,7 +151,7 @@ public class GUI extends JPanel
         JLabel ngramLabel = new JLabel("N-grams:");
         ngramLabel.setToolTipText("How many context words be displayed on either side of the search term?");
         npSouth.add(ngramLabel);
-        String[] ngrams = { "sentence", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+        String[] ngrams = { "sentence", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
         ngramList = new JComboBox<>(ngrams);
         npSouth.add(ngramList);
         npSouth.add(Box.createRigidArea(smallSep));

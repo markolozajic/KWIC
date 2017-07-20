@@ -328,7 +328,7 @@ public class GUI extends JPanel
             //prompt for input
             String fileName = JOptionPane.showInputDialog(frame, "Please enter a filename:");
             //so that an exception isn't thrown when the user closes the dialog box
-            if (fileName != null && !"".equals(fileName)) {
+            if (fileName != null && !fileName.equals("")) {
 
                 ArrayList<String> listContents = new ArrayList<>();
                 //listModel in order to access all elements in JList
@@ -498,8 +498,6 @@ public class GUI extends JPanel
                     wordAndTagSearchDone = true;
                     wordSearchDone = false;
 
-                    scrollPane.setViewportView(sentenceList); // replace old scrollpane with new results
-
                 } else
                 {
                     filteredSentences = new String[ngramsWithKeyword.size()];
@@ -527,6 +525,8 @@ public class GUI extends JPanel
 
                 // multiply longest sentence length by 9 and use that as cellwidth
                 maxWidth *= 9;
+
+                // re-initialise sentence list
 
                 sentenceList = new JList<>(filteredSentences);
                 sentenceList.setFont(new Font("Serif", Font.PLAIN, 18));

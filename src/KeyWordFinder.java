@@ -1,3 +1,11 @@
+/**
+ * Helper class called upon in GUI
+ * Gives output for JList-
+ * finds sentences containing keyword
+ * gets the n-grams for the sentence
+ * decides if a words has the correct tag for the search
+ */
+
 import java.io.IOException;
 import java.util.ArrayList;
 

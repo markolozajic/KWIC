@@ -835,10 +835,10 @@ public class GUI extends JPanel
         //choose between english or german
         Object[] options = {"English", "German"};
         int n = JOptionPane.showOptionDialog(frame,
-                "Please choose a language",
-                "Welcome!",
+                "Please choose a language:",
+                "Welcome to KWIC search!",
                 JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
+                JOptionPane.WARNING_MESSAGE,
                 null,
                 options,
                 options[0]);

@@ -74,7 +74,6 @@ public class GUI extends JPanel
     {
         // top window- set size and name of window
         frame = new JFrame("KWIC search");
-        frame.setSize((int) (width * 0.7), (int) (height * 0.7));
 
         // main panel with borderlayout
         JPanel panel = new JPanel();
@@ -300,6 +299,9 @@ public class GUI extends JPanel
         clearButton.setBackground(Color.white);
         helpButton.setBackground(Color.white);
         statsbutton.setBackground(Color.white);
+
+        //so it fits the screen
+        frame.pack();
     }
 
     /**
@@ -495,6 +497,7 @@ public class GUI extends JPanel
 
                     // the following block of code is just repeating what is already written above (look for "centerLeft")
                     sentenceList = new JList<>(filteredSentences);
+                    sentenceList.setPreferredSize(new Dimension((int) width / 4, (int) height / 5));
                     sentenceList.setFont(new Font("Serif", Font.PLAIN, 18));
                     sentenceList.setFixedCellHeight(24);
                     sentenceList.setFixedCellWidth(maxWidth);
@@ -532,6 +535,7 @@ public class GUI extends JPanel
 
                     // the following block of code is just repeating what is already written above (look for "centerLeft")
                     sentenceList = new JList<>(filteredSentences);
+                    sentenceList.setPreferredSize(new Dimension((int) width / 4, (int) height / 5));
                     sentenceList.setFont(new Font("Serif", Font.PLAIN, 18));
                     sentenceList.setFixedCellHeight(24);
                     sentenceList.setFixedCellWidth(maxWidth);

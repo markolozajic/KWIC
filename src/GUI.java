@@ -1,3 +1,4 @@
+package that;
 /**
  * Authors: Helen Joules, Anna Soboleva, Marko Lozajic, Jonas Biegert
  * Class which launches the GUI of KWIC search, a key word in context program,
@@ -27,7 +28,7 @@ import static javax.swing.BoxLayout.Y_AXIS;
 public class GUI extends JPanel
 {
 
-    private JFrame frame; // top window
+    private static JFrame frame; // top window
     private JTextField urlField; // to enter URL
     private JTextField searchBox; // the thing to search
     private JComboBox<String> ngramList; // how many context words
@@ -39,7 +40,8 @@ public class GUI extends JPanel
     private JRadioButton fileInput;
     private JRadioButton wikiInput;
     // languages available
-    private JRadioButton english;
+    private static JRadioButton english;
+    private static JRadioButton german;
     private JScrollPane scrollPane;
     private JTabbedPane helpPane;
 
@@ -170,7 +172,7 @@ public class GUI extends JPanel
         westPanel.setBorder(BorderFactory.createLineBorder(new Color(223, 240, 255), 8));
         // language buttons- change POS tag list
         english = new JRadioButton("English");
-        JRadioButton german = new JRadioButton("German");
+        german = new JRadioButton("German");
 
         // edit list of pos tags based on language selected
         english.addActionListener(e ->
@@ -829,5 +831,25 @@ public class GUI extends JPanel
     public static void main(String[] args)
     {
         new GUI();
-    }
-}
+		Object[] options = {"English", "German"};
+		int n = JOptionPane.showOptionDialog(frame,
+				"Please choose a language",
+"Welcome!",
+JOptionPane.YES_NO_OPTION,
+JOptionPane.QUESTION_MESSAGE,
+null,    
+options, 
+options[0]);
+		if (n == JOptionPane.YES_OPTION) {
+			english.setSelected(true);
+			german.setEnabled(false);
+		}
+		else {
+			german.setSelected(true);
+			english.setEnabled(false);
+		}
+		}
+			
+		}
+
+    

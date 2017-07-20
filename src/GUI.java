@@ -325,21 +325,29 @@ public class GUI extends JPanel
     {
         public void actionPerformed(ActionEvent e)
         {
-            //prompt for input
+            //listModel in order to access all elements in JList
+            ListModel model = sentenceList.getModel();
+
+            if (model.getSize() == 0) { // if results were cleared previously
+                JOptionPane.showMessageDialog(frame, "Why would you save empty results, silly?", "Saving error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // prompt for input
             String fileName = JOptionPane.showInputDialog(frame, "Please enter a filename:");
-            //so that an exception isn't thrown when the user closes the dialog box
+
+            // so that an exception isn't thrown when the user closes the dialog box
             if (fileName != null && !fileName.equals("")) {
 
                 ArrayList<String> listContents = new ArrayList<>();
-                //listModel in order to access all elements in JList
-                ListModel model = sentenceList.getModel();
 
                 // add all the elements in JList to model as strings (Object by default)
                 for (int i = 0; i < model.getSize(); i++) {
                     listContents.add(model.getElementAt(i).toString());
                 }
 
-                //tags differently depending on english or german
+                // tags differently depending on english or german
                 try {
                     if (english.isSelected()) {
                         Saving.saveToFile(listContents, fileName, "English");
@@ -541,13 +549,13 @@ public class GUI extends JPanel
             } catch (MalformedURLException m)
             {
                 JOptionPane.showMessageDialog(frame,
-                        "Text could not be fetched from URL",
+                        "Text could not be fetched from website",
                         "URL error",
                         JOptionPane.ERROR_MESSAGE);
             } catch (IOException i)
             {
                 JOptionPane.showMessageDialog(frame,
-                        "Text could not be fetched from file \n or \n Word could not be found in file",
+                        "Text could not be fetched from file",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -810,8 +818,7 @@ public class GUI extends JPanel
                 {
                     output = "The word \"" + searchBox.getText() + "\" with the tag \""
                             + posList.getSelectedItem().toString() + "\" has been found " + finder.getKeyWordCount()
-                            + " times in " + finder.getSentencesWithKeyWordCount() + " out of "
-                            + finder.getSentenceCount() + " sentences." + "\n\nThe search took " + searchTime + " seconds.";
+                            + " times in " + finder.getSentenceCount() + " sentences." + "\n\nThe search took " + searchTime + " seconds.";
                 } else {
                     output = "There is nothing to show statistics for!";
                 }

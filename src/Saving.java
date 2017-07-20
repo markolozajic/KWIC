@@ -34,9 +34,15 @@ public class Saving {
                 s += ngram + " %b "; // as with POStag search method, "%b" marks end of ngram
             }
             s = s.replaceAll("<b>|</b>|<html>|</html>",""); // remove html tags used to bolden keyword
-            s = s.substring(0,s.length()-3); // deletes last "%b ", don't want to generate extra empty ngram tag
 
-            String[] tokens, tags, lemmas;
+        if(s.length()<3) {
+            return;
+        }
+
+        s = s.substring(0, s.length() - 3); // deletes last "%b ", don't want to generate extra empty ngram tag
+
+
+        String[] tokens, tags, lemmas;
 
             // choose opennlp tools based on language selected (in GUI)
 

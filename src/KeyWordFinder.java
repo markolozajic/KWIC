@@ -307,10 +307,6 @@ public class KeyWordFinder
 					//if the keyword has the correct tag
 					if (tags.get(tagsIndex).equals(tag))
 					{
-						if (!rval.contains(item))
-						{
-							sentencesWithKeyWordCount++;
-						}
 
 						//add the ngram to the return value
 						rval.add((item));

@@ -171,6 +171,8 @@ public class GUI extends JPanel
         english = new JRadioButton("English");
         JRadioButton german = new JRadioButton("German");
         english.setSelected(true);
+
+        // edit list of pos tags based on language selected
         english.addActionListener(e ->
         {
             posList.removeAllItems();
@@ -452,6 +454,9 @@ public class GUI extends JPanel
                             "models/de-pos-maxent.bin");
                 }
 
+                int maxWidth = 0;
+                String[] filteredSentences;
+
                 // If there is a POSTag we have to take that into consideration and search with it
                 if (!POStag.isEmpty())
                 {
@@ -469,7 +474,7 @@ public class GUI extends JPanel
                     //search time
                     searchTime = (System.nanoTime() - startTime) * Math.pow(10, -9);
 
-                    String[] filteredSentences = new String[ngramsWithTag.size()];
+                    filteredSentences = new String[ngramsWithTag.size()];
                     // this array is used to figure out how wide the cells in the Jlist should be
                     int[] filteredSentencesLength = new int[ngramsWithTag.size()];
                     for (int i = 0; i < filteredSentences.length; i++)
@@ -477,34 +482,21 @@ public class GUI extends JPanel
                         filteredSentences[i] = "<html>" + ngramsWithTag.get(i) + "</html>";
                         filteredSentencesLength[i] = filteredSentences[i].length();
                     }
-                    int maxWidth = 0;
+
                     // find the biggest value in the int array
-                    for (int i = 0; i < filteredSentencesLength.length; i++)
-                    {
-                        if (filteredSentencesLength[i] > maxWidth)
-                        {
-                            maxWidth = filteredSentencesLength[i];
+                    for (int aSentenceLength : filteredSentencesLength) {
+                        if (aSentenceLength > maxWidth) {
+                            maxWidth = aSentenceLength;
                         }
                     }
-                    // multiply it by 6.3 and use that as cellwidth
-                    maxWidth *= 6.3;
 
                     // set the control boolean to true
                     wordAndTagSearchDone = true;
                     wordSearchDone = false;
 
-                    // the following block of code is just repeating what is already written above (look for "centerLeft")
-                    sentenceList = new JList<>(filteredSentences);
-                    sentenceList.setFont(new Font("Serif", Font.PLAIN, 18));
-                    sentenceList.setFixedCellHeight(24);
-                    sentenceList.setFixedCellWidth(maxWidth);
-                    sentenceList.setVisibleRowCount(24);
-                    sentenceList.addListSelectionListener(new SentenceListHandler());
-
-                    scrollPane.setViewportView(sentenceList); // replace old scrollpane with new results
                 } else
                 {
-                    String[] filteredSentences = new String[ngramsWithKeyword.size()];
+                    filteredSentences = new String[ngramsWithKeyword.size()];
                     // this array is used to figure out how wide the cells in the Jlist should be
                     int[] filteredSentencesLength = new int[ngramsWithKeyword.size()];
                     for (int i = 0; i < filteredSentences.length; i++)
@@ -514,34 +506,32 @@ public class GUI extends JPanel
                         filteredSentencesLength[i] = filteredSentences[i].length();
                     }
                     searchTime = (System.nanoTime() - startTime) * Math.pow(10, -9);
-                    int maxWidth = 0;
+
                     // find the biggest value in the int array
-                    for (int i = 0; i < filteredSentencesLength.length; i++)
-                    {
-                        if (filteredSentencesLength[i] > maxWidth)
-                        {
-                            maxWidth = filteredSentencesLength[i];
+                    for (int aSentenceLength : filteredSentencesLength) {
+                        if (aSentenceLength > maxWidth) {
+                            maxWidth = aSentenceLength;
                         }
                     }
-                    // multiply it by 6.3 and use that as cellwidth
-                    maxWidth *= 6.3;
 
                     // set the control boolean to true
                     wordSearchDone = true;
                     wordAndTagSearchDone = false;
-
-                    // the following block of code is just repeating what is already written above (look for "centerLeft")
-                    sentenceList = new JList<>(filteredSentences);
-                    sentenceList.setFont(new Font("Serif", Font.PLAIN, 18));
-                    sentenceList.setFixedCellHeight(24);
-                    sentenceList.setFixedCellWidth(maxWidth);
-                    sentenceList.setVisibleRowCount(24);
-                    sentenceList.addListSelectionListener(new SentenceListHandler());
-
-                    // replace old scrollpane with new results
-                    scrollPane.setViewportView(sentenceList);
-
                 }
+
+                // multiply longest sentence length by 6.3 and use that as cellwidth
+                maxWidth *= 9;
+
+                sentenceList = new JList<>(filteredSentences);
+                sentenceList.setFont(new Font("Serif", Font.PLAIN, 18));
+                sentenceList.setFixedCellHeight(24);
+                sentenceList.setFixedCellWidth(maxWidth);
+                sentenceList.setVisibleRowCount(24);
+                sentenceList.addListSelectionListener(new SentenceListHandler());
+
+                // replace old scrollpane with new results
+                scrollPane.setViewportView(sentenceList);
+
             } catch (MalformedURLException m)
             {
                 JOptionPane.showMessageDialog(frame,
@@ -790,7 +780,7 @@ public class GUI extends JPanel
                 }
 
                 // go through the list of unique tags and find the amount of times the tags occurs in tagList then
-                // add this information to the ouput string
+                // add this information to the output string
                 for (String uniqueTagsItem : uniqueTags)
                 {
                     int count = 0;

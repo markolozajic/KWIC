@@ -1,5 +1,6 @@
 /**
- * Author: Anna Soboleva, Marko Lozajic
+ * Authors: Anna Soboleva, Marko Lozajic
+ * Class used to fetch text from webpages, and containing all opennlp tools for corpus analysis
  */
 
 import opennlp.tools.lemmatizer.LemmatizerME;
@@ -24,10 +25,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-// class used to fetch text from webpages, and containing all opennlp tools for corpus analysis
+
 class POSTagging {
 
-    /** Method to scrape a site with given by user URL
+    /** Method to scrape a site specified by given URL
      *
      * @param givenurl - String input by user
      * @throws IOException, MalformedURLException
@@ -55,7 +56,7 @@ class POSTagging {
         writer.close();
     }
 
-    /** Method to scrape a Wiki-page with user search word.
+    /** Method to scrape a Wiki-page specified by given search word
      *
      * @param article - the name of Wiki page, for which user is looking
      * @param language - have "German or "English" as content, depend on User's choice
@@ -159,7 +160,7 @@ class POSTagging {
         return sentences;
     }
 
-    /**
+    /** Method which reads input string and splits into sentences
      *
      * @param input the text to split into sentences
      * @param sentenceModel differs depending on language
@@ -176,7 +177,7 @@ class POSTagging {
         return sentenceDetector.sentDetect(input);
     }
 
-    /**
+    /** Method which reads sentences and tokenizes them
      *
      * @param sentences input text split by the sentence model
      * @param tokenizerModel differs depending on language
@@ -193,7 +194,7 @@ class POSTagging {
         return tokenizer.tokenize(sentences);
     }
 
-    /**
+    /** Method which takes tokenized input and returns POS tags
      *
      * @param tokenizedText array containing tokens found in input
      * @param taggerModel differs depending on language
@@ -210,7 +211,7 @@ class POSTagging {
         return tagger.tag(tokenizedText);
     }
 
-    /**
+    /** Method which takes tokens and POS tags and uses them to generate lemmas
      *
      * @param tokens array of tokens
      * @param postags array of POS tags, in the same order as the tokens

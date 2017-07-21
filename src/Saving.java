@@ -1,5 +1,6 @@
 /**
  * Author: Marko Lozajic
+ * Class dedicated to saving XML version of the results to a file
  */
 
 import javax.xml.stream.XMLEventFactory;
@@ -12,7 +13,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 
-// class dedicated to saving XML version of the results to a file
+
 class Saving {
 
     /**
@@ -57,7 +58,7 @@ class Saving {
         }
         s = s.replaceAll("<b>|</b>|<html>|</html>",""); // remove html tags used to bolden keyword
 
-        if (s.length()==0) {
+        if (s.length()==0) { // if nothing is found in input (JList), do not generate XML
             return;
         }
 

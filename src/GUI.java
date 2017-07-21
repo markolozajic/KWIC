@@ -650,7 +650,7 @@ public class GUI extends JPanel
             } catch (IOException i)
             {
                 JOptionPane.showMessageDialog(frame,
-                        "A problem occurred",
+                        "Error loading help pages from specified filepath",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -673,7 +673,7 @@ public class GUI extends JPanel
             } catch (IOException i)
             {
                 JOptionPane.showMessageDialog(frame,
-                        "A problem occurred",
+                        "Error loading list of POS tags from specified filepath",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }

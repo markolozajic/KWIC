@@ -1,5 +1,5 @@
 /**
- * Author: Marko Lozajic
+ * @author: Marko Lozajic
  * Class dedicated to saving XML version of the results to a file
  */
 

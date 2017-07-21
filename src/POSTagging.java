@@ -1,5 +1,5 @@
 /**
- * Authors: Anna Soboleva, Marko Lozajic
+ * @authors: Anna Soboleva, Marko Lozajic
  * Class used to fetch text from webpages, and containing all opennlp tools for corpus analysis
  */
 

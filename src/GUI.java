@@ -1,5 +1,5 @@
 /**
- * Authors: Helen Joules, Anna Soboleva, Marko Lozajic, Jonas Biegert
+ * @authors: Helen Joules, Anna Soboleva, Marko Lozajic, Jonas Biegert
  * Class which launches the GUI of KWIC search, a key word in context program,
  * which operates with files, URls, and wikipedia articles
  */

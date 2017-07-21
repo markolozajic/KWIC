@@ -1,4 +1,5 @@
 /**
+ * Authors: Jonas Biegert, Marko Lozajic
  * Helper class called upon in GUI
  * Gives output for JList-
  * finds sentences containing keyword

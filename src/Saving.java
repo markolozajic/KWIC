@@ -1,3 +1,7 @@
+/**
+ * Author: Marko Lozajic
+ */
+
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLOutputFactory;
@@ -53,7 +57,7 @@ class Saving {
         }
         s = s.replaceAll("<b>|</b>|<html>|</html>",""); // remove html tags used to bolden keyword
 
-        if (s.length()<3) {
+        if (s.length()==0) {
             return;
         }
 

@@ -396,7 +396,7 @@ public class GUI extends JPanel
                 for (int j = 0; j < 3; j++)
                     resultTable.setValueAt("", i, j);
             }
-            
+
             //see if there's a POSTag, what the keyword to search is, and where to search
             String POStag = posList.getSelectedItem().toString();
             String keyword = searchBox.getText();

@@ -1,3 +1,7 @@
+/**
+ * Author: Anna Soboleva, Marko Lozajic
+ */
+
 import opennlp.tools.lemmatizer.LemmatizerME;
 import opennlp.tools.lemmatizer.LemmatizerModel;
 import opennlp.tools.postag.POSModel;
@@ -22,12 +26,12 @@ import java.util.List;
 
 // class used to fetch text from webpages, and containing all opennlp tools for corpus analysis
 class POSTagging {
-	
-	/** Method to scrape a site with given by user URL 
-	 * 
-	 * @param givenurl - String input by user
-	 * @throws IOException, MalformedURLException
-	 */
+
+    /** Method to scrape a site with given by user URL
+     *
+     * @param givenurl - String input by user
+     * @throws IOException, MalformedURLException
+     */
     static void fetchFromUrl(String givenurl) throws IOException {
         URL url = new URL(givenurl);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -41,7 +45,7 @@ class POSTagging {
 
         Document doc = Jsoup.connect(givenurl).get();
         Elements lines = doc.select("p");
-        //in program only text in <p> considered to be worth for scraping 
+        //in program only text in <p> considered to be worth for scraping
         PrintWriter writer = new PrintWriter("url.txt");
 
         //instead of saving every file separately, file is overwritten every time
@@ -52,18 +56,18 @@ class POSTagging {
     }
 
     /** Method to scrape a Wiki-page with user search word.
-     * 
+     *
      * @param article - the name of Wiki page, for which user is looking
      * @param language - have "German or "English" as content, depend on User's choice
      * @return List<String> TheList - list of Strings with names of possible Wiki-pages, in case of disambiguation, aList<String> - empty list
      * @throws IOException, MalformedURLException
      */
     static List<String> fetchFromWikipedia(String article, String language) throws IOException{
-    	//the variables are initialized
+        //the variables are initialized
         String sitename = "";
         String detect = "";
         if(language.equals("English")){
-        	//depending on language (chosen by user earlier) Wiki links would be different
+            //depending on language (chosen by user earlier) Wiki links would be different
             sitename = "https://en.wikipedia.org/wiki/" + article.replace(" ", "_");
             detect = "a[title=Help:Disambiguation]";
             //<almost> all pages with disambiguation have a link with this title, this way it's possible to detect is it meaningful
@@ -106,9 +110,9 @@ class POSTagging {
             for (int i = 0;  i < TheList.size(); i++){
                 String temp = TheList.get(i);
                 if(temp.contains("\"")){
-                	//in case that in list something like - "John" (Desireless song) - the link will not be made with " marks
-                	temp = temp.replace("\"", "");
-                	TheList.set(i, temp);
+                    //in case that in list something like - "John" (Desireless song) - the link will not be made with " marks
+                    temp = temp.replace("\"", "");
+                    TheList.set(i, temp);
                 }
                 if(temp.trim().equalsIgnoreCase(article))
                 {
@@ -123,7 +127,7 @@ class POSTagging {
             List<String> aList = new ArrayList<>();
             //empty list to take care of return statement
             Elements lines = doc.select("p");
-            //in program only text in <p> considered to be worth for scraping 
+            //in program only text in <p> considered to be worth for scraping
             PrintWriter writer = new PrintWriter("wiki.txt");
             //instead of saving every file separately, file is overwritten every time
             for (Element line : lines) {
@@ -136,7 +140,7 @@ class POSTagging {
     }
 
     /** Method which reads from file and converting them to String
-     * 
+     *
      * @param filename - name of the file
      * @return sentences - all sentences from given by user file
      * @throws IOException

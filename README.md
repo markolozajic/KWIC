@@ -1,17 +1,18 @@
+
 # KWIC
+### KeyWord In Context
 
-Search for keyword or a POS tag on a webpage or a file specified by a URL entered by the user.
+This app made using Java's Swing toolkit allows the user to analyze the text from a user specified website, local file or Wikipedia article.
 
-Display the search result(s) and a number of user specified left and right neighbours of the result.
+Utilities include:
 
-The output should contain text, POS and the lemma for 
-each word of the result.
+ - Searching for a specified keyword (case sensitive)
+ - Filtering by part-of-speech tag
+ - Specifying context size
+ - Displaying lemma/POS information for all words within context
+ - Statistics on word frequency and POS tag distribution
+ - Fine-tuning results from Wikipedia - disambiguation support
+ - Saving results in XML format
 
-The output should be restricted to the sentence where 
-the result was found.
+Support for English and German.
 
-The found search item should stand out.
-
-The program needs a GUI.
-
-Result sets should be savable.

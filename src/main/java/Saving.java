@@ -18,15 +18,15 @@ class Saving {
 
     /**
      *
-     * @param ngrams text input to be converted to xml
-     * @param addressFile file the xml output should be directed to
+     * @param ngrams text input to be converted to XML
+     * @param targetFile file the XML output should be directed to
      * @param language toggled in GUI, models differ depending on choice
      * @throws XMLStreamException
      * @throws IOException
      */
-    static void saveToFile(ArrayList<String> ngrams, String addressFile, String language) throws
+    static void saveToFile(ArrayList<String> ngrams, String targetFile, String language) throws
             XMLStreamException, IOException {
-        FileWriter fw = new FileWriter(new File(addressFile));
+        FileWriter fw = new FileWriter(new File(targetFile));
         if (language.equals("English")){
             generateXML(ngrams, fw, "English");
         }
@@ -38,7 +38,7 @@ class Saving {
 
     /**
      *
-     * @param ngrams text input to be converted to xml
+     * @param ngrams text input to be converted to XML
      * @param w // used to write XML events
      * @param language // choice of opennlp models differs based on language selected
      * @throws XMLStreamException
@@ -84,16 +84,16 @@ class Saving {
         XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(w);
 
         eventWriter.add(eventFactory.createStartDocument()); // mark start of document
-        eventWriter.add(eventFactory.createCharacters("\n")); // newline
-        // create opening addressbooktag
+        eventWriter.add(eventFactory.createCharacters("\n"));
+        // create opening tag for complete results
         eventWriter.add(eventFactory.createStartElement("", "", "results"));
 
         eventWriter.add(eventFactory.createCharacters("\n\t"));
-        // open sentence tag
+        
         eventWriter.add(eventFactory.createStartElement("", "", "ngram"));
 
 
-        for (int i = 0; i<tokens.length; i++) { // for all addresses found in the address book
+        for (int i = 0; i<tokens.length; i++) {
 
             if(tokens[i].equals("%b")){
                 eventWriter.add(eventFactory.createCharacters("\n\t"));
@@ -115,7 +115,7 @@ class Saving {
         eventWriter.add(eventFactory.createCharacters("\n\t"));
         eventWriter.add(eventFactory.createEndElement("", "", "ngram"));
         eventWriter.add(eventFactory.createCharacters("\n"));
-        // close address tag
+        // close results tag
         eventWriter.add(eventFactory.createEndElement("", "", "results"));
         eventWriter.add(eventFactory.createEndDocument()); // mark end of document
         eventWriter.close(); // close writer

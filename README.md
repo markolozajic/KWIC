@@ -1,6 +1,8 @@
 
-# KWIC
-### KeyWord In Context
+# KWIC - KeyWord In Context
+
+**Course**: Data Structures and Algorithms for Language Processing II (University of Tübingen, SS 2017, Jochen Saile)
+**Authors**: Marko Ložajić, Helen Joules, Jonas Biegert, Anna Soboleva
 
 This app made using Java's Swing toolkit allows the user to analyze the text from a user specified website, local file or Wikipedia article.
 
